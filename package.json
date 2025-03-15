@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "start": "expo start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "dev": "bun run start",
+    "build:ios:production": "eas build -p ios --profile production --local",
+    "build:ios:development": "eas build -p ios --profile development",
+    "build:android:production": "eas build -p android --profile production --local",
+    "run:android": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun android",
+    "run:ios": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun ios"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
@@ -21,7 +27,6 @@
     "@rn-primitives/avatar": "^1.1.0",
     "@rn-primitives/slot": "^1.1.0",
     "@roninoss/icons": "^0.0.4",
-    "@shopify/flash-list": "1.7.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "^52.0.38",
@@ -31,6 +36,7 @@
     "expo-linking": "~7.0.5",
     "expo-navigation-bar": "~4.0.8",
     "expo-router": "~4.0.6",
+    "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
     "expo-store-review": "~8.0.1",
     "expo-system-ui": "~4.0.8",
@@ -63,7 +69,10 @@
   },
   "eslintConfig": {
     "extends": "universe/native",
-    "root": true
+    "root": true,
+    "rules": {
+      "import/order": "off"
+    }
   },
   "private": true
 }

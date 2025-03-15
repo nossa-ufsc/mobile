@@ -1,15 +1,15 @@
 import RNSlider from '@react-native-community/slider';
 import { Platform } from 'react-native';
 
-import { useColorScheme } from '~/lib/useColorScheme';
-import { COLORS } from '~/theme/colors';
+import { useColorScheme } from '@/utils/use-color-scheme';
+import { COLORS } from '@/theme/colors';
 
-function Slider({
+export const Slider = ({
   thumbTintColor,
   minimumTrackTintColor,
   maximumTrackTintColor,
   ...props
-}: React.ComponentPropsWithoutRef<typeof RNSlider>) {
+}: React.ComponentPropsWithoutRef<typeof RNSlider>) => {
   const { colors } = useColorScheme();
   return (
     <RNSlider
@@ -21,6 +21,4 @@ function Slider({
       {...props}
     />
   );
-}
-
-export { Slider };
+};

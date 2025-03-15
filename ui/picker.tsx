@@ -1,17 +1,17 @@
 import { Picker as RNPicker } from '@react-native-picker/picker';
 import { View } from 'react-native';
 
-import { cn } from '~/lib/cn';
-import { useColorScheme } from '~/lib/useColorScheme';
+import { cn } from '@/utils/cn';
+import { useColorScheme } from '@/utils/use-color-scheme';
 
-export function Picker<T>({
+export const Picker = <T,>({
   mode = 'dropdown',
   style,
   dropdownIconColor,
   dropdownIconRippleColor,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof RNPicker<T>>) {
+}: React.ComponentPropsWithoutRef<typeof RNPicker<T>>) => {
   const { colors } = useColorScheme();
   return (
     <View
@@ -33,6 +33,6 @@ export function Picker<T>({
       />
     </View>
   );
-}
+};
 
 export const PickerItem = RNPicker.Item;

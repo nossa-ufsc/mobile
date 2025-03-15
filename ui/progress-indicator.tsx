@@ -8,11 +8,11 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { cn } from '~/lib/cn';
+import { cn } from '@/utils/cn';
 
 const DEFAULT_MAX = 100;
 
-const ProgressIndicator = React.forwardRef<
+export const ProgressIndicator = React.forwardRef<
   React.ElementRef<typeof View>,
   React.ComponentPropsWithoutRef<typeof View> & {
     value?: number;
@@ -68,8 +68,6 @@ const ProgressIndicator = React.forwardRef<
 );
 
 ProgressIndicator.displayName = 'ProgressIndicator';
-
-export { ProgressIndicator };
 
 function defaultGetValueLabel(value: number, max: number) {
   return `${Math.round((value / max) * 100)}%`;
