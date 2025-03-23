@@ -25,3 +25,6 @@ android
 
 # Bun
 .bun
+
+# Environment variables
+.env
