@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "nossa-ufsc",
-    "slug": "nossa-ufsc",
-    "version": "1.0.0",
+    "name": "Nossa UFSC",
+    "slug": "nossaUFSC",
+    "version": "3.0.0",
     "scheme": "nossa-ufsc",
     "web": {
       "bundler": "metro",
@@ -22,7 +22,8 @@
           },
           "imageWidth": 100
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -36,18 +37,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.nossaufsc.mobile"
+      "bundleIdentifier": "com.portal.ufsc",
+      "buildNumber": "27"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nossaufsc.mobile"
+      "package": "com.portal.ufsc",
+      "versionCode": 27
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d6f7d1bc-be99-4088-af8d-6af91ee08cd8"
+      }
     }
   }
 }

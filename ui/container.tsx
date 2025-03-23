@@ -1,12 +1,15 @@
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 
-export const Container = ({ children }: { children: React.ReactNode }) => {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+export const Container = ({
+  children,
+  scrollable = false,
+}: {
+  children: React.ReactNode;
+  scrollable?: boolean;
+}) => {
+  return (
+    <SafeAreaView className="flex-1 bg-background">
+      {scrollable ? <ScrollView className="flex-1">{children}</ScrollView> : children}
+    </SafeAreaView>
+  );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-});
