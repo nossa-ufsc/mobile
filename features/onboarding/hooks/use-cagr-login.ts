@@ -4,7 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
 import { CAGRSystemResponse, Subject, SubjectTime, User } from '../../../types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
-import { getEndTime, formatNumericTime } from '../../../utils/time-mapping';
+import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../utils/time-mapping';
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -119,7 +119,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
             const numericTime = parseInt(schedule.horario, 10);
             const formattedStartTime = formatNumericTime(numericTime);
             subjectTimes.push({
-              weekDay: schedule.diaSemana,
+              weekDay: cagrDayIndexToJsIndex(schedule.diaSemana),
               startTime: formattedStartTime,
               endTime: getEndTime(formattedStartTime),
               center: schedule.localizacaoCentro,

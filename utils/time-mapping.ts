@@ -56,3 +56,9 @@ export const formatNumericTime = (numericTime: number): string => {
 export const getEndTime = (startTime: string): string => {
   return timeMapping[startTime] || startTime;
 };
+
+export const cagrDayIndexToJsIndex = (cagrDayIndex: number): number => {
+  // CAGR: 1=Sunday, 2=Monday, ..., 7=Saturday
+  // JS: 0=Sunday, 1=Monday, ..., 6=Saturday
+  return (cagrDayIndex - 1) % 7;
+};
