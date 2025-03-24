@@ -4,6 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
 import { CAGRSystemResponse, Subject, SubjectTime, User } from '../../../types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
+import { getEndTime, formatNumericTime } from '../../../utils/time-mapping';
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -115,9 +116,12 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
         data.horarios?.forEach((schedule) => {
           if (schedule.codigoDisciplina === subject.codigoDisciplina) {
+            const numericTime = parseInt(schedule.horario, 10);
+            const formattedStartTime = formatNumericTime(numericTime);
             subjectTimes.push({
               weekDay: schedule.diaSemana,
-              startTime: schedule.horario,
+              startTime: formattedStartTime,
+              endTime: getEndTime(formattedStartTime),
               center: schedule.localizacaoCentro,
               room: schedule.localizacaoEspacoFisico,
             });
@@ -136,8 +140,9 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
           name: subject.nome,
           code: subject.codigoDisciplina,
           classGroup:
-            data.horarios?.find((h) => h.codigoDisciplina === subject.codigoDisciplina)
-              ?.codigoTurma || '',
+            data.horarios
+              ?.find((h) => h.codigoDisciplina === subject.codigoDisciplina)
+              ?.codigoTurma.trim() || '',
           weeklyClassCount: subject.numeroAulas,
           absenceCount: 0,
           professors,

@@ -40,28 +40,28 @@ export const WeekDaySelector = ({ selectedDay, onSelectDay, testID }: WeekDaySel
   return (
     <View className="w-full border-b border-gray-100 pb-3 dark:border-gray-800" testID={testID}>
       <View className="w-full flex-row justify-between">
-        {days.map((day) => (
+        {days.map((day, index) => (
           <TouchableOpacity
-            key={day.number}
-            onPress={() => onSelectDay(day.number)}
+            key={index}
+            onPress={() => onSelectDay(index)}
             className={cn('mx-0.5 h-16 flex-1 items-center justify-center')}
             testID={`${testID}-day-${day.number}`}>
             <Text
               className={cn(
                 'mb-1 text-xs uppercase',
-                selectedDay === day.number ? 'text-primary' : colors.foreground
+                selectedDay === index ? 'text-primary' : colors.foreground
               )}>
               {day.name}
             </Text>
             <View
               className={cn(
                 'h-10 w-10 items-center justify-center rounded-full',
-                selectedDay === day.number ? 'bg-primary' : 'bg-transparent'
+                selectedDay === index ? 'bg-primary' : 'bg-transparent'
               )}>
               <Text
                 className={cn(
                   'text-xl font-semibold',
-                  selectedDay === day.number ? 'text-white' : colors.foreground
+                  selectedDay === index ? 'text-white' : colors.foreground
                 )}>
                 {day.number}
               </Text>

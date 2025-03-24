@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { HeaderButton } from '@/ui/header-button';
+import { router, Stack } from 'expo-router';
 
 export default function HomeLayout() {
   return (
@@ -14,4 +15,5 @@ const SCREEN_OPTIONS = {
 
 const INDEX_OPTIONS = {
   headerLargeTitle: true,
+  headerRight: () => <HeaderButton onPress={() => router.push('/modal')} />,
 } as const;

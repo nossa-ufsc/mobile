@@ -16,8 +16,9 @@ export interface Subject {
 }
 
 export interface SubjectTime {
-  weekDay: string;
+  weekDay: number;
   startTime: string;
+  endTime: string;
   center: string;
   room: string;
 }
@@ -31,7 +32,7 @@ export interface CAGRSystemResponse {
   horarios?: {
     codigoDisciplina: string;
     codigoTurma: string;
-    diaSemana: string;
+    diaSemana: number;
     horario: string;
     localizacaoCentro: string;
     localizacaoEspacoFisico: string;
