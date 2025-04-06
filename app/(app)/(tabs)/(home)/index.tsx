@@ -1,5 +1,5 @@
-import { Home } from '@/features/home';
+import { SchedulesHome } from '@/features/home';
 
 export default function HomeScreen() {
-  return <Home />;
+  return <SchedulesHome />;
 }

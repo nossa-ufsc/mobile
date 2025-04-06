@@ -5,6 +5,13 @@ export default function HomeLayout() {
   return (
     <Stack screenOptions={SCREEN_OPTIONS}>
       <Stack.Screen name="index" options={{ ...INDEX_OPTIONS, title: 'Horários' }} />
+      <Stack.Screen
+        name="subject/[id]"
+        options={{
+          headerLargeTitle: false,
+          title: 'Detalhes',
+        }}
+      />
     </Stack>
   );
 }

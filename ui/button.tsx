@@ -6,7 +6,7 @@ import { Platform, Pressable, PressableProps, View, ViewStyle } from 'react-nati
 import { cn } from '@/utils/cn';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { COLORS } from '@/theme/colors';
-import { TextClassContext } from './text';
+import { Text, TextClassContext } from './text';
 
 const buttonVariants = cva('flex-row items-center justify-center gap-2', {
   variants: {
@@ -119,7 +119,15 @@ const Root = Platform.OS === 'android' ? View : Slot.Pressable;
 
 const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
   (
-    { className, variant = 'primary', size, style = BORDER_CURVE, androidRootClassName, ...props },
+    {
+      children,
+      className,
+      variant = 'primary',
+      size,
+      style = BORDER_CURVE,
+      androidRootClassName,
+      ...props
+    },
     ref
   ) => {
     const { colorScheme } = useColorScheme();
@@ -142,8 +150,9 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
             ref={ref}
             style={style}
             android_ripple={ANDROID_RIPPLE[colorScheme][variant]}
-            {...props}
-          />
+            {...props}>
+            {typeof children === 'string' ? <Text variant="body">{children}</Text> : children}
+          </Pressable>
         </Root>
       </TextClassContext.Provider>
     );

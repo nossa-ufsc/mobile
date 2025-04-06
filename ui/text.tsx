@@ -10,10 +10,10 @@ cssInterop(UITextView, { className: 'style' });
 const textVariants = cva('text-foreground', {
   variants: {
     variant: {
-      largeTitle: 'text-4xl',
-      title1: 'text-2xl',
-      title2: 'text-[22px] leading-7',
-      title3: 'text-xl',
+      largeTitle: 'text-4xl font-bold',
+      title1: 'text-2xl font-bold',
+      title2: 'text-[22px] leading-7 font-semibold',
+      title3: 'text-xl font-semibold',
       heading: 'text-[17px] leading-6 font-semibold',
       body: 'text-[17px] leading-6',
       callout: 'text-base',

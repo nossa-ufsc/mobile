@@ -2,7 +2,7 @@ import * as AuthSession from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
-import { CAGRSystemResponse, Subject, SubjectTime, User } from '../../../types';
+import { CAGRSystemResponse, Subject, User } from '../../../types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
 import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../utils/time-mapping';
 
@@ -107,42 +107,39 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       }
 
       const data: CAGRSystemResponse = await response.json();
-
       const subjects: Subject[] = [];
 
       data.disciplinas?.forEach((subject) => {
-        const subjectTimes: SubjectTime[] = [];
-        const professors: string[] = [];
-
-        data.horarios?.forEach((schedule) => {
-          if (schedule.codigoDisciplina === subject.codigoDisciplina) {
-            const numericTime = parseInt(schedule.horario, 10);
-            const formattedStartTime = formatNumericTime(numericTime);
-            subjectTimes.push({
-              weekDay: cagrDayIndexToJsIndex(schedule.diaSemana),
-              startTime: formattedStartTime,
-              endTime: getEndTime(formattedStartTime),
-              center: schedule.localizacaoCentro,
-              room: schedule.localizacaoEspacoFisico,
-            });
-          }
-        });
+        const subjectTimes =
+          data.horarios
+            ?.filter((schedule) => schedule.codigoDisciplina === subject.codigoDisciplina)
+            .map((schedule) => {
+              const numericTime = parseInt(schedule.horario, 10);
+              const formattedStartTime = formatNumericTime(numericTime);
+              return {
+                weekDay: cagrDayIndexToJsIndex(schedule.diaSemana),
+                startTime: formattedStartTime,
+                endTime: getEndTime(formattedStartTime),
+                center: schedule.localizacaoCentro,
+                room: schedule.localizacaoEspacoFisico,
+              };
+            }) ?? [];
 
         const professorData = data.professores?.find(
           (p) => p.codigoDisciplina === subject.codigoDisciplina
         );
-        if (professorData?.professores) {
-          professors.push(...professorData.professores);
-        }
+        const professors = professorData?.professores.map((p) => p.nomeProfessor) ?? [];
+
+        const classGroup =
+          data.horarios
+            ?.find((h) => h.codigoDisciplina === subject.codigoDisciplina)
+            ?.codigoTurma.trim() ?? '';
 
         subjects.push({
           id: subject.codigoDisciplina,
           name: subject.nome,
           code: subject.codigoDisciplina,
-          classGroup:
-            data.horarios
-              ?.find((h) => h.codigoDisciplina === subject.codigoDisciplina)
-              ?.codigoTurma.trim() || '',
+          classGroup,
           weeklyClassCount: subject.numeroAulas,
           absenceCount: 0,
           professors,

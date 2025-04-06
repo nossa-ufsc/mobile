@@ -12,9 +12,11 @@ interface EnvironmentState {
   user: User | null;
   subjects: Subject[] | null;
   isAuthenticated: boolean;
+  semesterDuration: number;
   setUser: (user: User | null) => void;
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  setSemesterDuration: (duration: number) => void;
   clearEnvironment: () => void;
 }
 
@@ -37,6 +39,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       user: null,
       subjects: null,
       isAuthenticated: false,
+      semesterDuration: 18, // Default to 18 weeks
 
       setUser: (user) => {
         set({
@@ -53,11 +56,16 @@ export const useEnvironmentStore = create<EnvironmentState>()(
         set({ isAuthenticated });
       },
 
+      setSemesterDuration: (duration) => {
+        set({ semesterDuration: duration });
+      },
+
       clearEnvironment: () => {
         set({
           user: null,
           subjects: null,
           isAuthenticated: false,
+          semesterDuration: 18, // Reset to default
         });
       },
     }),

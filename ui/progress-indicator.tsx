@@ -10,14 +10,13 @@ import Animated, {
 
 import { cn } from '@/utils/cn';
 
-const DEFAULT_MAX = 100;
-
 export const ProgressIndicator = React.forwardRef<
   React.ElementRef<typeof View>,
   React.ComponentPropsWithoutRef<typeof View> & {
     value?: number;
-    max?: number;
+    max: number;
     getValueLabel?: (value: number, max: number) => string;
+    indicatorClassName?: string;
   }
 >(
   (
@@ -26,19 +25,20 @@ export const ProgressIndicator = React.forwardRef<
       max: maxProp,
       getValueLabel = defaultGetValueLabel,
       className,
+      indicatorClassName,
       children,
       ...props
     },
     ref
   ) => {
-    const max = maxProp ?? DEFAULT_MAX;
+    const max = maxProp;
     const value = isValidValueNumber(valueProp, max) ? valueProp : 0;
     const progress = useDerivedValue(() => value ?? 0);
 
     const indicator = useAnimatedStyle(() => {
       return {
         width: withSpring(
-          `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
+          `${interpolate(progress.value, [0, max], [1, 100], Extrapolation.CLAMP)}%`,
           { overshootClamping: true }
         ),
       };
@@ -61,7 +61,11 @@ export const ProgressIndicator = React.forwardRef<
         className={cn('relative h-1 w-full overflow-hidden rounded-full', className)}
         {...props}>
         <View className="absolute bottom-0 left-0 right-0 top-0 bg-muted opacity-20" />
-        <Animated.View role="presentation" style={indicator} className={cn('h-full bg-primary')} />
+        <Animated.View
+          role="presentation"
+          style={indicator}
+          className={cn('h-full bg-primary', indicatorClassName)}
+        />
       </View>
     );
   }

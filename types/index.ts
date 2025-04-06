@@ -39,6 +39,8 @@ export interface CAGRSystemResponse {
   }[];
   professores?: {
     codigoDisciplina: string;
-    professores: string[];
+    professores: {
+      nomeProfessor: string;
+    }[];
   }[];
 }
