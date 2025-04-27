@@ -18,7 +18,6 @@ export const useClassesForDay = () => {
 
   if (!subjects) return [];
 
-  // Get all classes for the selected day
   const allClasses = subjects
     .flatMap((subject) =>
       (subject.schedule || [])
@@ -41,15 +40,15 @@ export const useClassesForDay = () => {
         classInfo.time.center
     );
 
-  // Sort classes by start time
   const sortedClasses = allClasses.sort((a, b) => {
     return numericTimeOrder[a.time.startTime] - numericTimeOrder[b.time.startTime];
   });
 
-  // Group consecutive classes of the same subject
-  const groupedClasses = sortedClasses.reduce<typeof sortedClasses>((acc, currentClass, index) => {
+  const groupedClasses = sortedClasses.reduce<
+    ((typeof sortedClasses)[0] & { consecutiveClasses: number })[]
+  >((acc, currentClass, index) => {
     if (index === 0) {
-      return [currentClass];
+      return [{ ...currentClass, consecutiveClasses: 0 }];
     }
 
     const previousClass = acc[acc.length - 1];
@@ -57,16 +56,16 @@ export const useClassesForDay = () => {
     const isConsecutive = previousClass.time.endTime === currentClass.time.startTime;
 
     if (isSameSubject && isConsecutive) {
-      // Update the last class with the end time from the current class
       acc[acc.length - 1] = {
         ...previousClass,
+        consecutiveClasses: previousClass.consecutiveClasses + 1,
         time: {
           ...previousClass.time,
           endTime: currentClass.time.endTime,
         },
       };
     } else {
-      acc.push(currentClass);
+      acc.push({ ...currentClass, consecutiveClasses: 0 });
     }
 
     return acc;

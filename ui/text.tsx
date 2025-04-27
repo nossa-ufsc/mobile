@@ -23,7 +23,7 @@ const textVariants = cva('text-foreground', {
       caption2: 'text-[11px] leading-4',
     },
     color: {
-      primary: '',
+      primary: 'text-foreground',
       secondary: 'text-secondary-foreground/90',
       tertiary: 'text-muted-foreground/90',
       quarternary: 'text-muted-foreground/50',

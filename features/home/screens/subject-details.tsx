@@ -1,179 +1,189 @@
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
-import { View, Alert, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useSubjectDetails } from '../hooks/use-subject-details';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useCalendar } from '@/features/calendar/hooks/use-calendar';
+import { useRef, useState } from 'react';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { Sheet } from '@/ui/bottom-sheet';
+import { CalendarItemSheet } from '@/features/calendar/components/calendar-item-sheet';
+import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { CalendarItem } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme } from '@/utils/use-color-scheme';
+import { AbsenceSheet } from '../components/absence-sheet';
 
 export const SubjectDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { subject } = useSubjectDetails(id);
-  const {
-    addAbsence,
-    removeAbsence,
-    resetAbsences,
-    setAbsences,
-    totalClasses,
-    maxAbsences,
-    absences,
-    remainingAbsences,
-  } = useSubjectAbsence(id);
-  const { showActionSheetWithOptions } = useActionSheet();
+  const subjects = useEnvironmentStore((state) => state.subjects);
+  const subject = subjects?.find((s) => s.id === id);
+  const { getItemsBySubject } = useCalendar();
+  const { addAbsence, removeAbsence, maxAbsences, absences, remainingAbsences, totalAbsences } =
+    useSubjectAbsence(id);
+  const calendarSheetRef = useRef<BottomSheetModal>(null);
+  const absenceSheetRef = useRef<BottomSheetModal>(null);
+  const { colors } = useColorScheme();
+  const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
 
-  const handleResetAbsences = () => {
-    showActionSheetWithOptions(
-      {
-        title: 'Redefinir Faltas',
-        message: 'Tem certeza que deseja redefinir todas as faltas?',
-        options: ['Redefinir', 'Cancelar'],
-        cancelButtonIndex: 1,
-        destructiveButtonIndex: 0,
-      },
-      (selectedIndex) => {
-        if (selectedIndex === 0) {
-          resetAbsences();
-        }
-      }
-    );
+  if (!subjects || !subject) return null;
+
+  const handleAddPress = () => {
+    setSelectedItem(undefined);
+    calendarSheetRef.current?.present();
   };
 
-  const handleSetAbsences = () => {
-    Alert.prompt(
-      'Definir Faltas',
-      'Digite o número de faltas:',
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Salvar',
-          onPress: (value) => {
-            const number = parseInt(value || '0', 10);
-            if (!isNaN(number)) {
-              setAbsences(number);
-            }
-          },
-        },
-      ],
-      'plain-text',
-      absences.toString()
-    );
+  const handleClose = () => {
+    calendarSheetRef.current?.dismiss();
+    setSelectedItem(undefined);
   };
 
-  if (!subject) {
-    return (
-      <Container>
-        <View className="flex-1 items-center justify-center">
-          <Text variant="callout" color="tertiary">
-            Matéria não encontrada
-          </Text>
-        </View>
-      </Container>
-    );
-  }
+  const handleCloseAbsence = () => {
+    absenceSheetRef.current?.dismiss();
+  };
+
+  const handlePressItem = (item: CalendarItem) => {
+    setSelectedItem(item);
+    calendarSheetRef.current?.present();
+  };
+
+  const sortedItems = getItemsBySubject(subject).sort((a, b) => {
+    const now = new Date();
+    const aDate = new Date(a.date);
+    const bDate = new Date(b.date);
+    const aIsPast = aDate < now;
+    const bIsPast = bDate < now;
+
+    if (aIsPast && !bIsPast) return 1;
+    if (!aIsPast && bIsPast) return -1;
+    return aDate.getTime() - bDate.getTime();
+  });
+
+  const handleAddAbsence = () => {
+    absenceSheetRef.current?.present();
+  };
 
   return (
     <Container scrollable className="px-4">
-      <View className="py-4">
+      <View className="pb-4 pt-2">
         <Text variant="title1" numberOfLines={2} className="mb-1">
           {subject.name}
         </Text>
         <Text variant="subhead" color="tertiary">
           {subject.code} • Turma {subject.classGroup}
         </Text>
+        <Text variant="footnote" color="tertiary">
+          {subject.professors.map((professor) => professor).join(', ')}
+        </Text>
       </View>
 
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
-        <View className="border-b border-border p-4">
-          <Text variant="title3" className="mb-1">
-            Frequência
-          </Text>
-          <Text variant="footnote" color="tertiary">
-            Acompanhe sua frequência nesta disciplina
-          </Text>
+        <View className="flex-row items-center justify-between border-b border-border p-4">
+          <Text variant="title3">Frequência</Text>
+          <Pressable onPress={handleAddAbsence}>
+            <Ionicons name="add" size={24} color={colors.foreground} />
+          </Pressable>
         </View>
 
         <View className="p-4">
-          <View className="mb-6 flex-row items-center justify-center">
-            <Pressable
-              onPress={removeAbsence}
-              disabled={absences === 0}
-              className="bg-secondary/10 active:bg-secondary/20 h-12 w-12 items-center justify-center rounded-full disabled:opacity-30">
-              <Text variant="title2">−</Text>
-            </Pressable>
-
-            <Pressable onPress={handleSetAbsences} className="mx-6 items-center active:opacity-70">
-              <Text variant="largeTitle" className="mb-1">
-                {absences}
-              </Text>
+          <View className="bg-secondary/5 mb-6 flex-row items-center justify-between rounded-xl p-4">
+            <View className="items-center">
+              <Text variant="title2">{totalAbsences}</Text>
               <Text variant="caption2" color="tertiary">
-                FALTAS
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={addAbsence}
-              className="bg-secondary/10 active:bg-secondary/20 h-12 w-12 items-center justify-center rounded-full">
-              <Text variant="title2">+</Text>
-            </Pressable>
-          </View>
-
-          <View className="bg-secondary/5 flex-row justify-between rounded-xl p-4">
-            <View>
-              <Text variant="callout">{totalClasses}</Text>
-              <Text variant="caption2" color="tertiary">
-                Total de Aulas
+                Total de Faltas
               </Text>
             </View>
+            <View className="h-8 w-[1px] bg-border" />
             <View className="items-center">
-              <Text variant="callout">{maxAbsences}</Text>
+              <Text variant="title2">{maxAbsences}</Text>
               <Text variant="caption2" color="tertiary">
                 Máximo de Faltas
               </Text>
             </View>
-            <View className="items-end">
-              <Text variant="callout">{remainingAbsences}</Text>
+            <View className="h-8 w-[1px] bg-border" />
+            <View className="items-center">
+              <Text variant="title2">{remainingAbsences}</Text>
               <Text variant="caption2" color="tertiary">
                 Faltas Restantes
               </Text>
             </View>
           </View>
-        </View>
 
-        <Pressable
-          onPress={handleResetAbsences}
-          disabled={absences === 0}
-          className="active:bg-secondary/10 flex-row items-center justify-center border-t border-border p-4">
-          <Text variant="body" color="tertiary" className={absences === 0 ? 'opacity-30' : ''}>
-            Redefinir faltas
-          </Text>
-        </Pressable>
+          {absences.length === 0 ? (
+            <Text variant="callout" color="tertiary" className="text-center">
+              Nenhuma falta registrada
+            </Text>
+          ) : (
+            absences
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              .map((entry) => (
+                <View
+                  key={entry.id}
+                  className="bg-secondary/5 mb-3 flex-row items-center justify-between rounded-xl p-4">
+                  <View>
+                    <Text variant="callout">
+                      {entry.count} aula{entry.count > 1 ? 's' : ''}
+                    </Text>
+                    <Text variant="caption2" color="tertiary">
+                      {new Date(entry.date).toLocaleDateString('pt-BR')}
+                    </Text>
+                  </View>
+                  <Pressable
+                    onPress={() => removeAbsence(entry.id)}
+                    className="bg-destructive/10 active:bg-destructive/20 h-8 w-8 items-center justify-center rounded-full">
+                    <Text variant="callout" className="text-destructive">
+                      ×
+                    </Text>
+                  </Pressable>
+                </View>
+              ))
+          )}
+        </View>
       </View>
 
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
-        <View className="border-b border-border p-4">
-          <Text variant="title3" className="mb-1">
-            {subject.professors.length > 1 ? 'Professores' : 'Professor'}
-          </Text>
+        <View className="flex-row items-center justify-between border-b border-border p-4">
+          <Text variant="title3">Atividades</Text>
+          <Pressable onPress={handleAddPress}>
+            <Ionicons name="add" size={24} color={colors.foreground} />
+          </Pressable>
         </View>
-        {subject.professors.map((professor, index) => (
-          <View
-            key={index}
-            className={`p-4 ${
-              index !== subject.professors.length - 1 ? 'border-b border-border' : ''
-            }`}>
-            <Text variant="body">{professor}</Text>
+        {sortedItems.length === 0 ? (
+          <View className="p-4">
+            <Text variant="callout" color="tertiary" className="text-center">
+              Nenhuma atividade encontrada
+            </Text>
           </View>
-        ))}
+        ) : (
+          sortedItems.map((item, index) => {
+            const isPast = new Date(item.date) < new Date();
+            return (
+              <Pressable
+                key={item.id}
+                onPress={() => handlePressItem(item)}
+                className={`p-4 ${
+                  index !== sortedItems.length - 1 ? 'border-b border-border' : ''
+                } ${isPast ? 'opacity-50' : ''}`}>
+                <View className="mb-1 flex-row items-center justify-between">
+                  <Text variant="body">{item.title}</Text>
+                  <Text variant="subhead" color="tertiary">
+                    {new Date(item.date).toLocaleDateString('pt-BR')}
+                  </Text>
+                </View>
+                {item.description && (
+                  <Text variant="footnote" color="tertiary">
+                    {item.description}
+                  </Text>
+                )}
+              </Pressable>
+            );
+          })
+        )}
       </View>
 
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
         <View className="border-b border-border p-4">
-          <Text variant="title3" className="mb-1">
-            Horários
-          </Text>
+          <Text variant="title3">Horários</Text>
         </View>
         {subject.schedule.map((time, index) => (
           <View
@@ -195,6 +205,22 @@ export const SubjectDetails = () => {
           </View>
         ))}
       </View>
+
+      <Sheet ref={calendarSheetRef} snapPoints={['80%']}>
+        <CalendarItemSheet
+          subjects={subjects}
+          onClose={handleClose}
+          initialItem={selectedItem}
+          initialSubject={subject}
+        />
+      </Sheet>
+
+      <Sheet ref={absenceSheetRef} snapPoints={['50%']}>
+        <AbsenceSheet
+          onSubmit={(date, count) => addAbsence(date, count, true)}
+          onClose={handleCloseAbsence}
+        />
+      </Sheet>
     </Container>
   );
 };

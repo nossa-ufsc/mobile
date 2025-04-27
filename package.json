@@ -22,9 +22,9 @@
     "@gorhom/bottom-sheet": "^4.6.4",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-native-community/slider": "4.5.5",
+    "@react-native-menu/menu": "1.2.2",
     "@react-native-picker/picker": "2.9.0",
     "@react-navigation/native": "^7.0.3",
-    "@rn-primitives/avatar": "^1.1.0",
     "@rn-primitives/slot": "^1.1.0",
     "@roninoss/icons": "^0.0.4",
     "class-variance-authority": "^0.7.0",
@@ -48,6 +48,8 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
     "react-native-gesture-handler": "~2.20.2",
+    "react-native-ios-context-menu": "3.1.0",
+    "react-native-ios-utilities": "5.1.2",
     "react-native-mmkv": "^3.2.0",
     "react-native-pager-view": "6.5.1",
     "react-native-reanimated": "3.16.2",
@@ -56,6 +58,7 @@
     "react-native-uitextview": "^1.1.4",
     "react-native-web": "~0.19.10",
     "tailwind-merge": "^2.2.1",
+    "zeego": "^3.0.6",
     "zustand": "^4.5.1"
   },
   "devDependencies": {

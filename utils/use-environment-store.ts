@@ -39,7 +39,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       user: null,
       subjects: null,
       isAuthenticated: false,
-      semesterDuration: 18, // Default to 18 weeks
+      semesterDuration: 18,
 
       setUser: (user) => {
         set({
@@ -65,7 +65,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           user: null,
           subjects: null,
           isAuthenticated: false,
-          semesterDuration: 18, // Reset to default
+          semesterDuration: 18,
         });
       },
     }),

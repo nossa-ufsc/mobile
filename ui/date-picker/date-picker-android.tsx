@@ -3,7 +3,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { Button } from '@/ui/button';
-import { Text } from '@/components/nativewindui/Text';
+import { Text } from '@/ui/text';
 import { cn } from '@/utils/cn';
 
 export function DatePicker(

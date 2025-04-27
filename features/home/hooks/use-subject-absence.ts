@@ -1,3 +1,5 @@
+import { AbsenceEntry } from '@/types';
+import { generateRandomId } from '@/utils/generate-random-id';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 
 export const useSubjectAbsence = (subjectId: string) => {
@@ -8,37 +10,62 @@ export const useSubjectAbsence = (subjectId: string) => {
 
   const totalClasses = subject ? subject.weeklyClassCount * semesterDuration : 0;
   const maxAbsences = Math.floor(totalClasses * 0.25);
-  const absences = subject?.absenceCount ?? 0;
-  const remainingAbsences = Math.max(0, maxAbsences - absences);
+  const absences = subject?.absences ?? [];
+  const totalAbsences = absences.reduce((sum, entry) => sum + entry.count, 0);
+  const remainingAbsences = Math.max(0, maxAbsences - totalAbsences);
 
-  const addAbsence = async () => {
-    if (!subjects) return;
+  const addAbsence = async (date: Date, numberOfAbsences = 1, isManual = false) => {
+    if (!subjects || !subject) return;
 
-    const updatedSubjects = subjects.map((subject) => {
-      if (subject.id === subjectId) {
+    const newEntry: AbsenceEntry = {
+      id: generateRandomId(),
+      date: date.toDateString(),
+      count: numberOfAbsences,
+      isManual,
+    };
+
+    const updatedSubjects = subjects.map((s) => {
+      if (s.id === subjectId) {
         return {
-          ...subject,
-          absenceCount: (subject.absenceCount ?? 0) + 1,
+          ...s,
+          absences: [...(s.absences ?? []), newEntry],
         };
       }
-      return subject;
+      return s;
     });
 
     setSubjects(updatedSubjects);
   };
 
-  const removeAbsence = async () => {
+  const removeAbsence = async (entryId: string) => {
     if (!subjects) return;
 
-    const updatedSubjects = subjects.map((subject) => {
-      if (subject.id === subjectId) {
-        const newCount = Math.max(0, (subject.absenceCount ?? 0) - 1);
+    const updatedSubjects = subjects.map((s) => {
+      if (s.id === subjectId) {
         return {
-          ...subject,
-          absenceCount: newCount,
+          ...s,
+          absences: (s.absences ?? []).filter((entry) => entry.id !== entryId),
         };
       }
-      return subject;
+      return s;
+    });
+
+    setSubjects(updatedSubjects);
+  };
+
+  const updateAbsence = async (entryId: string, count: number) => {
+    if (!subjects) return;
+
+    const updatedSubjects = subjects.map((s) => {
+      if (s.id === subjectId) {
+        return {
+          ...s,
+          absences: (s.absences ?? []).map((entry) =>
+            entry.id === entryId ? { ...entry, count } : entry
+          ),
+        };
+      }
+      return s;
     });
 
     setSubjects(updatedSubjects);
@@ -47,30 +74,14 @@ export const useSubjectAbsence = (subjectId: string) => {
   const resetAbsences = async () => {
     if (!subjects) return;
 
-    const updatedSubjects = subjects.map((subject) => {
-      if (subject.id === subjectId) {
+    const updatedSubjects = subjects.map((s) => {
+      if (s.id === subjectId) {
         return {
-          ...subject,
-          absenceCount: 0,
+          ...s,
+          absences: [],
         };
       }
-      return subject;
-    });
-
-    setSubjects(updatedSubjects);
-  };
-
-  const setAbsences = async (count: number) => {
-    if (!subjects) return;
-
-    const updatedSubjects = subjects.map((subject) => {
-      if (subject.id === subjectId) {
-        return {
-          ...subject,
-          absenceCount: Math.max(0, count),
-        };
-      }
-      return subject;
+      return s;
     });
 
     setSubjects(updatedSubjects);
@@ -78,12 +89,12 @@ export const useSubjectAbsence = (subjectId: string) => {
 
   return {
     absences,
+    totalAbsences,
     maxAbsences,
     remainingAbsences,
     addAbsence,
     removeAbsence,
+    updateAbsence,
     resetAbsences,
-    setAbsences,
-    totalClasses,
   };
 };

@@ -1,8 +1,9 @@
-import { Link, Tabs } from 'expo-router';
-import { HeaderButton } from '@/ui/header-button';
+import { Tabs } from 'expo-router';
 import { TabBarIcon } from '@/ui/tab-bar-icon';
+import { useColorScheme } from '@/utils/use-color-scheme';
 
 export default function TabLayout() {
+  const { colors } = useColorScheme();
   return (
     <Tabs
       screenOptions={{
@@ -12,12 +13,20 @@ export default function TabLayout() {
         name="(home)"
         options={{
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <HeaderButton />
-            </Link>
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="home" color={focused ? colors.grey : colors.grey4} />
           ),
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tabs.Screen
+        name="(calendar)"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="calendar" color={focused ? colors.grey : colors.grey4} />
+          ),
+          tabBarShowLabel: false,
         }}
       />
     </Tabs>

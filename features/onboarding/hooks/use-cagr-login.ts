@@ -5,6 +5,9 @@ import * as SecureStore from 'expo-secure-store';
 import { CAGRSystemResponse, Subject, User } from '../../../types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
 import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../utils/time-mapping';
+import { generateSemesterCalendar } from '../../../features/calendar/utils/generate-semester-calendar';
+import { getSemesterStartDate } from '../../../features/calendar/utils/get-semester-start-date';
+import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -37,8 +40,15 @@ export interface UseCAGRLoginResult {
 }
 
 export const useCAGRLogin = (): UseCAGRLoginResult => {
-  const { setUser, setSubjects, clearEnvironment, isAuthenticated, setIsAuthenticated } =
-    useEnvironmentStore();
+  const {
+    setUser,
+    setSubjects,
+    clearEnvironment,
+    isAuthenticated,
+    setIsAuthenticated,
+    semesterDuration,
+  } = useEnvironmentStore();
+  const { clearCalendar, addClassItem } = useCalendar();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -141,7 +151,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
           code: subject.codigoDisciplina,
           classGroup,
           weeklyClassCount: subject.numeroAulas,
-          absenceCount: 0,
+          absences: [],
           professors,
           schedule: subjectTimes,
         });
@@ -179,7 +189,6 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     }
   };
 
-  // Handle the authentication response
   useEffect(() => {
     if (isAuthenticated) return;
     if (response?.type === 'success') {
@@ -196,6 +205,14 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
           const userSubjects = await fetchSubjects(token);
           setSubjects(userSubjects);
+
+          const semesterStartDate = getSemesterStartDate();
+          const calendarItems = generateSemesterCalendar(
+            userSubjects,
+            semesterDuration,
+            semesterStartDate
+          );
+          calendarItems.forEach((item) => addClassItem(item));
 
           setIsAuthenticated(true);
         } catch (error) {
@@ -225,6 +242,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   const handleLogout = async () => {
     await saveAccessToken(null);
     clearEnvironment();
+    clearCalendar();
   };
 
   const reloadSubjects = async () => {
@@ -238,6 +256,14 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       setIsLoading(true);
       const userSubjects = await fetchSubjects(token);
       setSubjects(userSubjects);
+
+      const semesterStartDate = getSemesterStartDate();
+      const calendarItems = generateSemesterCalendar(
+        userSubjects,
+        semesterDuration,
+        semesterStartDate
+      );
+      calendarItems.forEach((item) => addClassItem(item));
     } catch (error) {
       console.error('Error reloading subjects:', error);
     } finally {

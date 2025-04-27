@@ -4,13 +4,20 @@ export interface User {
   enrollmentNumber: string;
 }
 
+export interface AbsenceEntry {
+  id: string;
+  date: string;
+  count: number;
+  isManual: boolean;
+}
+
 export interface Subject {
   id: string;
   name: string;
   code: string;
   classGroup: string;
   weeklyClassCount: number;
-  absenceCount: number;
+  absences: AbsenceEntry[];
   professors: string[];
   schedule: SubjectTime[];
 }
@@ -43,4 +50,17 @@ export interface CAGRSystemResponse {
       nomeProfessor: string;
     }[];
   }[];
+}
+
+export interface CalendarItem {
+  id: string;
+  title: string;
+  description?: string;
+  date: Date;
+  subject: Subject;
+  type: 'task' | 'exam' | 'assignment';
+}
+
+export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {
+  consecutiveClasses: number;
 }

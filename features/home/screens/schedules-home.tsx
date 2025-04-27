@@ -2,7 +2,7 @@ import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
 import { Button } from '@/ui/button';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
-import { WeekDaySelector } from '@/ui/week-day-selector';
+import { WeekDaySelector } from '@/features/home/components/week-day-selector';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -11,23 +11,33 @@ import { ClassCard } from '../components/class-card';
 import { NoClasses } from '../components/no-classes';
 import { router } from 'expo-router';
 
+const getDateFromDayIndex = (dayIndex: number) => {
+  const today = new Date();
+  const currentDay = today.getDate();
+  const currentWeekDay = today.getDay();
+
+  const adjustedCurrentWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay;
+  const diff = dayIndex - adjustedCurrentWeekDay;
+
+  const targetDate = new Date(today);
+  targetDate.setDate(currentDay + diff);
+  return targetDate;
+};
+
 export const SchedulesHome = () => {
   const { handleLogin, isAuthenticated, isLoading } = useCAGRLogin();
   const { selectedDay, setSelectedDay } = useScheduleStore();
   const classesForDay = useClassesForDay();
 
-  // Use Gesture API to handle swipe gestures
   const swipeGesture = Gesture.Pan()
     .activeOffsetX([-20, 20])
     .onEnd((event) => {
-      if (Math.abs(event.velocityX) < 500) return; // Ignore slow swipes
+      if (Math.abs(event.velocityX) < 500) return;
 
       if (event.velocityX > 0) {
-        // Swipe right - go to previous day
         const newDay = selectedDay === 0 ? 6 : selectedDay - 1;
         runOnJS(setSelectedDay)(newDay);
       } else {
-        // Swipe left - go to next day
         const newDay = selectedDay === 6 ? 0 : selectedDay + 1;
         runOnJS(setSelectedDay)(newDay);
       }
@@ -67,12 +77,14 @@ export const SchedulesHome = () => {
                       key={`${classInfo.subject.id}-${index}`}
                       subject={classInfo.subject}
                       time={classInfo.time}
+                      consecutiveClasses={classInfo.consecutiveClasses}
                       onPress={() => {
                         router.push({
                           pathname: '/subject/[id]',
                           params: { id: classInfo.subject.id },
                         });
                       }}
+                      currentDate={getDateFromDayIndex(selectedDay)}
                     />
                   ))
                 ) : (
