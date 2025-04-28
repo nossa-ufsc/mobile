@@ -21,6 +21,6 @@ const TABS_OPTIONS = {
 const MODAL_OPTIONS = {
   presentation: 'modal',
   animation: 'fade_from_bottom', // for android
-  title: 'Settings',
+  title: 'Configurações',
   headerRight: () => <ThemeToggle />,
 } as const;

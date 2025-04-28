@@ -59,6 +59,9 @@ export interface CalendarItem {
   date: Date;
   subject: Subject;
   type: 'task' | 'exam' | 'assignment';
+  notificationEnabled?: boolean;
+  notificationDate?: Date;
+  notificationId?: string;
 }
 
 export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {

@@ -13,10 +13,14 @@ interface EnvironmentState {
   subjects: Subject[] | null;
   isAuthenticated: boolean;
   semesterDuration: number;
+  notificationDelay: number;
+  notificationsEnabled: boolean;
   setUser: (user: User | null) => void;
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   setSemesterDuration: (duration: number) => void;
+  setNotificationDelay: (delay: number) => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
   clearEnvironment: () => void;
 }
 
@@ -40,6 +44,8 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       subjects: null,
       isAuthenticated: false,
       semesterDuration: 18,
+      notificationDelay: 15,
+      notificationsEnabled: true,
 
       setUser: (user) => {
         set({
@@ -60,12 +66,22 @@ export const useEnvironmentStore = create<EnvironmentState>()(
         set({ semesterDuration: duration });
       },
 
+      setNotificationDelay: (delay) => {
+        set({ notificationDelay: delay });
+      },
+
+      setNotificationsEnabled: (enabled) => {
+        set({ notificationsEnabled: enabled });
+      },
+
       clearEnvironment: () => {
         set({
           user: null,
           subjects: null,
           isAuthenticated: false,
           semesterDuration: 18,
+          notificationDelay: 15,
+          notificationsEnabled: true,
         });
       },
     }),

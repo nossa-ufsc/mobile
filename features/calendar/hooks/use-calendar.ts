@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
 import { CalendarClassItem, CalendarItem, Subject } from '@/types';
+import { useCalendarNotifications } from './use-calendar-notifications';
+import { generateRandomId } from '@/utils/generate-random-id';
 
 const persistedCalendarStorage = new MMKV({
   id: 'calendar-storage',
@@ -10,15 +12,15 @@ const persistedCalendarStorage = new MMKV({
 interface CalendarState {
   items: CalendarItem[];
   classItems: CalendarClassItem[];
-  addItem: (item: Omit<CalendarItem, 'id'>) => void;
+  addItemWithoutNotification: (item: CalendarItem) => void;
   addClassItem: (item: CalendarClassItem) => void;
   getItemsByDate: (date: Date) => CalendarItem[];
   getClassItemsByDate: (date: Date) => CalendarClassItem[];
   getItemsByDateAndSubject: (date: Date, subject: Subject) => CalendarItem[] | undefined;
   getItemsBySubject: (subject: Subject) => CalendarItem[];
-  removeItem: (id: string) => void;
-  updateItem: (id: string, item: Partial<CalendarItem>) => void;
-  clearCalendar: () => void;
+  removeItemWithoutNotification: (id: string) => void;
+  updateItemWithoutNotification: (id: string, item: Partial<CalendarItem>) => void;
+  clearCalendarWithoutNotification: () => void;
 }
 
 const systemStorageZustandAdapter = {
@@ -46,21 +48,13 @@ const useCalendarStore = create<CalendarState>()(
   persist(
     (set, get) => ({
       items: [],
+      classItems: [],
 
-      addItem: (newItem) => {
+      addItemWithoutNotification: (newItem) => {
         set((state) => ({
-          items: [
-            ...state.items,
-            {
-              ...newItem,
-              id: Math.random().toString(36).substring(7),
-              date: new Date(newItem.date),
-            },
-          ],
+          items: [...state.items, newItem],
         }));
       },
-
-      classItems: [],
 
       addClassItem: (newItem) => {
         set((state) => ({
@@ -86,20 +80,20 @@ const useCalendarStore = create<CalendarState>()(
         return get().items.filter((item) => item.subject.id === subject.id);
       },
 
-      removeItem: (id) => {
+      removeItemWithoutNotification: (id) => {
         set((state) => ({
           items: state.items.filter((item) => item.id !== id),
         }));
       },
 
-      updateItem: (id, updatedItem) => {
+      updateItemWithoutNotification: (id, updatedItem) => {
         set((state) => ({
           items: state.items.map((item) => (item.id === id ? { ...item, ...updatedItem } : item)),
         }));
       },
 
-      clearCalendar: () => {
-        set({ items: [] });
+      clearCalendarWithoutNotification: () => {
+        set({ items: [], classItems: [] });
       },
     }),
     {
@@ -113,16 +107,72 @@ export const useCalendar = () => {
   const {
     items,
     classItems,
-    addItem,
+    addItemWithoutNotification,
     addClassItem,
     getItemsByDate,
     getClassItemsByDate,
     getItemsByDateAndSubject,
     getItemsBySubject,
-    removeItem,
-    updateItem,
-    clearCalendar,
+    removeItemWithoutNotification,
+    updateItemWithoutNotification,
+    clearCalendarWithoutNotification,
   } = useCalendarStore();
+
+  const { scheduleNotification, cancelItemNotification } = useCalendarNotifications();
+
+  const addItem = async (newItem: Omit<CalendarItem, 'id'>) => {
+    const id = generateRandomId();
+    let notificationId: string | undefined;
+
+    if (newItem.notificationEnabled) {
+      notificationId = await scheduleNotification({ ...newItem, id } as CalendarItem);
+    }
+
+    const itemWithNotification = {
+      ...newItem,
+      id,
+      date: new Date(newItem.date),
+      notificationId,
+    };
+
+    addItemWithoutNotification(itemWithNotification);
+  };
+
+  const removeItem = async (id: string) => {
+    const item = items.find((item) => item.id === id);
+
+    if (item?.notificationId) {
+      await cancelItemNotification(item.notificationId);
+    }
+
+    removeItemWithoutNotification(id);
+  };
+
+  const updateItem = async (id: string, updatedItem: Partial<CalendarItem>) => {
+    const currentItem = items.find((item) => item.id === id);
+
+    if (currentItem?.notificationId) {
+      await cancelItemNotification(currentItem.notificationId);
+    }
+
+    let notificationId: string | undefined;
+    if (updatedItem.notificationEnabled) {
+      const newItem = { ...currentItem, ...updatedItem };
+      notificationId = await scheduleNotification(newItem as CalendarItem);
+    }
+
+    updateItemWithoutNotification(id, { ...updatedItem, notificationId });
+  };
+
+  const clearCalendar = async () => {
+    await Promise.all(
+      items
+        .filter((item) => item.notificationId)
+        .map((item) => cancelItemNotification(item.notificationId!))
+    );
+
+    clearCalendarWithoutNotification();
+  };
 
   return {
     items,
@@ -134,6 +184,7 @@ export const useCalendar = () => {
     removeItem,
     updateItem,
     clearCalendar,
+    clearCalendarWithoutNotification,
     classItems,
     addClassItem,
   };

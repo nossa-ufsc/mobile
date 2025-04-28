@@ -2,7 +2,7 @@ import { CalendarItem, Subject } from '@/types';
 import { Button } from '@/ui/button';
 import { DatePicker } from '@/ui/date-picker';
 import { Text } from '@/ui/text';
-import { View, Pressable, Alert } from 'react-native';
+import { View, Pressable, Alert, Switch } from 'react-native';
 import { useState } from 'react';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
@@ -45,12 +45,29 @@ export const CalendarItemSheet = ({
   );
   const [subject, setSubject] = useState(initialItem?.subject ?? initialSubject ?? subjects[0]);
   const [type, setType] = useState<CalendarItem['type']>(initialItem?.type ?? 'exam');
+  const [notificationEnabled, setNotificationEnabled] = useState(
+    initialItem?.notificationEnabled ?? false
+  );
+  const [notificationDate, setNotificationDate] = useState(
+    initialItem?.notificationDate
+      ? new Date(initialItem.notificationDate)
+      : new Date(date.getTime() + 24 * 60 * 60 * 1000)
+  );
 
   const selectedType = ITEM_TYPES.find((t) => t.value === type);
 
   const handleDateChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate) {
       setDate(selectedDate);
+      if (notificationDate <= selectedDate) {
+        setNotificationDate(new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000));
+      }
+    }
+  };
+
+  const handleNotificationDateChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+    if (selectedDate) {
+      setNotificationDate(selectedDate);
     }
   };
 
@@ -63,6 +80,8 @@ export const CalendarItemSheet = ({
       date,
       type,
       subject,
+      notificationEnabled,
+      notificationDate: notificationEnabled ? notificationDate : undefined,
     };
 
     if (initialItem) {
@@ -76,6 +95,8 @@ export const CalendarItemSheet = ({
     setDate(new Date());
     setSubject(subjects[0]);
     setType('exam');
+    setNotificationEnabled(false);
+    setNotificationDate(new Date(date.getTime() + 24 * 60 * 60 * 1000));
     onClose?.();
   };
 
@@ -151,10 +172,10 @@ export const CalendarItemSheet = ({
 
         <View className="gap-2">
           <Text color="primary" variant="subhead">
-            Descrição
+            Observações
           </Text>
           <BottomSheetTextInput
-            placeholder="Digite uma descrição (opcional)"
+            placeholder="Digite uma observação (opcional)"
             value={description}
             onChangeText={setDescription}
             multiline
@@ -183,6 +204,27 @@ export const CalendarItemSheet = ({
             value={date}
             minuteInterval={5}
           />
+        </View>
+
+        <View className="gap-2">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-base">Notificação</Text>
+            <Switch
+              value={notificationEnabled}
+              onValueChange={setNotificationEnabled}
+              trackColor={{ false: colors.grey2, true: colors.primary }}
+            />
+          </View>
+          {notificationEnabled && (
+            <DatePicker
+              locale="pt-BR"
+              mode="datetime"
+              onChange={handleNotificationDateChange}
+              value={notificationDate}
+              minimumDate={new Date(date.getTime() + 60 * 1000)}
+              minuteInterval={5}
+            />
+          )}
         </View>
 
         {!initialSubject && (

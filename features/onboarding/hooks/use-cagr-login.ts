@@ -8,6 +8,7 @@ import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../u
 import { generateSemesterCalendar } from '../../../features/calendar/utils/generate-semester-calendar';
 import { getSemesterStartDate } from '../../../features/calendar/utils/get-semester-start-date';
 import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
+import { useNotifications } from '@/utils/use-notifications';
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -48,11 +49,11 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     setIsAuthenticated,
     semesterDuration,
   } = useEnvironmentStore();
-  const { clearCalendar, addClassItem } = useCalendar();
+  const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
+  const { scheduleClassNotification, cancelAllNotifications } = useNotifications();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Save access token to secure store
   const saveAccessToken = async (token: string | null) => {
     try {
       if (token) {
@@ -213,6 +214,9 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
             semesterStartDate
           );
           calendarItems.forEach((item) => addClassItem(item));
+          calendarItems.forEach((item) =>
+            scheduleClassNotification(item.subject.name, item.date, item.description)
+          );
 
           setIsAuthenticated(true);
         } catch (error) {
@@ -241,6 +245,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
   const handleLogout = async () => {
     await saveAccessToken(null);
+    await cancelAllNotifications();
     clearEnvironment();
     clearCalendar();
   };
@@ -257,6 +262,10 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       const userSubjects = await fetchSubjects(token);
       setSubjects(userSubjects);
 
+      clearCalendarWithoutNotification();
+
+      await cancelAllNotifications();
+
       const semesterStartDate = getSemesterStartDate();
       const calendarItems = generateSemesterCalendar(
         userSubjects,
@@ -264,6 +273,9 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
         semesterStartDate
       );
       calendarItems.forEach((item) => addClassItem(item));
+      calendarItems.forEach((item) =>
+        scheduleClassNotification(item.subject.name, item.date, item.description)
+      );
     } catch (error) {
       console.error('Error reloading subjects:', error);
     } finally {
