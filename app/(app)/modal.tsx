@@ -1,9 +1,8 @@
 import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
-import { Button } from '@/ui/button';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, View, TouchableOpacity, Switch } from 'react-native';
+import { Platform, View, TouchableOpacity, Switch, Alert } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
@@ -15,7 +14,6 @@ export default function Modal() {
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const {
-    setSubjects,
     semesterDuration,
     setSemesterDuration,
     notificationDelay,
@@ -23,7 +21,7 @@ export default function Modal() {
     notificationsEnabled,
     setNotificationsEnabled,
   } = useEnvironmentStore();
-  const { cancelAllNotifications } = useNotifications();
+  const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
   const handleSemesterDuration = () => {
     const options = ['15 semanas', '16 semanas', '17 semanas', '18 semanas', 'Cancelar'];
@@ -76,30 +74,65 @@ export default function Modal() {
     }
     setNotificationsEnabled(value);
     if (value) {
-      await reloadSubjects();
+      setTimeout(async () => {
+        await generateClassesNotifications();
+      }, 1000);
     }
   };
 
+  const handleReloadSchedule = async () => {
+    Alert.alert(
+      'Recarregar Grade',
+      'Ao recarregar a grade, você perderá todos os itens do calendário e faltas registradas. Deseja continuar?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Recarregar',
+          style: 'destructive',
+          onPress: reloadSubjects,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   const handleScheduleActions = () => {
-    const options = ['Recarregar grade', 'Apagar grade', 'Cancelar'];
-    const destructiveButtonIndex = 1;
-    const cancelButtonIndex = 2;
+    const options = ['Recarregar grade', 'Cancelar'];
+    const cancelButtonIndex = 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        destructiveButtonIndex,
         title: 'Gerenciar Grade',
-        message: 'Escolha uma ação para sua grade horária',
       },
       async (selectedIndex) => {
         if (selectedIndex === 0) {
-          await reloadSubjects();
-        } else if (selectedIndex === 1) {
-          setSubjects(null);
+          handleReloadSchedule();
         }
       }
+    );
+  };
+
+  const confirmLogout = () => {
+    Alert.alert(
+      'Sair da conta',
+      'Ao sair da conta, você perderá todas as suas configurações e dados salvos. Deseja continuar?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: handleLogout,
+        },
+      ],
+      { cancelable: true }
     );
   };
 
@@ -110,11 +143,10 @@ export default function Modal() {
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
           Geral
         </Text>
-
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
             onPress={handleSemesterDuration}
-            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
+            className="flex-row items-center justify-between px-4 py-3">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400 shadow-sm">
                 <MaterialCommunityIcons name="calendar-clock" size={24} color="white" />
@@ -128,7 +160,12 @@ export default function Modal() {
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </View>
           </TouchableOpacity>
+        </View>
 
+        <Text variant="footnote" className="mb-2 px-2 text-gray-500">
+          Notificações
+        </Text>
+        <View className="mb-6 rounded-lg bg-card">
           <View className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-red-400 shadow-sm">
@@ -146,7 +183,7 @@ export default function Modal() {
           {notificationsEnabled && (
             <TouchableOpacity
               onPress={handleNotificationDelay}
-              className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
+              className="flex-row items-center justify-between px-4 py-3">
               <View className="flex-row items-center gap-3">
                 <View className="h-8 w-8 items-center justify-center rounded-md bg-red-400/80 shadow-sm">
                   <MaterialCommunityIcons name="clock-time-four" size={24} color="white" />
@@ -161,10 +198,15 @@ export default function Modal() {
               </View>
             </TouchableOpacity>
           )}
+        </View>
 
+        <Text variant="footnote" className="mb-2 px-2 text-gray-500">
+          Usuário
+        </Text>
+        <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
             onPress={handleScheduleActions}
-            className="flex-row items-center justify-between px-4 py-3">
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400 shadow-sm">
                 <MaterialCommunityIcons name="timetable" size={24} color="white" />
@@ -173,11 +215,19 @@ export default function Modal() {
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
-        </View>
 
-        <Button onPress={handleLogout} variant="secondary" size="lg" className="w-full">
-          <Text>Sair</Text>
-        </Button>
+          <TouchableOpacity
+            onPress={confirmLogout}
+            className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-red-500 shadow-sm">
+                <MaterialCommunityIcons name="logout" size={24} color="white" />
+              </View>
+              <Text variant="body">Sair da conta</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+          </TouchableOpacity>
+        </View>
       </Container>
     </>
   );

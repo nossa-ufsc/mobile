@@ -2,6 +2,9 @@ import * as Notifications from 'expo-notifications';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { useEnvironmentStore } from './use-environment-store';
+import { CalendarClassItem } from '@/types';
+import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
+import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -12,16 +15,16 @@ Notifications.setNotificationHandler({
 });
 
 export const useNotifications = () => {
-  const [expoPushToken, setExpoPushToken] = useState<string>('');
   const [notification, setNotification] = useState<Notifications.Notification>();
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
-  const { notificationDelay, notificationsEnabled } = useEnvironmentStore();
+  const { notificationDelay, notificationsEnabled, subjects, semesterDuration } =
+    useEnvironmentStore();
 
   useEffect(() => {
     if (!notificationsEnabled) return;
 
-    registerForPushNotificationsAsync().then((token) => token && setExpoPushToken(token));
+    registerForPushNotificationsAsync();
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -41,7 +44,12 @@ export const useNotifications = () => {
     };
   }, [notificationsEnabled]);
 
-  const scheduleClassNotification = async (className: string, date: Date, classPlace?: string) => {
+  const scheduleClassNotification = async (
+    className: string,
+    date: Date,
+    notificationsEnabled: boolean,
+    classPlace?: string
+  ) => {
     if (!notificationsEnabled) return;
 
     const notificationDate = new Date(date);
@@ -113,13 +121,29 @@ export const useNotifications = () => {
     await Notifications.cancelAllScheduledNotificationsAsync();
   };
 
+  const generateClassesNotifications = async (classes?: CalendarClassItem[]) => {
+    let calendarItems = classes;
+    if (!classes) {
+      if (!subjects) return;
+
+      const semesterStartDate = getSemesterStartDate();
+      calendarItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
+    }
+
+    if (!calendarItems) return;
+
+    calendarItems.forEach(async (item) => {
+      await scheduleClassNotification(item.subject.name, item.date, true, item.description);
+    });
+  };
+
   return {
-    expoPushToken,
     notification,
     scheduleClassNotification,
     scheduleCalendarItemNotification,
     cancelNotification,
     cancelAllNotifications,
+    generateClassesNotifications,
   };
 };
 
@@ -144,7 +168,4 @@ async function registerForPushNotificationsAsync() {
   if (finalStatus !== 'granted') {
     return null;
   }
-
-  const token = (await Notifications.getExpoPushTokenAsync()).data;
-  return token;
 }

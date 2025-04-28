@@ -50,7 +50,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     semesterDuration,
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
-  const { scheduleClassNotification, cancelAllNotifications } = useNotifications();
+  const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -214,9 +214,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
             semesterStartDate
           );
           calendarItems.forEach((item) => addClassItem(item));
-          calendarItems.forEach((item) =>
-            scheduleClassNotification(item.subject.name, item.date, item.description)
-          );
+          generateClassesNotifications(calendarItems);
 
           setIsAuthenticated(true);
         } catch (error) {
@@ -273,9 +271,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
         semesterStartDate
       );
       calendarItems.forEach((item) => addClassItem(item));
-      calendarItems.forEach((item) =>
-        scheduleClassNotification(item.subject.name, item.date, item.description)
-      );
+      generateClassesNotifications(calendarItems);
     } catch (error) {
       console.error('Error reloading subjects:', error);
     } finally {

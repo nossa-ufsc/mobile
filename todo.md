@@ -1,7 +1,7 @@
 ## Still missing:
 
 [ ] - Widgets
-[ ] - Notifications setup
+[x] - Notifications setup
 [ ] - Events/Parties Logic
 [x] - Calendar/reminders Logic
 [x] - Show next calendar items on the subject details
