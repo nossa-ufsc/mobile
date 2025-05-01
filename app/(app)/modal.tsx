@@ -8,6 +8,15 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useNotifications } from '@/utils/use-notifications';
+import { Campus } from '@/types';
+
+const CAMPUS_LABELS: Record<Campus, string> = {
+  [Campus.FLORIANOPOLIS]: 'Florianópolis',
+  [Campus.ARARANGUA]: 'Araranguá',
+  [Campus.BLUMENAU]: 'Blumenau',
+  [Campus.JOINVILLE]: 'Joinville',
+  [Campus.CURITIBANOS]: 'Curitibanos',
+};
 
 export default function Modal() {
   const { handleLogout, reloadSubjects } = useCAGRLogin();
@@ -20,6 +29,8 @@ export default function Modal() {
     setNotificationDelay,
     notificationsEnabled,
     setNotificationsEnabled,
+    campus,
+    setCampus,
   } = useEnvironmentStore();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
@@ -40,6 +51,25 @@ export default function Modal() {
         const weeks =
           selectedIndex === 0 ? 15 : selectedIndex === 1 ? 16 : selectedIndex === 2 ? 17 : 18;
         setSemesterDuration(weeks);
+      }
+    );
+  };
+
+  const handleCampusChange = () => {
+    const campusOptions = Object.values(Campus);
+    const options = [...campusOptions.map((c) => CAMPUS_LABELS[c]), 'Cancelar'];
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        title: 'Campus',
+        message: 'Escolha o seu campus',
+      },
+      (selectedIndex) => {
+        if (selectedIndex === cancelButtonIndex) return;
+        setCampus(campusOptions[selectedIndex!]);
       }
     );
   };
@@ -146,7 +176,7 @@ export default function Modal() {
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
             onPress={handleSemesterDuration}
-            className="flex-row items-center justify-between px-4 py-3">
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400 shadow-sm">
                 <MaterialCommunityIcons name="calendar-clock" size={24} color="white" />
@@ -156,6 +186,23 @@ export default function Modal() {
             <View className="flex-row items-center">
               <Text variant="subhead" color="primary" className="mr-2">
                 {semesterDuration} semanas
+              </Text>
+              <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleCampusChange}
+            className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400/80 shadow-sm">
+                <MaterialCommunityIcons name="school" size={24} color="white" />
+              </View>
+              <Text variant="body">Campus</Text>
+            </View>
+            <View className="flex-row items-center">
+              <Text variant="subhead" color="primary" className="mr-2">
+                {CAMPUS_LABELS[campus]}
               </Text>
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </View>

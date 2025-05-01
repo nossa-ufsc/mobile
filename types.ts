@@ -1,3 +1,28 @@
+export enum Campus {
+  ARARANGUA = 'ararangua',
+  FLORIANOPOLIS = 'florianopolis',
+  JOINVILLE = 'joinville',
+  BLUMENAU = 'blumenau',
+  CURITIBANOS = 'curitibanos',
+}
+
+interface EventCreator {
+  name: string;
+  enrollmentNumber: string;
+}
+
+export interface Event {
+  id: string;
+  created_at: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  location: string;
+  image_url: string;
+  campus: Campus;
+  created_by: EventCreator;
+}
+
 export interface User {
   id: string;
   name: string;

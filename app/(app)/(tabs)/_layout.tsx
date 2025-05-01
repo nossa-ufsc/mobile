@@ -29,6 +29,16 @@ export default function TabLayout() {
           tabBarShowLabel: false,
         }}
       />
+      <Tabs.Screen
+        name="(events)"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="location" color={focused ? colors.grey : colors.grey4} size={24} />
+          ),
+          tabBarShowLabel: false,
+        }}
+      />
     </Tabs>
   );
 }

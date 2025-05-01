@@ -2,13 +2,14 @@ import * as AuthSession from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
-import { CAGRSystemResponse, Subject, User } from '../../../types';
+import { CAGRSystemResponse, Subject, User } from '@/types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
 import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../utils/time-mapping';
 import { generateSemesterCalendar } from '../../../features/calendar/utils/generate-semester-calendar';
 import { getSemesterStartDate } from '../../../features/calendar/utils/get-semester-start-date';
 import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
 import { useNotifications } from '@/utils/use-notifications';
+import { supabase } from '@/utils/supabase';
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -216,6 +217,13 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
           calendarItems.forEach((item) => addClassItem(item));
           generateClassesNotifications(calendarItems);
 
+          const { error } = await supabase.auth.signInAnonymously();
+
+          if (error) {
+            console.error('Error signing in anonymously:', error);
+            // TODO: add posthog logs here to track the error
+          }
+
           setIsAuthenticated(true);
         } catch (error) {
           console.error('Authentication error:', error);
@@ -246,6 +254,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     await cancelAllNotifications();
     clearEnvironment();
     clearCalendar();
+    await supabase.auth.signOut();
   };
 
   const reloadSubjects = async () => {

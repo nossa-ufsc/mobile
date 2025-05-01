@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { Subject, User } from '../types';
+import { Subject, User, Campus } from '@/types';
 
 import { MMKV } from 'react-native-mmkv';
 
@@ -15,12 +15,14 @@ interface EnvironmentState {
   semesterDuration: number;
   notificationDelay: number;
   notificationsEnabled: boolean;
+  campus: Campus;
   setUser: (user: User | null) => void;
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   setSemesterDuration: (duration: number) => void;
   setNotificationDelay: (delay: number) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
+  setCampus: (campus: Campus) => void;
   clearEnvironment: () => void;
 }
 
@@ -46,6 +48,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       semesterDuration: 18,
       notificationDelay: 15,
       notificationsEnabled: true,
+      campus: Campus.FLORIANOPOLIS,
 
       setUser: (user) => {
         set({
@@ -74,6 +77,10 @@ export const useEnvironmentStore = create<EnvironmentState>()(
         set({ notificationsEnabled: enabled });
       },
 
+      setCampus: (campus) => {
+        set({ campus });
+      },
+
       clearEnvironment: () => {
         set({
           user: null,
@@ -82,6 +89,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           semesterDuration: 18,
           notificationDelay: 15,
           notificationsEnabled: true,
+          campus: Campus.FLORIANOPOLIS,
         });
       },
     }),

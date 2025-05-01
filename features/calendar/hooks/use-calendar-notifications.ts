@@ -1,5 +1,5 @@
 import { useNotifications } from '@/utils/use-notifications';
-import { CalendarItem } from '../../../types';
+import { CalendarItem } from '@/types';
 
 export const useCalendarNotifications = () => {
   const { scheduleCalendarItemNotification, cancelNotification } = useNotifications();

@@ -6,6 +6,7 @@ import { ThemeProvider as NavThemeProvider } from '@react-navigation/native';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-scheme';
 import { NAV_THEME } from '@/theme';
@@ -14,6 +15,8 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   useInitialAndroidBarSync();
@@ -26,13 +29,15 @@ export default function RootLayout() {
         style={isDarkColorScheme ? 'light' : 'dark'}
       />
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <ActionSheetProvider>
-            <NavThemeProvider value={NAV_THEME[colorScheme]}>
-              <Slot />
-            </NavThemeProvider>
-          </ActionSheetProvider>
-        </BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <BottomSheetModalProvider>
+            <ActionSheetProvider>
+              <NavThemeProvider value={NAV_THEME[colorScheme]}>
+                <Slot />
+              </NavThemeProvider>
+            </ActionSheetProvider>
+          </BottomSheetModalProvider>
+        </QueryClientProvider>
       </GestureHandlerRootView>
     </>
   );

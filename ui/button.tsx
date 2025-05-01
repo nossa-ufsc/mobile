@@ -1,7 +1,14 @@
 import * as Slot from '@rn-primitives/slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { Platform, Pressable, PressableProps, View, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  PressableProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { cn } from '@/utils/cn';
 import { useColorScheme } from '@/utils/use-color-scheme';
@@ -113,7 +120,11 @@ type AndroidOnlyButtonProps = {
   androidRootClassName?: string;
 };
 
-type ButtonProps = PressableProps & ButtonVariantProps & AndroidOnlyButtonProps;
+type ButtonProps = PressableProps &
+  ButtonVariantProps &
+  AndroidOnlyButtonProps & {
+    isLoading?: boolean;
+  };
 
 const Root = Platform.OS === 'android' ? View : Slot.Pressable;
 
@@ -126,6 +137,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
       size,
       style = BORDER_CURVE,
       androidRootClassName,
+      isLoading,
       ...props
     },
     ref
@@ -151,7 +163,13 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
             style={style}
             android_ripple={ANDROID_RIPPLE[colorScheme][variant]}
             {...props}>
-            {typeof children === 'string' ? <Text variant="body">{children}</Text> : children}
+            {typeof children === 'string' ? (
+              <Text variant="body">{children}</Text>
+            ) : isLoading ? (
+              <ActivityIndicator size="small" color={COLORS.light.grey5} />
+            ) : (
+              children
+            )}
           </Pressable>
         </Root>
       </TextClassContext.Provider>
