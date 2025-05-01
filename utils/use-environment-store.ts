@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { Subject, User, Campus } from '@/types';
+import { ExtensionStorage } from '@bacons/apple-targets';
+import { convertSubjectsToWidgetFormat } from './subjects-to-widget-adapter';
 
 import { MMKV } from 'react-native-mmkv';
+
+const extStorage = new ExtensionStorage('group.nossa-ufsc.data');
 
 const persistedEnvironmentStorage = new MMKV({
   id: 'environment-storage',
@@ -59,6 +63,9 @@ export const useEnvironmentStore = create<EnvironmentState>()(
 
       setSubjects: (subjects) => {
         set({ subjects });
+
+        const widgetData = convertSubjectsToWidgetFormat(subjects);
+        extStorage.set('subjects', JSON.stringify(widgetData));
       },
 
       setIsAuthenticated: (isAuthenticated) => {

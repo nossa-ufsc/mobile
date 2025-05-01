@@ -17,6 +17,7 @@
     "run:ios": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun ios"
   },
   "dependencies": {
+    "@bacons/apple-targets": "^0.2.1",
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "^14.0.0",
     "@gorhom/bottom-sheet": "^4.6.4",

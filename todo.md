@@ -2,7 +2,7 @@
 
 [ ] - Widgets
 [x] - Notifications setup
-[ ] - Events/Parties Logic
+[x] - Events/Parties Logic
 [x] - Calendar/reminders Logic
 [x] - Show next calendar items on the subject details
 [x] - Show calendar item for the day in subject card on home screen

@@ -86,26 +86,34 @@ export const SubjectDetails = () => {
         </View>
 
         <View className="p-4">
-          <View className="bg-secondary/5 mb-6 flex-row items-center justify-between rounded-xl p-4">
-            <View className="items-center">
-              <Text variant="title2">{totalAbsences}</Text>
-              <Text variant="caption2" color="tertiary">
-                Total de Faltas
+          <View className="mb-6 flex-col rounded-xl bg-[#f3f3f7] p-4 dark:bg-[#1b1b1f]">
+            <View className="mb-3 items-center">
+              <Text variant="largeTitle" className="text-center">
+                {totalAbsences}
+              </Text>
+              <Text variant="subhead" color="tertiary" className="text-center">
+                Faltas Registradas
               </Text>
             </View>
-            <View className="h-8 w-[1px] bg-border" />
-            <View className="items-center">
-              <Text variant="title2">{maxAbsences}</Text>
-              <Text variant="caption2" color="tertiary">
-                Máximo de Faltas
-              </Text>
-            </View>
-            <View className="h-8 w-[1px] bg-border" />
-            <View className="items-center">
-              <Text variant="title2">{remainingAbsences}</Text>
-              <Text variant="caption2" color="tertiary">
-                Faltas Restantes
-              </Text>
+            <View className="mb-3 h-[1px] w-full bg-border" />
+            <View className="flex-row justify-between">
+              <View className="flex-1 items-center">
+                <Text variant="callout" color="tertiary">
+                  {maxAbsences}
+                </Text>
+                <Text variant="caption2" color="tertiary">
+                  Máximo
+                </Text>
+              </View>
+              <View className="h-8 w-[1px] bg-border" />
+              <View className="flex-1 items-center">
+                <Text variant="callout" color="tertiary">
+                  {remainingAbsences}
+                </Text>
+                <Text variant="caption2" color="tertiary">
+                  Restantes
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -119,7 +127,7 @@ export const SubjectDetails = () => {
               .map((entry) => (
                 <View
                   key={entry.id}
-                  className="bg-secondary/5 mb-3 flex-row items-center justify-between rounded-xl p-4">
+                  className="mb-3 flex-row items-center justify-between rounded-xl bg-[#f3f3f7] p-4 dark:bg-[#1b1b1f]">
                   <View>
                     <Text variant="callout">
                       {entry.count} aula{entry.count > 1 ? 's' : ''}

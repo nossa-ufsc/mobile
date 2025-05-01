@@ -24,7 +24,8 @@
         }
       ],
       "expo-secure-store",
-      "expo-notifications"
+      "expo-notifications",
+      "@bacons/apple-targets"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -35,6 +36,10 @@
     "icon": "./assets/icon.png",
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "appleTeamId": "UCDT8D8B7Q",
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
+      },
       "supportsTablet": true,
       "infoPlist": {
         "NSAppTransportSecurity": {
