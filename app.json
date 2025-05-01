@@ -33,7 +33,6 @@
     "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,

@@ -165,9 +165,9 @@ export const ClassCard = ({
       {!!todayItems?.length && (
         <View className="mt-3 flex-col items-start gap-1 border-t border-border pt-3">
           {todayItems.map((item) => (
-            <View key={item.id} className="flex-row items-center gap-2">
-              <View className={cn(getItemColor(item.type), 'h-2 w-2 rounded-full')} />
-              <Text variant="footnote" numberOfLines={1}>
+            <View key={item.id} className="flex-row items-center gap-3">
+              <View className={cn(getItemColor(item.type), 'h-3 w-3 rounded-full')} />
+              <Text variant="subhead" className="text-foreground" numberOfLines={1}>
                 {item.title}
               </Text>
             </View>

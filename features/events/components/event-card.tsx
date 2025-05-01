@@ -26,12 +26,12 @@ export const EventCard = ({ event, onPress }: EventCardProps) => {
         resizeMode="cover"
       />
       <View className="absolute right-3 top-3 rounded-lg bg-black/70 px-2 py-1">
-        <Text variant="subhead" color="primary" className="text-center font-medium">
+        <Text variant="subhead" className="text-center font-medium text-white">
           {startDateTime.formattedDate}
         </Text>
       </View>
       <LinearGradient
-        colors={['rgba(18, 14, 27, 0.3)', 'rgba(18, 14, 27, 0.9)', 'rgba(18, 14, 27, 1)']}
+        colors={['rgba(18, 14, 27, 0.1)', 'rgba(18, 14, 27, 0.9)', 'rgba(18, 14, 27, 1)']}
         style={{
           position: 'absolute',
           bottom: 0,
@@ -42,7 +42,7 @@ export const EventCard = ({ event, onPress }: EventCardProps) => {
           borderBottomRightRadius: 12,
         }}>
         <View className="pl-1.5">
-          <Text variant="title3" color="primary" numberOfLines={1}>
+          <Text variant="title3" className="text-white" numberOfLines={1}>
             {event.name}
           </Text>
           <Text variant="subhead" color="secondary">

@@ -1,5 +1,4 @@
 import { CalendarItem, Subject } from '@/types';
-import { Button } from '@/ui/button';
 import { DatePicker } from '@/ui/date-picker';
 import { Text } from '@/ui/text';
 import { View, Pressable, Alert, Switch } from 'react-native';
@@ -120,17 +119,17 @@ export const CalendarItemSheet = ({
   };
 
   return (
-    <View className="flex-1 px-6 pt-2">
-      <View className="mb-6 flex-row items-center justify-between">
-        {initialItem && (
-          <Pressable onPress={handleRemove} className="absolute right-0">
-            <Ionicons name="trash-outline" size={24} color={colors.foreground} />
-          </Pressable>
-        )}
+    <View className="flex-1 bg-background">
+      <View
+        style={{ backgroundColor: colors.card }}
+        className="flex-row items-center justify-between px-4 pb-3 pt-1">
+        <Pressable onPress={onClose}>
+          <Text className="text-[17px] font-normal text-[#FF3B30]">Cancelar</Text>
+        </Pressable>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <Pressable className="android:gap-3 flex-row items-center gap-1.5">
-              <Text className="text-2xl font-bold">{selectedType?.label}</Text>
+              <Text className="text-lg font-bold">{selectedType?.label}</Text>
               <View className="pl-0.5 opacity-70">
                 <Ionicons name="chevron-down" size={20} color={colors.foreground} />
               </View>
@@ -148,67 +147,71 @@ export const CalendarItemSheet = ({
             ))}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
+        <Pressable onPress={handleSubmit} disabled={!title || !subject}>
+          <Text
+            className={cn(
+              'text-[17px] font-normal text-primary',
+              (!title || !subject) && 'opacity-50'
+            )}>
+            {initialItem ? 'Salvar' : 'Adicionar'}
+          </Text>
+        </Pressable>
       </View>
 
-      <View className="gap-4">
-        <View className="gap-2">
-          <Text color="primary" variant="subhead">
-            Título
-          </Text>
+      <View className="flex-1 px-4 pt-4">
+        <View className="mb-4">
           <BottomSheetTextInput
             placeholder="Digite o título"
             value={title}
             onChangeText={setTitle}
+            className="rounded-xl px-4 py-3 text-[17px]"
             style={{
-              padding: 16,
-              borderRadius: 12,
-              fontSize: 16,
-              borderWidth: 1,
-              borderColor: colors.grey2,
+              backgroundColor: colors.card,
               color: colors.foreground,
             }}
+            placeholderTextColor={colors.grey3}
           />
         </View>
 
-        <View className="gap-2">
-          <Text color="primary" variant="subhead">
-            Observações
-          </Text>
+        <View className="mb-4">
           <BottomSheetTextInput
             placeholder="Digite uma observação (opcional)"
             value={description}
             onChangeText={setDescription}
             multiline
             numberOfLines={3}
+            className="h-[100px] rounded-xl  px-4 py-3 text-[17px]"
             style={{
-              padding: 16,
-              borderRadius: 12,
-              fontSize: 16,
-              borderWidth: 1,
-              borderColor: colors.grey2,
-              height: 100,
-              textAlignVertical: 'top',
+              backgroundColor: colors.card,
               color: colors.foreground,
             }}
+            placeholderTextColor={colors.grey3}
+            textAlignVertical="top"
           />
         </View>
 
-        <View className="gap-2">
-          <Text color="primary" variant="subhead">
-            Data e Hora
-          </Text>
-          <DatePicker
-            locale="pt-BR"
-            mode="datetime"
-            onChange={handleDateChange}
-            value={date}
-            minuteInterval={5}
-          />
+        <View className="mb-4">
+          <View
+            style={{ backgroundColor: colors.card }}
+            className="flex-row items-center justify-between rounded-xl px-4 py-3">
+            <Text className="text-[17px] text-foreground">Data e Hora</Text>
+            <DatePicker
+              locale="pt-BR"
+              mode="datetime"
+              onChange={handleDateChange}
+              value={date}
+              minuteInterval={5}
+            />
+          </View>
         </View>
 
-        <View className="gap-2">
-          <View className="flex-row items-center justify-between">
-            <Text className="text-base">Notificação</Text>
+        <View
+          style={{ backgroundColor: colors.card }}
+          className="mb-4 flex flex-col rounded-xl px-4 py-3">
+          <View
+            style={{ paddingBottom: notificationEnabled ? 12 : 0 }}
+            className="flex-row items-center justify-between">
+            <Text className="text-[17px] text-foreground">Notificação</Text>
             <Switch
               value={notificationEnabled}
               onValueChange={setNotificationEnabled}
@@ -216,58 +219,60 @@ export const CalendarItemSheet = ({
             />
           </View>
           {notificationEnabled && (
-            <DatePicker
-              locale="pt-BR"
-              mode="datetime"
-              onChange={handleNotificationDateChange}
-              value={notificationDate}
-              minimumDate={new Date(date.getTime() + 60 * 1000)}
-              minuteInterval={5}
-            />
+            <View className="flex-row items-center justify-between rounded-xl border-t border-gray-200 pt-3 dark:border-gray-600">
+              <Text className="text-[17px] text-foreground">Horário</Text>
+              <DatePicker
+                locale="pt-BR"
+                mode="datetime"
+                onChange={handleNotificationDateChange}
+                value={notificationDate}
+                minimumDate={new Date(date.getTime() + 60 * 1000)}
+                minuteInterval={5}
+              />
+            </View>
           )}
         </View>
 
         {!initialSubject && (
-          <View className="gap-2">
-            <Text color="primary" variant="subhead">
-              Disciplina
-            </Text>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <Pressable
-                  className={cn(
-                    'flex-row items-center justify-between ',
-                    !subject && 'border-gray-300'
-                  )}>
-                  <Text className="text-base font-medium">
-                    {subject ? `${subject.code} - ${subject.name}` : 'Selecione uma disciplina'}
-                  </Text>
-                  <Ionicons name="chevron-down" size={20} color={colors.foreground} />
-                </Pressable>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content>
-                {subjects.map((s) => (
-                  <DropdownMenu.CheckboxItem
-                    key={s.id}
-                    value={s.id === subject.id}
-                    onValueChange={() => setSubject(s)}>
-                    <DropdownMenu.ItemIndicator />
-                    <DropdownMenu.ItemTitle>{`${s.code} - ${s.name}`}</DropdownMenu.ItemTitle>
-                  </DropdownMenu.CheckboxItem>
-                ))}
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+          <View className="mb-4">
+            <View style={{ backgroundColor: colors.card }} className="overflow-hidden rounded-xl">
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Pressable className="flex-row items-center justify-between px-4 py-3">
+                    <Text className="text-[17px] text-foreground">
+                      {subject ? `${subject.code} - ${subject.name}` : 'Selecione uma disciplina'}
+                    </Text>
+                    <Ionicons name="chevron-down" size={20} color={colors.grey3} />
+                  </Pressable>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  {subjects.map((s) => (
+                    <DropdownMenu.CheckboxItem
+                      key={s.id}
+                      value={s.id === subject.id}
+                      onValueChange={() => setSubject(s)}>
+                      <DropdownMenu.ItemIndicator />
+                      <DropdownMenu.ItemTitle>{`${s.code} - ${s.name}`}</DropdownMenu.ItemTitle>
+                    </DropdownMenu.CheckboxItem>
+                  ))}
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            </View>
           </View>
         )}
+
+        {initialItem && (
+          <Pressable
+            onPress={handleRemove}
+            className="mb-4 mt-auto flex-row items-center justify-center rounded-xl bg-card px-4 py-3"
+            style={{
+              marginBottom: bottom + 8,
+            }}>
+            <Ionicons name="trash-outline" size={24} color="#FF3B30" className="mr-2" />
+            <Text className="text-[17px] text-[#FF3B30]">Excluir</Text>
+          </Pressable>
+        )}
       </View>
-      <Button
-        variant="primary"
-        onPress={handleSubmit}
-        disabled={!title || !subject}
-        style={{ marginBottom: bottom + 16 }}
-        className="mt-auto">
-        <Text className="font-medium text-white">{initialItem ? 'Salvar' : 'Adicionar'}</Text>
-      </Button>
     </View>
   );
 };
