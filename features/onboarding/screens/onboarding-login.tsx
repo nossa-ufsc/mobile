@@ -83,7 +83,7 @@ export const OnboardingLoginScreen = () => {
           onPress={() =>
             handleLogin({
               onSuccess: () => {
-                router.push('/(app)/(tabs)/(_home)');
+                router.push('/(app)/(tabs)/(home)');
               },
             })
           }

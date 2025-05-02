@@ -4,7 +4,7 @@ import { router, Stack } from 'expo-router';
 export default function CalendarLayout() {
   return (
     <Stack screenOptions={SCREEN_OPTIONS}>
-      <Stack.Screen name="index" options={{ ...INDEX_OPTIONS, title: 'Calendário' }} />
+      <Stack.Screen name="calendar" options={{ ...INDEX_OPTIONS, title: 'Calendário' }} />
     </Stack>
   );
 }

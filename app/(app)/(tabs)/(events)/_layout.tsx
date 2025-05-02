@@ -4,7 +4,7 @@ import { router, Stack } from 'expo-router';
 export default function EventsLayout() {
   return (
     <Stack screenOptions={SCREEN_OPTIONS}>
-      <Stack.Screen name="index" options={{ ...INDEX_OPTIONS, title: 'Eventos' }} />
+      <Stack.Screen name="events" options={{ ...INDEX_OPTIONS, title: 'Eventos' }} />
     </Stack>
   );
 }

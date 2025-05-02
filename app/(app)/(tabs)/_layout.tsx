@@ -10,7 +10,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: 'black',
       }}>
       <Tabs.Screen
-        name="(_home)"
+        name="(home)"
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
