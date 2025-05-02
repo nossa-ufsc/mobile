@@ -6,8 +6,8 @@ import {
 import * as React from 'react';
 
 import { useColorScheme } from '@/utils/use-color-scheme';
-import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 const Sheet = React.forwardRef<
   BottomSheetModal,
   React.ComponentPropsWithoutRef<typeof BottomSheetModal>

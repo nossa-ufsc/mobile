@@ -14,7 +14,8 @@
     "build:ios:development": "eas build -p ios --profile development",
     "build:android:production": "eas build -p android --profile production --local",
     "run:android": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun android",
-    "run:ios": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun ios"
+    "run:ios": "expo prebuild && SENTRY_DISABLE_AUTO_UPLOAD=true bun ios",
+    "prepare": "husky"
   },
   "dependencies": {
     "@bacons/apple-targets": "^0.2.1",
@@ -72,11 +73,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@types/react": "~18.3.12",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "eslint": "^8.57.0",
     "eslint-config-universe": "^12.0.1",
+    "husky": "^9.1.7",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.0",
