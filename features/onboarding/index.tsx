@@ -1,1 +1,1 @@
-export const Onboarding = () => {};
+export * from './screens/onboarding';

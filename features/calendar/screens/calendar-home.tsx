@@ -13,6 +13,7 @@ import { CalendarClassItem, CalendarItem } from '@/types';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { ClassItemSheet } from '../components/class-item-sheet';
+import { Text } from '@/ui/text';
 
 export const CalendarHome = () => {
   const calendarSheetRef = useRef<BottomSheetModal>(null);
@@ -28,8 +29,6 @@ export const CalendarHome = () => {
 
   const items = getItemsByDate(selectedDay);
   const classItems = getClassItemsByDate(selectedDay);
-
-  if (!subjects) return null;
 
   const handleAddPress = () => {
     setSelectedItem(undefined);
@@ -73,6 +72,19 @@ export const CalendarHome = () => {
         runOnJS(changeDate)('next');
       }
     });
+
+  if (!subjects?.length) {
+    return (
+      <Container>
+        <View className="flex-1 items-center justify-center pt-36">
+          <Text className="text-lg font-medium">Nenhuma disciplina cadastrada</Text>
+          <Text className="mt-2 text-center text-muted-foreground">
+            Cadastre suas disciplinas para ver seu horário
+          </Text>
+        </View>
+      </Container>
+    );
+  }
 
   return (
     <Container>

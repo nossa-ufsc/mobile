@@ -1,7 +1,14 @@
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { ThemeToggle } from '@/ui/theme-toggle';
+import { useEnvironmentStore } from '@/utils/use-environment-store';
 
 export default function AppLayout() {
+  const { isAuthenticated } = useEnvironmentStore();
+
+  if (!isAuthenticated) {
+    return <Redirect href="/onboarding" />;
+  }
+
   return (
     <Stack screenOptions={SCREEN_OPTIONS}>
       <Stack.Screen name="(tabs)" options={TABS_OPTIONS} />

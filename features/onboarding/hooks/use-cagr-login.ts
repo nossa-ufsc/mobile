@@ -40,7 +40,7 @@ WebBrowser.maybeCompleteAuthSession();
 export interface UseCAGRLoginResult {
   isAuthenticated: boolean;
   isLoading: boolean;
-  handleLogin: () => Promise<void>;
+  handleLogin: (options: { onSuccess: () => void }) => Promise<void>;
   handleLogout: () => void;
   reloadSubjects: () => Promise<void>;
 }
@@ -228,7 +228,10 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
             // TODO: add posthog logs here to track the error
           }
 
-          setIsAuthenticated(true);
+          // small delay to fetch user information nicely
+          setTimeout(() => {
+            setIsAuthenticated(true);
+          }, 1000);
         } catch (error) {
           console.error('Authentication error:', error);
         } finally {
@@ -271,7 +274,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     setIsLoading(false);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async ({ onSuccess }: { onSuccess: () => void }) => {
     setIsLoading(true);
     try {
       if (isDev) {
@@ -279,6 +282,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       } else {
         await promptAsync();
       }
+      onSuccess();
     } catch (error) {
       console.error('Error during login:', error);
       setIsLoading(false);

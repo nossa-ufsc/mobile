@@ -1,7 +1,4 @@
-import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
-import { Button } from '@/ui/button';
 import { Container } from '@/ui/container';
-import { Text } from '@/ui/text';
 import { WeekDaySelector } from '@/features/home/components/week-day-selector';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -11,11 +8,13 @@ import { ClassCard } from '../components/class-card';
 import { NoClasses } from '../components/no-classes';
 import { router } from 'expo-router';
 import { getDateFromDayIndex } from '@/features/calendar/utils/get-date-from-day-index';
+import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { Text } from '@/ui/text';
 
 export const SchedulesHome = () => {
-  const { handleLogin, isAuthenticated, isLoading } = useCAGRLogin();
   const { selectedDay, setSelectedDay } = useScheduleStore();
   const classesForDay = useClassesForDay();
+  const subjects = useEnvironmentStore((state) => state.subjects);
 
   const swipeGesture = Gesture.Pan()
     .activeOffsetX([-20, 20])
@@ -31,58 +30,54 @@ export const SchedulesHome = () => {
       }
     });
 
+  if (!subjects?.length) {
+    return (
+      <Container>
+        <View className="flex-1 items-center justify-center pt-36">
+          <Text className="text-lg font-medium">Nenhuma disciplina cadastrada</Text>
+          <Text className="mt-2 text-center text-muted-foreground">
+            Cadastre suas disciplinas para ver seu horário
+          </Text>
+        </View>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      {!isAuthenticated ? (
-        <View className="mt-8 flex-1 items-center justify-center px-4">
-          <Text className="mb-4 text-xl font-bold">Bem-vindo ao Nossa UFSC</Text>
-          <Text className="mb-6 text-center text-base">
-            Faça login com sua conta UFSC para acessar suas informações acadêmicas
-          </Text>
-          <Button
-            onPress={handleLogin}
-            variant="primary"
-            size="lg"
-            className="w-full items-center justify-center"
-            disabled={isLoading}>
-            <Text>{isLoading ? 'Carregando...' : 'Login com UFSC'}</Text>
-          </Button>
-        </View>
-      ) : (
-        <GestureDetector gesture={swipeGesture}>
-          <View className="flex-1">
-            <WeekDaySelector
-              className="mt-4"
-              selectedDay={selectedDay}
-              onSelectDay={setSelectedDay}
-            />
+      <GestureDetector gesture={swipeGesture}>
+        <View className="flex-1">
+          <WeekDaySelector
+            className="mt-4"
+            selectedDay={selectedDay}
+            onSelectDay={setSelectedDay}
+          />
 
-            <Container scrollable autoPadding={false}>
-              <View className="mt-6 px-4">
-                {classesForDay.length > 0 ? (
-                  classesForDay.map((classInfo, index) => (
-                    <ClassCard
-                      key={`${classInfo.subject.id}-${index}`}
-                      subject={classInfo.subject}
-                      time={classInfo.time}
-                      consecutiveClasses={classInfo.consecutiveClasses}
-                      onPress={() => {
-                        router.push({
-                          pathname: '/subject/[id]',
-                          params: { id: classInfo.subject.id },
-                        });
-                      }}
-                      currentDate={getDateFromDayIndex(selectedDay)}
-                    />
-                  ))
-                ) : (
-                  <NoClasses />
-                )}
-              </View>
-            </Container>
-          </View>
-        </GestureDetector>
-      )}
+          <Container scrollable autoPadding={false}>
+            <View className="mt-6 px-4">
+              {classesForDay.length > 0 ? (
+                classesForDay.map((classInfo, index) => (
+                  <ClassCard
+                    key={`${classInfo.subject.id}-${index}`}
+                    subject={classInfo.subject}
+                    time={classInfo.time}
+                    consecutiveClasses={classInfo.consecutiveClasses}
+                    onPress={() => {
+                      router.push({
+                        pathname: '/subject/[id]',
+                        params: { id: classInfo.subject.id },
+                      });
+                    }}
+                    currentDate={getDateFromDayIndex(selectedDay)}
+                  />
+                ))
+              ) : (
+                <NoClasses />
+              )}
+            </View>
+          </Container>
+        </View>
+      </GestureDetector>
     </Container>
   );
 };

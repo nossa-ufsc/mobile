@@ -13,6 +13,7 @@ import { CalendarItem } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { AbsenceSheet } from '../components/absence-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const SubjectDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,6 +26,7 @@ export const SubjectDetails = () => {
   const absenceSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
   const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
+  const insets = useSafeAreaInsets();
 
   if (!subjects || !subject) return null;
 
@@ -64,7 +66,7 @@ export const SubjectDetails = () => {
   };
 
   return (
-    <Container scrollable className="px-4">
+    <Container contentStyle={{ paddingBottom: insets.bottom }} scrollable className="px-4">
       <View className="pb-4 pt-2">
         <Text variant="title1" numberOfLines={2} className="mb-1">
           {subject.name}
