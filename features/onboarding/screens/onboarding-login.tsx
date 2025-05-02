@@ -29,7 +29,7 @@ export const OnboardingLoginScreen = () => {
     {
       icon: 'shield-checkmark-outline',
       title: 'Dados Seguros',
-      description: 'Seus dados são salvos apenas no seu dispositivo.',
+      description: 'Seus dados são salvos apenas no seu dispositivo de forma segura.',
     },
     {
       icon: 'sync-outline',

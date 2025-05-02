@@ -46,7 +46,8 @@
             }
           ]
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -56,11 +57,15 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "appleTeamId": "UCDT8D8B7Q",
       "entitlements": {
-        "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
+        "com.apple.security.application-groups": [
+          "group.nossa-ufsc.data"
+        ]
       },
       "supportsTablet": true,
       "infoPlist": {

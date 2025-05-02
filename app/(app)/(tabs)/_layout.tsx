@@ -30,6 +30,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="(menu)"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="restaurant" color={focused ? colors.grey : colors.grey4} size={24} />
+          ),
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tabs.Screen
         name="(events)"
         options={{
           headerShown: false,

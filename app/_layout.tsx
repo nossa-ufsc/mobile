@@ -12,6 +12,7 @@ import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-sche
 import { NAV_THEME } from '@/theme';
 import { registerWidgetTaskHandler } from 'react-native-android-widget';
 import { widgetTaskHandler } from '@/features/widget/widget-task-handler';
+import { PostHogProvider } from 'posthog-react-native';
 
 registerWidgetTaskHandler(widgetTaskHandler);
 
@@ -32,17 +33,23 @@ export default function RootLayout() {
         key={`root-status-bar-${isDarkColorScheme ? 'light' : 'dark'}`}
         style={isDarkColorScheme ? 'light' : 'dark'}
       />
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <QueryClientProvider client={queryClient}>
-          <BottomSheetModalProvider>
-            <ActionSheetProvider>
-              <NavThemeProvider value={NAV_THEME[colorScheme]}>
-                <Slot />
-              </NavThemeProvider>
-            </ActionSheetProvider>
-          </BottomSheetModalProvider>
-        </QueryClientProvider>
-      </GestureHandlerRootView>
+      <PostHogProvider
+        apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
+        options={{
+          host: 'https://us.i.posthog.com',
+        }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <QueryClientProvider client={queryClient}>
+            <BottomSheetModalProvider>
+              <ActionSheetProvider>
+                <NavThemeProvider value={NAV_THEME[colorScheme]}>
+                  <Slot />
+                </NavThemeProvider>
+              </ActionSheetProvider>
+            </BottomSheetModalProvider>
+          </QueryClientProvider>
+        </GestureHandlerRootView>
+      </PostHogProvider>
     </>
   );
 }

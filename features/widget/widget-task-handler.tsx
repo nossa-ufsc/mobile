@@ -28,30 +28,38 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
           .map((schedule) => ({
             name: subject.name,
             id: subject.id,
-            time: schedule.startTime || '',
-            finishTime: schedule.endTime || '',
+            startTime: schedule.startTime || '',
+            endTime: schedule.endTime || '',
             classroom: schedule.room || '',
           }))
       )
-      .filter((classInfo) => classInfo.time && classInfo.finishTime && classInfo.classroom);
+      .filter((classInfo) => classInfo.startTime && classInfo.endTime && classInfo.classroom);
 
     const sortedClasses = allClasses.sort((a, b) => {
-      return numericTimeOrder[a.time] - numericTimeOrder[b.time];
+      return numericTimeOrder[a.startTime] - numericTimeOrder[b.startTime];
     });
 
-    const groupedClasses = sortedClasses.reduce<any[]>((acc, currentClass, index) => {
+    const groupedClasses = sortedClasses.reduce<
+      {
+        name: string;
+        id: string;
+        startTime: string;
+        endTime: string;
+        classroom: string;
+      }[]
+    >((acc, currentClass, index) => {
       if (index === 0) {
         return [{ ...currentClass }];
       }
 
       const previousClass = acc[acc.length - 1];
       const isSameSubject = previousClass.id === currentClass.id;
-      const isConsecutive = previousClass.finishTime === currentClass.time;
+      const isConsecutive = previousClass.endTime === currentClass.startTime;
 
       if (isSameSubject && isConsecutive) {
         acc[acc.length - 1] = {
           ...previousClass,
-          finishTime: currentClass.finishTime,
+          endTime: currentClass.endTime,
         };
       } else {
         acc.push({ ...currentClass });
@@ -63,7 +71,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     const currentHour = currentDate.getHours();
     const events = groupedClasses
       .filter((event) => {
-        const eventHour = parseInt(event.finishTime.split(':')[0], 10);
+        const eventHour = parseInt(event.endTime.split(':')[0], 10);
         return eventHour >= currentHour;
       })
       .slice(0, 3);
