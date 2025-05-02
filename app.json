@@ -25,7 +25,28 @@
       ],
       "expo-secure-store",
       "expo-notifications",
-      "@bacons/apple-targets"
+      "@bacons/apple-targets",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "nossa_ufsc_schedule",
+              "label": "Nossa UFSC - Horários",
+              "minWidth": "180dp",
+              "minHeight": "110dp",
+              "maxWidth": "360dp",
+              "maxHeight": "220dp",
+              "targetCellWidth": 5,
+              "targetCellHeight": 2,
+              "description": "Veja suas aulas do dia",
+              "previewImage": "./assets/icon.png",
+              "resizeMode": "horizontal",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -33,6 +54,7 @@
     },
     "newArchEnabled": true,
     "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": ["**/*"],
     "ios": {

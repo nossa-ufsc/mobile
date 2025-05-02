@@ -10,9 +10,13 @@ import { getSemesterStartDate } from '../../../features/calendar/utils/get-semes
 import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
 import { useNotifications } from '@/utils/use-notifications';
 import { supabase } from '@/utils/supabase';
+import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
+
+const isDev = __DEV__;
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
+
 const REDIRECT_URI = AuthSession.makeRedirectUri({
   scheme: CLIENT_ID,
   path: process.env.EXPO_PUBLIC_CAGR_REDIRECT_URI,
@@ -239,10 +243,42 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     }
   }, [response]);
 
+  const handleDevLogin = async () => {
+    setIsLoading(true);
+    const userInfo = await mockFetchUserInformation();
+    setUser(userInfo);
+
+    const userSubjects = await mockFetchSubjects();
+    setSubjects(userSubjects);
+
+    const semesterStartDate = getSemesterStartDate();
+    const calendarItems = generateSemesterCalendar(
+      userSubjects,
+      semesterDuration,
+      semesterStartDate
+    );
+    calendarItems.forEach((item) => addClassItem(item));
+    // Uncomment this to test notifications
+    // generateClassesNotifications(calendarItems);
+
+    const { error } = await supabase.auth.signInAnonymously();
+
+    if (error) {
+      console.error('Error signing in anonymously:', error);
+    }
+
+    setIsAuthenticated(true);
+    setIsLoading(false);
+  };
+
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      await promptAsync();
+      if (isDev) {
+        await handleDevLogin();
+      } else {
+        await promptAsync();
+      }
     } catch (error) {
       console.error('Error during login:', error);
       setIsLoading(false);

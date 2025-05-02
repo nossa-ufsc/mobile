@@ -94,7 +94,7 @@ export const CalendarHome = () => {
         <Ionicons name="add" size={24} color="white" />
       </Pressable>
 
-      <Sheet ref={calendarSheetRef} snapPoints={['80%']}>
+      <Sheet ref={calendarSheetRef} enableDynamicSizing>
         <CalendarItemSheet
           subjects={subjects}
           onClose={handleClose}
@@ -103,7 +103,7 @@ export const CalendarHome = () => {
         />
       </Sheet>
 
-      <Sheet ref={classSheetRef} snapPoints={['60%']}>
+      <Sheet ref={classSheetRef} enableDynamicSizing>
         {selectedClassItem && <ClassItemSheet item={selectedClassItem} />}
       </Sheet>
     </Container>

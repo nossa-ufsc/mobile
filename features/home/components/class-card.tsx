@@ -10,6 +10,7 @@ import * as DropdownMenu from 'zeego/dropdown-menu';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ClassCardProps {
   subject: Subject;
@@ -38,6 +39,7 @@ export const ClassCard = ({
   const { getItemsByDateAndSubject } = useCalendar();
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
+  const { bottom } = useSafeAreaInsets();
 
   const handleAddAbsence = () => {
     if (consecutiveClasses > 0) {
@@ -54,6 +56,9 @@ export const ClassCard = ({
           cancelButtonIndex,
           title: 'Adicionar Falta',
           message: 'Quantas aulas você faltou?',
+          containerStyle: {
+            paddingBottom: bottom + 8,
+          },
         },
         (selectedIndex) => {
           if (selectedIndex !== undefined && selectedIndex !== cancelButtonIndex) {

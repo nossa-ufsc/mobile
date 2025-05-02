@@ -45,10 +45,10 @@ export const EventCard = ({ event, onPress }: EventCardProps) => {
           <Text variant="title3" className="text-white" numberOfLines={1}>
             {event.name}
           </Text>
-          <Text variant="subhead" color="secondary">
+          <Text variant="subhead" className="text-white">
             {event.location} • {dateTimeRange}
           </Text>
-          <Text variant="footnote" color="secondary">
+          <Text variant="footnote" className="text-white">
             Enviado por {event.created_by.name}
           </Text>
         </View>

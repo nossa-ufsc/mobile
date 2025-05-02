@@ -2,6 +2,8 @@ import { CalendarClassItem } from '@/types';
 import { Text } from '@/ui/text';
 import { View, Pressable } from 'react-native';
 import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ClassItemSheetProps {
   item: CalendarClassItem;
@@ -10,7 +12,7 @@ interface ClassItemSheetProps {
 
 export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
   const { addAbsence, absences, removeAbsence, updateAbsence } = useSubjectAbsence(item.subject.id);
-
+  const { bottom } = useSafeAreaInsets();
   const existingAbsence = absences.find((entry) => entry.date === item.date.toDateString());
 
   const maxAbsences = item.consecutiveClasses + 1 || 1;
@@ -32,7 +34,9 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
   };
 
   return (
-    <View className="flex-1 px-6 pt-2">
+    <BottomSheetScrollView
+      contentContainerStyle={{ paddingBottom: 16 + bottom }}
+      className="flex-1 px-6 pb-4 pt-2">
       <View className="mb-4 flex-col">
         <Text className="text-2xl font-bold">{item.subject.name}</Text>
         <Text variant="subhead" color="secondary" className="mt-1">
@@ -79,7 +83,7 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
           </View>
         )}
 
-        <View className="gap-2">
+        <View className="mb-4 gap-2">
           <View className="flex-row items-center justify-between">
             <Text color="primary" variant="subhead">
               {existingAbsence ? 'Faltas Registradas' : 'Registrar Falta'}
@@ -120,6 +124,6 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
           </View>
         </View>
       </View>
-    </View>
+    </BottomSheetScrollView>
   );
 };

@@ -48,7 +48,7 @@ export const EventsHome = () => {
         <Ionicons name="add" size={24} color="white" />
       </Pressable>
 
-      <Sheet snapPoints={['90%']} ref={eventSheetRef}>
+      <Sheet enableDynamicSizing ref={eventSheetRef}>
         <NewEventSheet onClose={handleClose} onSuccess={refetch} />
       </Sheet>
     </Container>

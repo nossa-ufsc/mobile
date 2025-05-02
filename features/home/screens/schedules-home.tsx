@@ -43,7 +43,7 @@ export const SchedulesHome = () => {
             onPress={handleLogin}
             variant="primary"
             size="lg"
-            className="w-full"
+            className="w-full items-center justify-center"
             disabled={isLoading}>
             <Text>{isLoading ? 'Carregando...' : 'Login com UFSC'}</Text>
           </Button>

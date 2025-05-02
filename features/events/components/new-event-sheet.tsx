@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { View, Pressable, Image, Alert, ActivityIndicator } from 'react-native';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { DatePicker } from '@/ui/date-picker';
 import { Text } from '@/ui/text';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
@@ -12,7 +11,8 @@ import { Event } from '@/types';
 import { uploadEventImage } from '../utils/upload-image';
 import { supabase } from '@/utils/supabase';
 import { cn } from '@/utils/cn';
-
+import { DatePicker } from '@/ui/date-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 interface NewEventSheetProps {
   onClose?: () => void;
   onSuccess?: () => void;
@@ -29,6 +29,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
   const [image, setImage] = useState<{ uri: string; base64: string } | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const { bottom } = useSafeAreaInsets();
 
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -113,7 +114,9 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
     };
 
     return (
-      <View className="flex-1 bg-background">
+      <BottomSheetScrollView
+        contentContainerStyle={{ paddingBottom: 16 + bottom }}
+        className="flex-1 bg-background">
         <View
           style={{ backgroundColor: colors.card }}
           className="flex-row items-center justify-between px-4 pb-3 pt-1">
@@ -148,12 +151,14 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
             Seu nome ({user!.name}) e matrícula ({user!.enrollmentNumber}) serão armazenados.
           </Text>
         </View>
-      </View>
+      </BottomSheetScrollView>
     );
   }
 
   return (
-    <View className="flex-1 bg-background">
+    <BottomSheetScrollView
+      contentContainerStyle={{ paddingBottom: bottom + 16 }}
+      className="flex-1 bg-background">
       <View
         style={{ backgroundColor: colors.card }}
         className="flex-row items-center justify-between px-4 pb-3 pt-1">
@@ -256,6 +261,6 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           )}
         </Pressable>
       </View>
-    </View>
+    </BottomSheetScrollView>
   );
 };

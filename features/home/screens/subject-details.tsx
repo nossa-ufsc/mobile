@@ -214,7 +214,7 @@ export const SubjectDetails = () => {
         ))}
       </View>
 
-      <Sheet ref={calendarSheetRef} snapPoints={['80%']}>
+      <Sheet ref={calendarSheetRef} enableDynamicSizing>
         <CalendarItemSheet
           subjects={subjects}
           onClose={handleClose}
@@ -223,7 +223,7 @@ export const SubjectDetails = () => {
         />
       </Sheet>
 
-      <Sheet ref={absenceSheetRef} snapPoints={['50%']}>
+      <Sheet ref={absenceSheetRef} enableDynamicSizing>
         <AbsenceSheet
           onSubmit={(date, count) => addAbsence(date, count, true)}
           onClose={handleCloseAbsence}

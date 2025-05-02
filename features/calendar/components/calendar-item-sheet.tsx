@@ -1,16 +1,16 @@
 import { CalendarItem, Subject } from '@/types';
-import { DatePicker } from '@/ui/date-picker';
 import { Text } from '@/ui/text';
 import { View, Pressable, Alert, Switch } from 'react-native';
 import { useState } from 'react';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useCalendar } from '../hooks/use-calendar';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '@/utils/cn';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { DatePicker } from '@/ui/date-picker';
 
 interface CalendarItemSheetProps {
   subjects: Subject[];
@@ -119,7 +119,9 @@ export const CalendarItemSheet = ({
   };
 
   return (
-    <View className="flex-1 bg-background">
+    <BottomSheetScrollView
+      contentContainerStyle={{ paddingBottom: 16 + bottom }}
+      className="flex-1 bg-background">
       <View
         style={{ backgroundColor: colors.card }}
         className="flex-row items-center justify-between px-4 pb-3 pt-1">
@@ -240,7 +242,7 @@ export const CalendarItemSheet = ({
                 <DropdownMenu.Trigger>
                   <Pressable className="flex-row items-center justify-between px-4 py-3">
                     <Text className="text-[17px] text-foreground">
-                      {subject ? `${subject.code} - ${subject.name}` : 'Selecione uma disciplina'}
+                      {subject ? subject.name : 'Selecione uma disciplina'}
                     </Text>
                     <Ionicons name="chevron-down" size={20} color={colors.grey3} />
                   </Pressable>
@@ -252,7 +254,7 @@ export const CalendarItemSheet = ({
                       value={s.id === subject.id}
                       onValueChange={() => setSubject(s)}>
                       <DropdownMenu.ItemIndicator />
-                      <DropdownMenu.ItemTitle>{`${s.code} - ${s.name}`}</DropdownMenu.ItemTitle>
+                      <DropdownMenu.ItemTitle>{s.name}</DropdownMenu.ItemTitle>
                     </DropdownMenu.CheckboxItem>
                   ))}
                 </DropdownMenu.Content>
@@ -273,6 +275,6 @@ export const CalendarItemSheet = ({
           </Pressable>
         )}
       </View>
-    </View>
+    </BottomSheetScrollView>
   );
 };

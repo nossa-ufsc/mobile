@@ -1,10 +1,11 @@
 import { DatePicker } from '@/ui/date-picker';
 import { Text } from '@/ui/text';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Platform } from 'react-native';
 import { useState } from 'react';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/ui/button';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 interface AbsenceSheetProps {
   onSubmit: (date: Date, count: number) => void;
@@ -28,12 +29,14 @@ export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
   };
 
   return (
-    <View className="flex-1 px-6 pt-2">
+    <BottomSheetScrollView
+      contentContainerStyle={{ paddingBottom: 16 + bottom }}
+      className="flex-1 px-6 pt-2">
       <View className="mb-6">
         <Text className="text-2xl font-bold">Adicionar Falta</Text>
       </View>
 
-      <View className="gap-6">
+      <View className="mb-4 gap-6">
         <View className="gap-2">
           <Text color="primary" variant="subhead">
             Data
@@ -64,11 +67,11 @@ export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
 
       <Button
         variant="primary"
+        style={{ marginBottom: Platform.OS === 'android' ? bottom + 8 : 0 }}
         onPress={handleSubmit}
-        style={{ marginBottom: bottom + 16 }}
-        className="mt-auto">
+        className="mt-12">
         <Text className="font-medium text-white">Adicionar</Text>
       </Button>
-    </View>
+    </BottomSheetScrollView>
   );
 };

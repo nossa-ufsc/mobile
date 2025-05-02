@@ -10,6 +10,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-scheme';
 import { NAV_THEME } from '@/theme';
+import { registerWidgetTaskHandler } from 'react-native-android-widget';
+import { widgetTaskHandler } from '@/features/widget/widget-task-handler';
+
+registerWidgetTaskHandler(widgetTaskHandler);
 
 export {
   // Catch any errors thrown by the Layout component.
