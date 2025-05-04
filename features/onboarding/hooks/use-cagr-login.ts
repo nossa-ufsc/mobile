@@ -11,6 +11,7 @@ import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
 import { useNotifications } from '@/utils/use-notifications';
 import { supabase } from '@/utils/supabase';
 import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
+import { usePostHog } from 'posthog-react-native';
 
 const isDev = __DEV__;
 
@@ -56,6 +57,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
+  const posthog = usePostHog();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -225,7 +227,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
           if (error) {
             console.error('Error signing in anonymously:', error);
-            // TODO: add posthog logs here to track the error
+            posthog.capture('error_signing_in_anonymously', { error });
           }
 
           // small delay to fetch user information nicely

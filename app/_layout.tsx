@@ -12,7 +12,7 @@ import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-sche
 import { NAV_THEME } from '@/theme';
 import { registerWidgetTaskHandler } from 'react-native-android-widget';
 import { widgetTaskHandler } from '@/features/widget/widget-task-handler';
-import { PostHogProvider } from 'posthog-react-native';
+import { PostHogProvider, PostHogProviderProps } from 'posthog-react-native';
 
 registerWidgetTaskHandler(widgetTaskHandler);
 
@@ -22,6 +22,12 @@ export {
 } from 'expo-router';
 
 const queryClient = new QueryClient();
+
+const MockPostHogProvider = ({ children }: Pick<PostHogProviderProps, 'children'>) => (
+  <>{children}</>
+);
+
+const PostHogWrapper = __DEV__ ? MockPostHogProvider : PostHogProvider;
 
 export default function RootLayout() {
   useInitialAndroidBarSync();
@@ -33,7 +39,7 @@ export default function RootLayout() {
         key={`root-status-bar-${isDarkColorScheme ? 'light' : 'dark'}`}
         style={isDarkColorScheme ? 'light' : 'dark'}
       />
-      <PostHogProvider
+      <PostHogWrapper
         apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
         options={{
           host: 'https://us.i.posthog.com',
@@ -49,7 +55,7 @@ export default function RootLayout() {
             </BottomSheetModalProvider>
           </QueryClientProvider>
         </GestureHandlerRootView>
-      </PostHogProvider>
+      </PostHogWrapper>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Event } from '@/types';
 import { supabase } from '@/utils/supabase';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { MOCK_EVENTS } from '../utils/mock';
 
 export const useEvents = () => {
   const campus = useEnvironmentStore((state) => state.campus);
@@ -10,6 +11,11 @@ export const useEvents = () => {
   return useQuery({
     queryKey: ['events', campus],
     queryFn: async () => {
+      if (__DEV__) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return MOCK_EVENTS;
+      }
+
       const { data, error } = await supabase
         .from('events')
         .select('*')

@@ -86,6 +86,11 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
   };
 
   const handleSubmit = async () => {
+    if (__DEV__) {
+      Alert.alert('Não é possível publicar eventos no ambiente de desenvolvimento');
+      return;
+    }
+
     try {
       setIsPublishing(true);
       await onSubmit();
