@@ -1,6 +1,21 @@
 # Nossa UFSC
 
-## Executando o Projeto Localmente
+👋 Bem-vindo!
+
+O Nossa UFSC é um aplicativo móvel desenvolvido para facilitar a vida acadêmica dos estudantes da Universidade Federal de Santa Catarina (UFSC).
+
+O aplicativo foi criado por alunos para alunos, com o objetivo de modernizar e simplificar o acesso às informações acadêmicas.
+
+### 🎯 Principais Funcionalidades
+
+- **Grade de Horários**: Visualize suas aulas do semestre de forma organizada
+- **Integração com CAGR**: Sincronização automática com o sistema acadêmico da UFSC
+- **Eventos do Campus**: Acompanhe e crie eventos que acontecem no seu campus
+- **Notificações**: Receba lembretes de aulas, provas e eventos importantes
+- **Interface Moderna**: Design intuitivo e agradável para melhor experiência do usuário
+- **Widgets Nativos**: Acesse rapidamente seus horários direto da tela inicial do seu dispositivo
+
+## Executando o Projeto
 
 O projeto utiliza Continuous Native Generation do Expo. As pastas ios e android são geradas por inteiro toda vez que o `expo prebuild` é executado.
 
@@ -51,81 +66,6 @@ Estes comandos irão:
 
 1. Executar o `expo prebuild` para gerar/atualizar o código nativo
 2. Iniciar o aplicativo no dispositivo/emulador selecionado
-
-## Como funcionam os Widgets
-
-O aplicativo inclui recursos de widgets para iOS e Android que exibem o horário das aulas do usuário para o dia atual.
-
-### Widget iOS
-
-A integração do widget iOS é construída usando [expo-apple-targets](https://github.com/EvanBacon/expo-apple-targets).
-
-#### Como funciona
-
-1. **Compartilhamento de Dados**: O aplicativo compartilha os dados do horário com o widget através de um App Group compartilhado usando `ExtensionStorage`. Esses dados são sincronizados automaticamente sempre que o horário é atualizado no aplicativo principal.
-
-2. **Formato dos Dados**: Os dados do horário são convertidos para um formato compatível com o widget usando um adaptador dedicado (`utils/subjects-to-widget-adapter.ts`). A estrutura é a seguinte:
-
-```typescript
-interface WidgetData {
-  data: {
-    [weekDay: number]: Array<{
-      name: string; // Nome da disciplina
-      classroom: string; // Número da sala
-      time: string; // Horário de início
-      finishTime: string; // Horário de término
-    }>;
-  };
-}
-```
-
-3. **Implementação do Widget**: O widget (`targets/widget/widgets.swift`) lê esses dados e exibe o horário do dia atual. Ele:
-   - Atualiza a cada 5 minutos
-   - Mostra até 3 próximas aulas do dia
-   - Exibe nome da disciplina, sala e informações de horário
-   - Atualiza automaticamente quando o aplicativo modifica o horário
-
-### Widget Android
-
-O widget Android é implementado usando [react-native-android-widget](https://github.com/awesomejerry/react-native-android-widget), que permite criar widgets nativos do Android usando componentes React Native.
-
-#### Como funciona
-
-1. **Configuração do Widget**: O widget é configurado no `app.json`.
-
-2. **Implementação**: O widget é implementado usando dois componentes principais:
-
-   - `widget-task-handler.tsx`: Gerencia os dados e o ciclo de vida do widget
-   - `android-schedule-widget.tsx`: Lida com a renderização da UI do widget
-
-### Desenvolvimento
-
-#### Desenvolvimento do Widget iOS
-
-O código do widget está localizado no diretório `targets/widget` e é gerenciado fora do diretório principal do projeto iOS. Esta configuração permite:
-
-- Desenvolvimento independente do widget sem afetar o código do aplicativo principal
-- Controle de versão do código do widget separado dos arquivos iOS gerados
-- Integração perfeita com o processo de build do Expo
-
-Para modificar o widget iOS:
-
-1. Edite os arquivos em `targets/widget`
-2. Execute `npx expo prebuild -p ios` para regenerar o código nativo
-3. Abra o Xcode para testar o widget no simulador
-
-#### Desenvolvimento do Widget Android
-
-O código do widget Android está localizado no diretório `features/widget`. Para modificar o widget Android:
-
-1. Edite os componentes do widget em `features/widget`
-2. Atualize a configuração do widget no `app.json` se necessário
-3. Reconstrua e implante o aplicativo para testar as alterações
-
-Para mais detalhes sobre as implementações:
-
-- Widget iOS: Consulte a [documentação do expo-apple-targets](https://github.com/EvanBacon/expo-apple-targets#-how-to-use)
-- Widget Android: Consulte a [documentação do react-native-android-widget](https://github.com/awesomejerry/react-native-android-widget)
 
 ## Como Contribuir
 
@@ -200,6 +140,17 @@ Siga o padrão abaixo para nomear suas branches:
 
 3. **Review**: Todo PR deve ter pelo menos uma aprovação antes do merge
 
+### Processo de Desenvolvimento
+
+1. Fork o repositório
+2. Crie uma branch seguindo a convenção de nomenclatura
+3. Faça suas alterações seguindo os padrões de código
+4. Escreva/atualize testes conforme necessário
+5. Certifique-se que todos os testes passam
+6. Faça commits seguindo a convenção
+7. Abra um Pull Request
+8. Aguarde review e faça as alterações solicitadas se necessário
+
 ### Issues
 
 Para reportar bugs ou sugerir novas funcionalidades, crie uma issue seguindo os templates abaixo:
@@ -255,13 +206,75 @@ Utilizamos as seguintes labels para categorizar as issues:
 - `help wanted`: Precisamos de ajuda extra nesta issue
 - `good first issue`: Bom para primeiro contato com o projeto
 
-### Processo de Desenvolvimento
+## Como funcionam os Widgets
 
-1. Fork o repositório
-2. Crie uma branch seguindo a convenção de nomenclatura
-3. Faça suas alterações seguindo os padrões de código
-4. Escreva/atualize testes conforme necessário
-5. Certifique-se que todos os testes passam
-6. Faça commits seguindo a convenção
-7. Abra um Pull Request
-8. Aguarde review e faça as alterações solicitadas se necessário
+O aplicativo inclui recursos de widgets para iOS e Android que exibem o horário das aulas do usuário para o dia atual.
+
+### Widget iOS
+
+A integração do widget iOS é construída usando [expo-apple-targets](https://github.com/EvanBacon/expo-apple-targets).
+
+#### Como funciona
+
+1. **Compartilhamento de Dados**: O aplicativo compartilha os dados do horário com o widget através de um App Group compartilhado usando `ExtensionStorage`. Esses dados são sincronizados automaticamente sempre que o horário é atualizado no aplicativo principal.
+
+2. **Formato dos Dados**: Os dados do horário são convertidos para um formato compatível com o widget usando um adaptador dedicado (`utils/subjects-to-widget-adapter.ts`). A estrutura é a seguinte:
+
+```typescript
+interface WidgetData {
+  data: {
+    [weekDay: number]: Array<{
+      name: string; // Nome da disciplina
+      classroom: string; // Número da sala
+      time: string; // Horário de início
+      finishTime: string; // Horário de término
+    }>;
+  };
+}
+```
+
+3. **Implementação do Widget**: O widget (`targets/widget/widgets.swift`) lê esses dados e exibe o horário do dia atual. Ele:
+   - Atualiza a cada 5 minutos
+   - Mostra até 3 próximas aulas do dia
+   - Exibe nome da disciplina, sala e informações de horário
+   - Atualiza automaticamente quando o aplicativo modifica o horário
+
+### Widget Android
+
+O widget Android é implementado usando [react-native-android-widget](https://github.com/awesomejerry/react-native-android-widget), que permite criar widgets nativos do Android usando componentes React Native.
+
+#### Como funciona
+
+1. **Configuração do Widget**: O widget é configurado no `app.json`.
+
+2. **Implementação**: O widget é implementado usando dois componentes principais:
+
+   - `widget-task-handler.tsx`: Gerencia os dados e o ciclo de vida do widget
+   - `android-schedule-widget.tsx`: Lida com a renderização da UI do widget
+
+#### Desenvolvimento do Widget iOS
+
+O código do widget está localizado no diretório `targets/widget` e é gerenciado fora do diretório principal do projeto iOS. Esta configuração permite:
+
+- Desenvolvimento independente do widget sem afetar o código do aplicativo principal
+- Controle de versão do código do widget separado dos arquivos iOS gerados
+- Integração perfeita com o processo de build do Expo
+
+Para modificar o widget iOS:
+
+1. Edite os arquivos em `targets/widget`
+2. Execute `npx expo prebuild -p ios` para regenerar o código nativo
+3. Abra o Xcode para testar o widget no simulador
+
+#### Desenvolvimento do Widget Android
+
+O código do widget Android está localizado no diretório `features/widget`. Para modificar o widget Android:
+
+1. Edite os componentes do widget em `features/widget`
+2. Atualize a configuração do widget no `app.json` se necessário
+3. Reconstrua e implante o aplicativo para testar as alterações
+
+Para mais detalhes sobre as implementações:
+
+- Widget iOS: Consulte a [documentação do expo-apple-targets](https://github.com/EvanBacon/expo-apple-targets#-how-to-use)
+- Widget Android: Consulte a [documentação do react-native-android-widget](https://github.com/awesomejerry/react-native-android-widget)
