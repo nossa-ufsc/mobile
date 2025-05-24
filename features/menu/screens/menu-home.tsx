@@ -3,11 +3,13 @@ import { WeekDaySelector } from '@/features/home/components/week-day-selector';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import { Text } from '@/ui/text';
 import { useMenuStore } from '../hooks/use-menu-store';
+import { useMenu } from '../hooks/use-menu';
+import { MenuDisplay } from '../components/menu-display';
 
 export const MenuHome = () => {
   const { selectedDay, setSelectedDay } = useMenuStore();
+  const { data: menu, isLoading, error } = useMenu();
 
   const swipeGesture = Gesture.Pan()
     .activeOffsetX([-20, 20])
@@ -33,9 +35,7 @@ export const MenuHome = () => {
             onSelectDay={setSelectedDay}
           />
 
-          <Container scrollable autoPadding={false}>
-            <Text>Cardápio</Text>
-          </Container>
+          <MenuDisplay menu={menu} isLoading={isLoading} error={error} />
         </View>
       </GestureDetector>
     </Container>

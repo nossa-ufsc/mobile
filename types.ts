@@ -92,3 +92,15 @@ export interface CalendarItem {
 export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {
   consecutiveClasses: number;
 }
+
+export interface MenuItem {
+  dia: string;
+  data: string;
+  itens: string[];
+}
+
+export interface Menu {
+  cardapio: MenuItem[] | { url_imagem: string };
+  diaInicial: string | null;
+  diaFinal: string | null;
+}

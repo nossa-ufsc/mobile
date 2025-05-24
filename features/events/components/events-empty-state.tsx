@@ -1,6 +1,7 @@
 import { Container } from '@/ui/container';
 import { View } from 'react-native';
 import { Text } from '@/ui/text';
+
 export const EventsEmptyState = () => {
   return (
     <Container scrollable>
