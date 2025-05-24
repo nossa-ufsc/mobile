@@ -68,7 +68,7 @@ export const SubjectDetails = () => {
   return (
     <Container contentStyle={{ paddingBottom: insets.bottom }} scrollable className="px-4">
       <View className="pb-4 pt-2">
-        <Text variant="title1" numberOfLines={2} className="mb-1">
+        <Text variant="mediumTitle" numberOfLines={2} className="mb-1">
           {subject.name}
         </Text>
         <Text variant="subhead" color="tertiary">

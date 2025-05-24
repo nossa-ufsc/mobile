@@ -2,7 +2,7 @@ import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, View, TouchableOpacity, Switch, Alert } from 'react-native';
+import { Platform, View, TouchableOpacity, Switch, Alert, Linking } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
@@ -278,6 +278,23 @@ export const SettingsModal = () => {
                 <MaterialCommunityIcons name="logout" size={24} color="white" />
               </View>
               <Text variant="body">Sair da conta</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+          </TouchableOpacity>
+        </View>
+
+        <Text variant="footnote" className="mb-2 px-2 text-gray-500">
+          Comunidade
+        </Text>
+        <View className="mb-6 rounded-lg bg-card">
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://github.com/nossa-ufsc/mobile')}
+            className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700 shadow-sm">
+                <MaterialCommunityIcons name="github" size={24} color="white" />
+              </View>
+              <Text variant="body">Contribuir com o código</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
