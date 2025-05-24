@@ -9,7 +9,3 @@ export const useMenuStore = create<MenuState>()((set) => ({
   selectedDay: new Date().getDay(),
   setSelectedDay: (day: number) => set({ selectedDay: day }),
 }));
-
-export const useMenuForDay = () => {
-  return null;
-};
