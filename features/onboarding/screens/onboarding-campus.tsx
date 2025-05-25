@@ -41,7 +41,7 @@ export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
               key={key}
               className={cn(
                 'flex-row items-center gap-4 rounded-lg bg-card p-4',
-                selectedCampus === key && 'bg-primary/20'
+                selectedCampus === key && 'bg-primary/10'
               )}
               onPress={() => setCampus(key as Campus)}>
               <View className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
