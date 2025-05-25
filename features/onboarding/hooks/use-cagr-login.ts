@@ -12,6 +12,7 @@ import { useNotifications } from '@/utils/use-notifications';
 import { supabase } from '@/utils/supabase';
 import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
 import { usePostHog } from 'posthog-react-native';
+import { useRouter } from 'expo-router';
 
 const isDev = __DEV__;
 
@@ -58,6 +59,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
   const posthog = usePostHog();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -233,11 +235,14 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
           // small delay to fetch user information nicely
           setTimeout(() => {
             setIsAuthenticated(true);
+            router.push('/(app)/(tabs)/(home)');
           }, 1000);
         } catch (error) {
           console.error('Authentication error:', error);
         } finally {
-          setIsLoading(false);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 3000);
         }
       };
 
@@ -281,13 +286,20 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     try {
       if (isDev) {
         await handleDevLogin();
+        onSuccess();
       } else {
-        await promptAsync();
+        const result = await promptAsync();
+        if (!result) {
+          throw new Error('No response from authentication');
+        }
+        if (result.type !== 'success') {
+          throw new Error(`Authentication failed: ${result.type}`);
+        }
       }
-      onSuccess();
     } catch (error) {
       console.error('Error during login:', error);
       setIsLoading(false);
+      throw error;
     }
   };
 

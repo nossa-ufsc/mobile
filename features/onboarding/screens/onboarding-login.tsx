@@ -40,7 +40,7 @@ export const OnboardingLoginScreen = () => {
 
   return (
     <View className="flex-1">
-      <Container scrollable className="flex-1 px-4 pt-8">
+      <Container scrollable className="flex-1 px-6 pt-8">
         <View className="space-y-4">
           <View>
             <Text className="mb-2 text-4xl font-bold" style={{ color: colors.foreground }}>

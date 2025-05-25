@@ -294,7 +294,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700 shadow-sm">
                 <MaterialCommunityIcons name="github" size={24} color="white" />
               </View>
-              <Text variant="body">Contribuir com o código</Text>
+              <Text variant="body">Contribuir com o Código</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
