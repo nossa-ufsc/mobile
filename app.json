@@ -57,15 +57,11 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "appleTeamId": "UCDT8D8B7Q",
       "entitlements": {
-        "com.apple.security.application-groups": [
-          "group.nossa-ufsc.data"
-        ]
+        "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
       },
       "supportsTablet": true,
       "infoPlist": {
@@ -99,8 +95,29 @@
     },
     "extra": {
       "eas": {
-        "projectId": "d6f7d1bc-be99-4088-af8d-6af91ee08cd8"
+        "projectId": "d6f7d1bc-be99-4088-af8d-6af91ee08cd8",
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "bundleIdentifier": "com.portal.ufsc.widget",
+                  "targetName": "widget",
+                  "entitlements": {
+                    "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
+                  }
+                }
+              ]
+            }
+          }
+        }
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d6f7d1bc-be99-4088-af8d-6af91ee08cd8"
     }
   }
 }

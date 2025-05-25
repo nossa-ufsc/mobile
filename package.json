@@ -54,6 +54,7 @@
     "expo-status-bar": "~2.0.1",
     "expo-store-review": "~8.0.1",
     "expo-system-ui": "~4.0.8",
+    "expo-updates": "~0.27.4",
     "expo-web-browser": "~14.0.2",
     "nativewind": "latest",
     "posthog-react-native": "^3.15.1",
