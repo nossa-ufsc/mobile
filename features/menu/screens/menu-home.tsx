@@ -6,10 +6,18 @@ import { runOnJS } from 'react-native-reanimated';
 import { useMenuStore } from '../hooks/use-menu-store';
 import { useMenu } from '../hooks/use-menu';
 import { MenuDisplay } from '../components/menu-display';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 export const MenuHome = () => {
   const { selectedDay, setSelectedDay } = useMenuStore();
-  const { data: menu, isLoading, error } = useMenu();
+  const { data: menu, isLoading, error, refetch } = useMenu();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   const swipeGesture = Gesture.Pan()
     .activeOffsetX([-20, 20])

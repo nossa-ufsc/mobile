@@ -1,6 +1,6 @@
 import { CalendarClassItem, Subject } from '@/types';
 import { generateRandomId } from '@/utils/generate-random-id';
-import { numericTimeOrder } from '@/utils/time-mapping';
+import { numericTimeOrder, isLunchBreak } from '@/utils/time-mapping';
 
 export const generateSemesterCalendar = (
   subjects: Subject[],
@@ -44,7 +44,9 @@ export const generateSemesterCalendar = (
         if (index > 0) {
           const previousClass = sortedClasses[index - 1];
           const isSameSubject = previousClass.subject.id === currentClass.subject.id;
-          const isConsecutive = previousClass.schedule.endTime === currentClass.schedule.startTime;
+          const isConsecutive =
+            previousClass.schedule.endTime === currentClass.schedule.startTime ||
+            isLunchBreak(previousClass.schedule.endTime, currentClass.schedule.startTime);
 
           if (isSameSubject && isConsecutive) {
             return;
@@ -55,7 +57,8 @@ export const generateSemesterCalendar = (
           const nextClass = sortedClasses[j];
           const isSameSubject = currentClass.subject.id === nextClass.subject.id;
           const isConsecutive =
-            sortedClasses[j - 1].schedule.endTime === nextClass.schedule.startTime;
+            sortedClasses[j - 1].schedule.endTime === nextClass.schedule.startTime ||
+            isLunchBreak(sortedClasses[j - 1].schedule.endTime, nextClass.schedule.startTime);
 
           if (isSameSubject && isConsecutive) {
             consecutiveClasses++;

@@ -1,9 +1,10 @@
 import { ScrollView, View, Pressable } from 'react-native';
 import { Text } from '@/ui/text';
 import { cn } from '@/utils/cn';
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import { CalendarClassItem, CalendarItem } from '@/types';
 import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface CalendarDayViewProps {
   className?: string;
@@ -147,6 +148,11 @@ export const CalendarDayView = ({
   onPressClass,
 }: CalendarDayViewProps) => {
   const scrollRef = useRef<ScrollView>(null);
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
+
+  useFocusEffect(() => {
+    setCurrentHour(new Date().getHours());
+  });
 
   const layout = useMemo(() => {
     const groupedClasses: { [key: string]: PositionedClassItem[] } = {};
@@ -287,15 +293,13 @@ export const CalendarDayView = ({
   }, [items, classItems]);
 
   const hours = useMemo(() => {
-    const now = new Date().getHours();
-    return Array.from({ length: 24 }, (_, i) => ({ hour: i, isNow: i === now }));
-  }, []);
+    return Array.from({ length: 24 }, (_, i) => ({ hour: i, isNow: i === currentHour }));
+  }, [currentHour]);
 
   useEffect(() => {
-    const now = new Date().getHours();
-    const targetScroll = Math.max(0, now * HOUR_HEIGHT - HOUR_HEIGHT);
+    const targetScroll = Math.max(0, currentHour * HOUR_HEIGHT - HOUR_HEIGHT);
     setTimeout(() => scrollRef.current?.scrollTo({ y: targetScroll, animated: true }), 100);
-  }, []);
+  }, [currentHour]);
 
   return (
     <ScrollView

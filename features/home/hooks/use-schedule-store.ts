@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
-import { numericTimeOrder } from '@/utils/time-mapping';
+import { numericTimeOrder, isLunchBreak } from '@/utils/time-mapping';
 
 interface ScheduleState {
   selectedDay: number;
@@ -53,7 +53,9 @@ export const useClassesForDay = () => {
 
     const previousClass = acc[acc.length - 1];
     const isSameSubject = previousClass.subject.id === currentClass.subject.id;
-    const isConsecutive = previousClass.time.endTime === currentClass.time.startTime;
+    const isConsecutive =
+      previousClass.time.endTime === currentClass.time.startTime ||
+      isLunchBreak(previousClass.time.endTime, currentClass.time.startTime);
 
     if (isSameSubject && isConsecutive) {
       acc[acc.length - 1] = {

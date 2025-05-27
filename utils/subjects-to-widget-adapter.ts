@@ -1,4 +1,5 @@
 import { Subject } from '@/types';
+import { isLunchBreak } from '@/utils/time-mapping';
 
 interface WidgetCalendarEvent {
   name: string;
@@ -51,7 +52,9 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
 
       const previousClass = acc[acc.length - 1];
       const isSameSubject = previousClass.name === currentClass.name;
-      const isConsecutive = previousClass.finishTime === currentClass.time;
+      const isConsecutive =
+        previousClass.finishTime === currentClass.time ||
+        isLunchBreak(previousClass.finishTime, currentClass.time);
 
       if (isSameSubject && isConsecutive) {
         acc[acc.length - 1] = {

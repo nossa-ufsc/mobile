@@ -15,6 +15,16 @@ export const timeMapping: Record<string, string> = {
   '21:10': '22:00',
 };
 
+export const LUNCH_BREAKS = [
+  { start: '10:00', end: '10:10' },
+  { start: '16:00', end: '16:20' },
+  { start: '20:10', end: '20:20' },
+] as const;
+
+export const isLunchBreak = (endTime: string, startTime: string): boolean => {
+  return LUNCH_BREAKS.some((break_) => break_.start === endTime && break_.end === startTime);
+};
+
 export const numericTimeMapping: Record<number, string> = {
   730: '07:30',
   820: '08:20',

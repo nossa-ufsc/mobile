@@ -175,7 +175,9 @@ export const SubjectDetails = () => {
                   index !== sortedItems.length - 1 ? 'border-b border-border' : ''
                 } ${isPast ? 'opacity-50' : ''}`}>
                 <View className="mb-1 flex-row items-center justify-between">
-                  <Text variant="body">{item.title}</Text>
+                  <Text variant="body" className="flex-1">
+                    {item.title}
+                  </Text>
                   <Text variant="subhead" color="tertiary">
                     {new Date(item.date).toLocaleDateString('pt-BR')}
                   </Text>

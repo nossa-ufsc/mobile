@@ -209,7 +209,7 @@ export const SettingsModal = () => {
             </View>
             <View className="flex-row items-center">
               <Text variant="subhead" color="primary" className="mr-2">
-                {CAMPUS_LABELS[campus]}
+                {CAMPUS_LABELS[campus!]}
               </Text>
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </View>

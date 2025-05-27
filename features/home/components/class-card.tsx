@@ -85,7 +85,7 @@ export const ClassCard = ({
     <TouchableOpacity className="mb-4 rounded-2xl bg-card p-4 shadow-sm" onPress={onPress}>
       <View className="mb-2 flex-row items-start justify-between">
         <Pressable onPress={onPress} className="mr-3 flex-1 active:opacity-70">
-          <Text className="text-lg font-semibold" numberOfLines={1}>
+          <Text className="text-lg font-semibold" numberOfLines={3}>
             {subject.name}
           </Text>
           <Text className="text-sm text-muted-foreground">
@@ -172,8 +172,14 @@ export const ClassCard = ({
           {todayItems.map((item) => (
             <View key={item.id} className="flex-row items-center gap-3">
               <View className={cn(getItemColor(item.type), 'h-3 w-3 rounded-full')} />
-              <Text variant="subhead" className="text-foreground" numberOfLines={1}>
+              <Text variant="subhead" className="flex-1 text-foreground" numberOfLines={1}>
                 {item.title}
+              </Text>
+              <Text variant="subhead" color="tertiary" numberOfLines={1}>
+                {new Date(item.date).toLocaleTimeString('pt-BR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </Text>
             </View>
           ))}

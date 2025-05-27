@@ -14,13 +14,15 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { ClassItemSheet } from '../components/class-item-sheet';
 import { Text } from '@/ui/text';
+import { useCalendarState } from '../hooks/use-calendar-state';
 
 export const CalendarHome = () => {
   const calendarSheetRef = useRef<BottomSheetModal>(null);
   const classSheetRef = useRef<BottomSheetModal>(null);
 
   const { subjects } = useEnvironmentStore();
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const { selectedDay, setSelectedDay } = useCalendarState();
+  const { isExpanded, setIsExpanded } = useCalendarState();
   const { getItemsByDate, getClassItemsByDate } = useCalendar();
   const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
   const [selectedClassItem, setSelectedClassItem] = useState<CalendarClassItem | undefined>(
@@ -49,6 +51,12 @@ export const CalendarHome = () => {
   const handlePressClass = (item: CalendarClassItem) => {
     setSelectedClassItem(item);
     classSheetRef.current?.present();
+  };
+
+  const handleDayViewPress = () => {
+    if (isExpanded) {
+      setIsExpanded(false);
+    }
   };
 
   const changeDate = (direction: 'next' | 'prev') => {
@@ -90,14 +98,14 @@ export const CalendarHome = () => {
     <Container>
       <MonthSelector selectedDay={selectedDay} onSelectDay={setSelectedDay} />
       <GestureDetector gesture={swipeGesture}>
-        <View className="flex-1">
+        <Pressable className="flex-1" onPress={handleDayViewPress}>
           <CalendarDayView
             onPressClass={handlePressClass}
             onPressItem={handlePressItem}
             items={items}
             classItems={classItems}
           />
-        </View>
+        </Pressable>
       </GestureDetector>
 
       <Pressable

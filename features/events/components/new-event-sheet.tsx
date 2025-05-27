@@ -70,7 +70,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
       start_date: startDate.toISOString(),
       end_date: endDate.toISOString(),
       image_url: imageUrl,
-      campus,
+      campus: campus!,
       created_by: {
         name: user!.name,
         enrollmentNumber: user!.enrollmentNumber,
@@ -111,7 +111,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
       start_date: startDate.toISOString(),
       end_date: endDate.toISOString(),
       image_url: image!.uri,
-      campus,
+      campus: campus!,
       created_by: {
         name: user!.name,
         enrollmentNumber: user!.enrollmentNumber,

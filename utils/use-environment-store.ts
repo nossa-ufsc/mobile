@@ -19,7 +19,7 @@ interface EnvironmentState {
   semesterDuration: number;
   notificationDelay: number;
   notificationsEnabled: boolean;
-  campus: Campus;
+  campus: Campus | null;
   setUser: (user: User | null) => void;
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
@@ -52,7 +52,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       semesterDuration: 18,
       notificationDelay: 15,
       notificationsEnabled: true,
-      campus: Campus.FLORIANOPOLIS,
+      campus: null,
 
       setUser: (user) => {
         set({

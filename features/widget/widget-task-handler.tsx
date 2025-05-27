@@ -1,7 +1,7 @@
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { AndroidScheduleWidget } from './views/android-schedule-widget';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
-import { numericTimeOrder } from '@/utils/time-mapping';
+import { numericTimeOrder, isLunchBreak } from '@/utils/time-mapping';
 
 const nameToWidget = {
   nossa_ufsc_schedule: AndroidScheduleWidget,
@@ -54,7 +54,9 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
       const previousClass = acc[acc.length - 1];
       const isSameSubject = previousClass.id === currentClass.id;
-      const isConsecutive = previousClass.endTime === currentClass.startTime;
+      const isConsecutive =
+        previousClass.endTime === currentClass.startTime ||
+        isLunchBreak(previousClass.endTime, currentClass.startTime);
 
       if (isSameSubject && isConsecutive) {
         acc[acc.length - 1] = {

@@ -2,8 +2,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Text } from '@/ui/text';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { cn } from '@/utils/cn';
-import { useCallback, useMemo, useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useMemo, useEffect } from 'react';
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -12,7 +11,8 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { MONTHS, WEEKDAY_NAMES } from '@/utils/const';
+import { WEEKDAY_NAMES } from '@/utils/const';
+import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
 
 interface MonthSelectorProps {
   selectedDay: Date;
@@ -28,35 +28,51 @@ export const MonthSelector = ({
   className,
 }: MonthSelectorProps) => {
   const { colors } = useColorScheme();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [currentDate, setCurrentDate] = useState(selectedDay);
+  const { isExpanded, setIsExpanded, currentDate, setCurrentDate } = useCalendarState();
 
   const expandProgress = useSharedValue(0);
+  const translateX = useSharedValue(0);
 
-  const setIsExpandedJS = useCallback((value: boolean) => {
-    setIsExpanded(value);
-  }, []);
+  useEffect(() => {
+    expandProgress.value = withSpring(isExpanded ? 1 : 0, {
+      damping: 20,
+      stiffness: 200,
+      mass: 0.5,
+    });
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (!isExpanded) {
+      setCurrentDate(new Date(selectedDay));
+    }
+  }, [selectedDay, isExpanded, setCurrentDate]);
 
   const expand = useCallback(() => {
-    expandProgress.value = withSpring(1, {
-      damping: 20,
-      stiffness: 200,
-      mass: 0.5,
-    });
-    runOnJS(setIsExpandedJS)(true);
-  }, []);
+    setIsExpanded(true);
+  }, [setIsExpanded]);
 
   const collapse = useCallback(() => {
-    expandProgress.value = withSpring(0, {
-      damping: 20,
-      stiffness: 200,
-      mass: 0.5,
-    });
-    runOnJS(setIsExpandedJS)(false);
-  }, []);
+    setIsExpanded(false);
+  }, [setIsExpanded]);
+
+  const handlePrevMonth = useCallback(() => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
+  }, [currentDate, setCurrentDate]);
+
+  const handleNextMonth = useCallback(() => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
+  }, [currentDate, setCurrentDate]);
+
+  const handlePrevWeek = useCallback(() => {
+    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 7)));
+  }, [currentDate, setCurrentDate]);
+
+  const handleNextWeek = useCallback(() => {
+    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 7)));
+  }, [currentDate, setCurrentDate]);
 
   const gesture = Gesture.Pan()
-    .activeOffsetY([-10, 10])
+    .activeOffsetX([-10, 10])
     .onStart(() => {})
     .onUpdate((event) => {
       if (!isExpanded && event.translationY < -50) {
@@ -64,36 +80,35 @@ export const MonthSelector = ({
       } else if (isExpanded && event.translationY > 50) {
         runOnJS(collapse)();
       }
+    })
+    .onEnd((event) => {
+      if (!isExpanded) {
+        if (event.translationX > 50) {
+          runOnJS(handlePrevWeek)();
+        } else if (event.translationX < -50) {
+          runOnJS(handleNextWeek)();
+        }
+      } else {
+        if (event.translationX > 50) {
+          runOnJS(handlePrevMonth)();
+        } else if (event.translationX < -50) {
+          runOnJS(handleNextMonth)();
+        }
+      }
     });
 
   const containerStyle = useAnimatedStyle(() => {
-    const height = interpolate(expandProgress.value, [0, 1], [106, 380]);
+    const height = interpolate(expandProgress.value, [0, 1], [92, 340]);
 
     return {
       height,
     };
   });
 
-  const rotateStyle = useAnimatedStyle(() => {
-    const rotation = interpolate(expandProgress.value, [0, 1], [0, 180]);
-
-    return {
-      transform: [{ rotate: `${rotation}deg` }],
-    };
-  });
-
-  const toggleExpanded = useCallback(() => {
-    if (isExpanded) {
-      collapse();
-    } else {
-      expand();
-    }
-  }, [isExpanded, expand, collapse]);
-
   const days = useMemo(() => {
     const today = new Date();
 
-    const baseDate = selectedDay || today;
+    const baseDate = currentDate || today;
     const currentDay = baseDate.getDate();
     const currentWeekDay = baseDate.getDay();
 
@@ -145,58 +160,24 @@ export const MonthSelector = ({
     return days;
   }, [currentDate, selectedDay, isExpanded]);
 
-  const handlePrevMonth = useCallback(() => {
-    setCurrentDate((prev) => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() - 1);
-      return newDate;
-    });
-  }, []);
-
-  const handleNextMonth = useCallback(() => {
-    setCurrentDate((prev) => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() + 1);
-      return newDate;
-    });
-  }, []);
+  const weekViewStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
 
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
         className={cn(
-          'w-full overflow-hidden border-b border-gray-300 pb-2 dark:border-gray-800',
+          'w-full overflow-hidden border-b border-gray-300 dark:border-gray-800',
           className
         )}
         style={[containerStyle]}
         testID={testID}>
-        <View className="mb-2 flex-row items-center justify-between px-2 pt-2">
-          {isExpanded && (
-            <TouchableOpacity
-              onPress={handlePrevMonth}
-              className="h-8 w-8 items-center justify-center rounded-full">
-              <Ionicons name="chevron-back" size={20} color="#666" />
-            </TouchableOpacity>
-          )}
-
-          {isExpanded && (
-            <Text className="text-base font-medium">
-              {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </Text>
-          )}
-
-          {isExpanded && (
-            <TouchableOpacity
-              onPress={handleNextMonth}
-              className="h-8 w-8 items-center justify-center rounded-full">
-              <Ionicons name="chevron-forward" size={20} color="#666" />
-            </TouchableOpacity>
-          )}
-        </View>
-
         <View>
           {!isExpanded ? (
-            <View className="w-full flex-row justify-between">
+            <Animated.View className="w-full flex-row justify-between pt-4" style={weekViewStyle}>
               {days.map((day) => (
                 <TouchableOpacity
                   key={day.date.toISOString()}
@@ -235,10 +216,10 @@ export const MonthSelector = ({
                   </View>
                 </TouchableOpacity>
               ))}
-            </View>
+            </Animated.View>
           ) : (
             <>
-              <View className="my-2 w-full flex-row">
+              <View className="my-2 w-full flex-row pt-[10px]">
                 {WEEKDAY_NAMES.map((name, index) => (
                   <View key={index} className="flex-1 items-center">
                     <Text className="text-xs uppercase">{name}</Text>
@@ -290,14 +271,6 @@ export const MonthSelector = ({
             </>
           )}
         </View>
-
-        <TouchableOpacity
-          onPress={toggleExpanded}
-          className="absolute bottom-0 left-1/2 h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full">
-          <Animated.View style={rotateStyle}>
-            <Ionicons name="chevron-down" size={24} color={colors.grey2} />
-          </Animated.View>
-        </TouchableOpacity>
       </Animated.View>
     </GestureDetector>
   );
