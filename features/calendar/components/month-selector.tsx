@@ -28,7 +28,8 @@ export const MonthSelector = ({
   className,
 }: MonthSelectorProps) => {
   const { colors } = useColorScheme();
-  const { isExpanded, setIsExpanded, currentDate, setCurrentDate } = useCalendarState();
+  const { isExpanded, setIsExpanded, currentDate, setCurrentDate, setSelectedDay } =
+    useCalendarState();
 
   const expandProgress = useSharedValue(0);
   const translateX = useSharedValue(0);
@@ -71,12 +72,14 @@ export const MonthSelector = ({
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() - 7);
     setCurrentDate(newDate);
+    setSelectedDay(newDate);
   }, [currentDate, setCurrentDate]);
 
   const handleNextWeek = useCallback(() => {
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() + 7);
     setCurrentDate(newDate);
+    setSelectedDay(newDate);
   }, [currentDate, setCurrentDate]);
 
   // Pan gesture for calendar interactions:
@@ -244,7 +247,7 @@ export const MonthSelector = ({
             </Animated.View>
           ) : (
             <>
-              <View className="my-2 w-full flex-row pt-[10px]">
+              <View className="my-2 w-full flex-row gap-0.5 pt-[10px]">
                 {WEEKDAY_NAMES.map((name, index) => (
                   <View key={index} className="flex-1 items-center">
                     <Text className="text-xs uppercase">{name}</Text>
