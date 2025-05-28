@@ -13,7 +13,7 @@ export default function CalendarLayout() {
         name="calendar"
         options={{
           headerRight: () => (
-            <View className="flex-row items-center gap-2 px-2">
+            <View className="flex-row items-center gap-2">
               <MonthButton />
               <HeaderButton onPress={() => router.push('/modal')} />
             </View>

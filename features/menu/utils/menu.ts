@@ -36,3 +36,27 @@ export const getMenuForDay = (menu: Menu, dayIndex: number): MenuItem | null => 
 export const hasImageMenu = (menu: Menu): boolean => {
   return !!(menu && 'cardapio' in menu && 'url_imagem' in menu.cardapio);
 };
+
+export const formatMenuItem = (item: string): string => {
+  if (!item) return '';
+
+  let formatted = item
+    .replace(/^COMPLEMENTO ALMOÇO:\s*/i, '')
+    .replace(/^COMPLEMENTO:\s*/i, '')
+    .replace(/^CARNE JANTA:\s*/i, '')
+    .replace(/^CARNE ALMOÇO:\s*/i, '')
+    .replace(/^CARNE:\s*/i, '');
+
+  formatted = formatted.replace(/\//g, ',');
+
+  formatted = formatted
+    .toLowerCase()
+    .split(' ')
+    .map((word) => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+
+  return formatted;
+};

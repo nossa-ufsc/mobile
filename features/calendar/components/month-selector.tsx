@@ -56,43 +56,66 @@ export const MonthSelector = ({
   }, [setIsExpanded]);
 
   const handlePrevMonth = useCallback(() => {
-    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentDate(newDate);
   }, [currentDate, setCurrentDate]);
 
   const handleNextMonth = useCallback(() => {
-    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentDate(newDate);
   }, [currentDate, setCurrentDate]);
 
   const handlePrevWeek = useCallback(() => {
-    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 7)));
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() - 7);
+    setCurrentDate(newDate);
   }, [currentDate, setCurrentDate]);
 
   const handleNextWeek = useCallback(() => {
-    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 7)));
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 7);
+    setCurrentDate(newDate);
   }, [currentDate, setCurrentDate]);
 
+  // Pan gesture for calendar interactions:
+  // - Vertical swipes: expand/collapse calendar
+  // - Horizontal swipes: navigate weeks (collapsed) or months (expanded)
   const gesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
+    .activeOffsetX([-15, 15])
+    .activeOffsetY([-15, 15])
+    .minDistance(15)
     .onStart(() => {})
     .onUpdate((event) => {
-      if (!isExpanded && event.translationY < -50) {
-        runOnJS(expand)();
-      } else if (isExpanded && event.translationY > 50) {
-        runOnJS(collapse)();
+      if (
+        Math.abs(event.translationY) > Math.abs(event.translationX) &&
+        Math.abs(event.translationY) > 30
+      ) {
+        if (!isExpanded && event.translationY < -50) {
+          runOnJS(expand)();
+        } else if (isExpanded && event.translationY > 50) {
+          runOnJS(collapse)();
+        }
       }
     })
     .onEnd((event) => {
-      if (!isExpanded) {
-        if (event.translationX > 50) {
-          runOnJS(handlePrevWeek)();
-        } else if (event.translationX < -50) {
-          runOnJS(handleNextWeek)();
-        }
-      } else {
-        if (event.translationX > 50) {
-          runOnJS(handlePrevMonth)();
-        } else if (event.translationX < -50) {
-          runOnJS(handleNextMonth)();
+      if (
+        Math.abs(event.translationX) > Math.abs(event.translationY) &&
+        Math.abs(event.translationX) > 60
+      ) {
+        if (!isExpanded) {
+          if (event.translationX > 60) {
+            runOnJS(handlePrevWeek)();
+          } else if (event.translationX < -60) {
+            runOnJS(handleNextWeek)();
+          }
+        } else {
+          if (event.translationX > 60) {
+            runOnJS(handlePrevMonth)();
+          } else if (event.translationX < -60) {
+            runOnJS(handleNextMonth)();
+          }
         }
       }
     });
@@ -177,7 +200,9 @@ export const MonthSelector = ({
         testID={testID}>
         <View>
           {!isExpanded ? (
-            <Animated.View className="w-full flex-row justify-between pt-4" style={weekViewStyle}>
+            <Animated.View
+              className="w-full flex-row justify-between gap-0.5 pt-4"
+              style={weekViewStyle}>
               {days.map((day) => (
                 <TouchableOpacity
                   key={day.date.toISOString()}

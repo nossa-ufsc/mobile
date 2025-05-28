@@ -69,17 +69,28 @@ export const CalendarHome = () => {
     setSelectedDay(newDate);
   };
 
-  const swipeGesture = Gesture.Pan()
-    .activeOffsetX([-20, 20])
-    .onEnd((event) => {
-      if (Math.abs(event.velocityX) < 500) return;
+  const combinedGesture = Gesture.Race(
+    Gesture.Pan()
+      .activeOffsetX([-25, 25])
+      .minDistance(25)
+      .enabled(!isExpanded)
+      .onEnd((event) => {
+        if (Math.abs(event.velocityX) < 400) return;
+        if (Math.abs(event.translationX) < Math.abs(event.translationY)) return;
+        if (Math.abs(event.translationX) < 40) return;
 
-      if (event.velocityX > 0) {
-        runOnJS(changeDate)('prev');
-      } else {
-        runOnJS(changeDate)('next');
-      }
-    });
+        if (event.velocityX > 0) {
+          runOnJS(changeDate)('prev');
+        } else {
+          runOnJS(changeDate)('next');
+        }
+      }),
+    Gesture.Tap()
+      .enabled(isExpanded)
+      .onEnd(() => {
+        runOnJS(handleDayViewPress)();
+      })
+  );
 
   if (!subjects?.length) {
     return (
@@ -97,15 +108,13 @@ export const CalendarHome = () => {
   return (
     <Container>
       <MonthSelector selectedDay={selectedDay} onSelectDay={setSelectedDay} />
-      <GestureDetector gesture={swipeGesture}>
-        <Pressable className="flex-1" onPress={handleDayViewPress}>
-          <CalendarDayView
-            onPressClass={handlePressClass}
-            onPressItem={handlePressItem}
-            items={items}
-            classItems={classItems}
-          />
-        </Pressable>
+      <GestureDetector gesture={combinedGesture}>
+        <CalendarDayView
+          onPressClass={handlePressClass}
+          onPressItem={handlePressItem}
+          items={items}
+          classItems={classItems}
+        />
       </GestureDetector>
 
       <Pressable
