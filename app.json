@@ -83,7 +83,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.portal.ufsc",
-      "buildNumber": "30"
+      "buildNumber": "31"
     },
     "android": {
       "adaptiveIcon": {
@@ -91,7 +91,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.portal.ufsc",
-      "versionCode": 30
+      "versionCode": 31
     },
     "extra": {
       "eas": {
