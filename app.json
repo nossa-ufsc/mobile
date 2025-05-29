@@ -83,7 +83,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.portal.ufsc",
-      "buildNumber": "31"
+      "buildNumber": "32"
     },
     "android": {
       "adaptiveIcon": {
@@ -91,7 +91,19 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.portal.ufsc",
-      "versionCode": 31
+      "versionCode": 32,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "nossa-ufsc" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "tccleal" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "extra": {
       "eas": {

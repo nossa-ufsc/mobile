@@ -14,7 +14,7 @@ import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
 import { usePostHog } from 'posthog-react-native';
 import { useRouter } from 'expo-router';
 
-const isDev = __DEV__;
+const isDev = false;
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -45,6 +45,7 @@ export interface UseCAGRLoginResult {
   handleLogin: (options: { onSuccess: () => void }) => Promise<void>;
   handleLogout: () => void;
   reloadSubjects: () => Promise<void>;
+  handleForcedAuthentication: (code: string) => Promise<void>;
 }
 
 export const useCAGRLogin = (): UseCAGRLoginResult => {
@@ -204,49 +205,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     if (response?.type === 'success') {
       const { code } = response.params;
 
-      const handleAuthentication = async () => {
-        setIsLoading(true);
-        try {
-          const token = await exchangeCodeForToken(code);
-          await saveAccessToken(token);
-
-          const userInfo = await fetchUserInformation(token);
-          setUser(userInfo);
-
-          const userSubjects = await fetchSubjects(token);
-          setSubjects(userSubjects);
-
-          const semesterStartDate = getSemesterStartDate();
-          const calendarItems = generateSemesterCalendar(
-            userSubjects,
-            semesterDuration,
-            semesterStartDate
-          );
-          calendarItems.forEach((item) => addClassItem(item));
-          generateClassesNotifications(calendarItems);
-
-          const { error } = await supabase.auth.signInAnonymously();
-
-          if (error) {
-            console.error('Error signing in anonymously:', error);
-            posthog.capture('error_signing_in_anonymously', { error });
-          }
-
-          // small delay to fetch user information nicely
-          setTimeout(() => {
-            setIsAuthenticated(true);
-            router.push('/(app)/(tabs)/(home)');
-          }, 1000);
-        } catch (error) {
-          console.error('Authentication error:', error);
-        } finally {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 3000);
-        }
-      };
-
-      handleAuthentication();
+      handleAuthentication(code);
     } else if (response) {
       console.log('Authentication was not successful:', response.type);
       setIsLoading(false);
@@ -303,6 +262,48 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     }
   };
 
+  const handleAuthentication = async (code: string) => {
+    setIsLoading(true);
+    try {
+      const token = await exchangeCodeForToken(code);
+      await saveAccessToken(token);
+
+      const userInfo = await fetchUserInformation(token);
+      setUser(userInfo);
+
+      const userSubjects = await fetchSubjects(token);
+      setSubjects(userSubjects);
+
+      const semesterStartDate = getSemesterStartDate();
+      const calendarItems = generateSemesterCalendar(
+        userSubjects,
+        semesterDuration,
+        semesterStartDate
+      );
+      calendarItems.forEach((item) => addClassItem(item));
+      generateClassesNotifications(calendarItems);
+
+      const { error } = await supabase.auth.signInAnonymously();
+
+      if (error) {
+        console.error('Error signing in anonymously:', error);
+        posthog.capture('error_signing_in_anonymously', { error });
+      }
+
+      // small delay to fetch user information nicely
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        router.push('/(app)/(tabs)/(home)');
+      }, 1000);
+    } catch (error) {
+      console.error('Authentication error:', error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    }
+  };
+
   const handleLogout = async () => {
     await saveAccessToken(null);
     await cancelAllNotifications();
@@ -348,5 +349,10 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     handleLogin,
     handleLogout,
     reloadSubjects,
+    // This is necessary due to the OAuth client not being ours for now,
+    // resulting in a different redirectUrl and consequently not enabling redirection.
+    // This is a temporary solution to allow the Android app to work with the OAuth client.
+    // We need to expose this function to the app so we can handle the OAuth callback.
+    handleForcedAuthentication: handleAuthentication,
   };
 };
