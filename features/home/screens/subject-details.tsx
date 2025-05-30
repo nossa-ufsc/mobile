@@ -82,7 +82,7 @@ export const SubjectDetails = () => {
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
         <View className="flex-row items-center justify-between border-b border-border p-4">
           <Text variant="title3">Frequência</Text>
-          <Pressable onPress={handleAddAbsence}>
+          <Pressable hitSlop={8} onPress={handleAddAbsence}>
             <Ionicons name="add" size={24} color={colors.foreground} />
           </Pressable>
         </View>
@@ -139,6 +139,7 @@ export const SubjectDetails = () => {
                     </Text>
                   </View>
                   <Pressable
+                    hitSlop={4}
                     onPress={() => removeAbsence(entry.id)}
                     className="bg-destructive/10 active:bg-destructive/20 h-8 w-8 items-center justify-center rounded-full">
                     <Text variant="callout" className="text-destructive">
@@ -154,7 +155,7 @@ export const SubjectDetails = () => {
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
         <View className="flex-row items-center justify-between border-b border-border p-4">
           <Text variant="title3">Atividades</Text>
-          <Pressable onPress={handleAddPress}>
+          <Pressable hitSlop={8} onPress={handleAddPress}>
             <Ionicons name="add" size={24} color={colors.foreground} />
           </Pressable>
         </View>

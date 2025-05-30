@@ -5,7 +5,6 @@ import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { Container } from '@/ui/container';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Step = {
   icon: 'calendar-outline' | 'school-outline' | 'people-outline' | 'code-outline';
@@ -15,20 +14,12 @@ type Step = {
 
 export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
   const { colors } = useColorScheme();
-  const insets = useSafeAreaInsets();
 
   const steps: Step[] = [
     {
       icon: 'calendar-outline',
-      title: 'Controle suas Faltas',
-      description:
-        'Acompanhe e gerencie suas presenças em cada disciplina de forma fácil e organizada.',
-    },
-    {
-      icon: 'school-outline',
-      title: 'Provas e Trabalhos',
-      description:
-        'Mantenha-se atualizado sobre suas avaliações e nunca perca um prazo importante.',
+      title: 'Gerencie seus horários',
+      description: 'Acompanhe e gerencie suas matérias e faltas de forma fácil e organizada.',
     },
     {
       icon: 'people-outline',
@@ -61,7 +52,7 @@ export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
           </View>
         </View>
 
-        <View className="mt-12 flex-1">
+        <View className="mt-8 flex-1">
           <View className="w-full max-w-sm gap-4 space-y-8">
             {steps.map((step) => (
               <View key={step.title} className="flex-row items-start gap-4 space-x-4">
@@ -80,9 +71,7 @@ export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
         </View>
       </Container>
 
-      <View
-        style={{ bottom: insets.bottom + 8 }}
-        className="absolute left-0 right-0 bg-background px-4">
+      <View className="mt-auto bg-background px-4 pb-2">
         <Button onPress={onNext} variant="primary">
           Começar
         </Button>

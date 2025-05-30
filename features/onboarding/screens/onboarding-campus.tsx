@@ -9,14 +9,12 @@ import { CAMPUS_LABELS } from '@/features/settings/utils/const';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { Campus } from '@/types';
 import { cn } from '@/utils/cn';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
   const { colors } = useColorScheme();
   const campuses = Object.entries(CAMPUS_LABELS);
   const setCampus = useEnvironmentStore((state) => state.setCampus);
   const selectedCampus = useEnvironmentStore((state) => state.campus);
-  const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1">
@@ -55,9 +53,7 @@ export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
         </View>
       </Container>
 
-      <View
-        style={{ bottom: insets.bottom + 8 }}
-        className="absolute left-0 right-0 bg-background px-4">
+      <View className="mt-auto bg-background px-4 pb-2">
         <Button onPress={onNext} variant="primary">
           Próximo
         </Button>

@@ -2,21 +2,18 @@ import { useState } from 'react';
 import { OnboardingCampusScreen } from './onboarding-campus';
 import { OnboardingLoginScreen } from './onboarding-login';
 import { OnboardingInitialScreen } from './onboarding-initial';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
 export const OnboardingScreen = () => {
   const [scene, setScene] = useState<'initial' | 'campus' | 'login'>('initial');
+  const insets = useSafeAreaInsets();
 
-  if (scene === 'initial') {
-    return <OnboardingInitialScreen onNext={() => setScene('campus')} />;
-  }
-
-  if (scene === 'campus') {
-    return <OnboardingCampusScreen onNext={() => setScene('login')} />;
-  }
-
-  if (scene === 'login') {
-    return <OnboardingLoginScreen />;
-  }
-
-  return null;
+  return (
+    <View className="flex-1" style={{ paddingBottom: insets.bottom, paddingTop: insets.top }}>
+      {scene === 'login' && <OnboardingLoginScreen />}
+      {scene === 'campus' && <OnboardingCampusScreen onNext={() => setScene('login')} />}
+      {scene === 'initial' && <OnboardingInitialScreen onNext={() => setScene('campus')} />}
+    </View>
+  );
 };

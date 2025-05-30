@@ -6,7 +6,6 @@ import { Button } from '@/ui/button';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { Container } from '@/ui/container';
 import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 type Step = {
@@ -18,7 +17,6 @@ type Step = {
 export const OnboardingLoginScreen = () => {
   const { colors } = useColorScheme();
   const { handleLogin, isLoading } = useCAGRLogin();
-  const insets = useSafeAreaInsets();
 
   const steps: Step[] = [
     {
@@ -56,7 +54,7 @@ export const OnboardingLoginScreen = () => {
           </View>
         </View>
 
-        <View className="mt-12">
+        <View className="mt-8">
           <View className="w-full max-w-sm gap-4 space-y-8">
             {steps.map((step) => (
               <View key={step.title} className="flex-row items-start gap-4 space-x-4">
@@ -75,9 +73,7 @@ export const OnboardingLoginScreen = () => {
         </View>
       </Container>
 
-      <View
-        style={{ bottom: insets.bottom + 8 }}
-        className="absolute left-0 right-0 bg-background px-4">
+      <View className="mt-auto bg-background px-4 pb-2">
         <Button
           variant="primary"
           onPress={() =>

@@ -16,7 +16,9 @@ const Sheet = React.forwardRef<
   const { top } = useSafeAreaInsets();
 
   const renderBackdrop = React.useCallback(
-    (props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />,
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} opacity={1} />
+    ),
     []
   );
   return (
@@ -32,8 +34,6 @@ const Sheet = React.forwardRef<
       keyboardBlurBehavior="restore"
       style={
         style ?? {
-          borderWidth: 1,
-          borderColor: colors.grey5,
           borderTopStartRadius: 16,
           borderTopEndRadius: 16,
         }

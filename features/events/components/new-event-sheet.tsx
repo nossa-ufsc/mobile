@@ -215,7 +215,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Data de Início</Text>
+            <Text className="text-[17px] text-foreground">Início</Text>
             <DatePicker
               locale="pt-BR"
               mode="datetime"
@@ -231,7 +231,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Data de Término</Text>
+            <Text className="text-[17px] text-foreground">Término</Text>
             <DatePicker
               locale="pt-BR"
               mode="datetime"

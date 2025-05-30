@@ -1,4 +1,4 @@
-import { ScrollView, View, Pressable } from 'react-native';
+import { ScrollView, View, TouchableOpacity } from 'react-native';
 import { Text } from '@/ui/text';
 import { cn } from '@/utils/cn';
 import { useMemo, useRef, useEffect, useState } from 'react';
@@ -86,14 +86,15 @@ const ClassItem = ({
   const existingAbsence = absences.find((entry) => entry.date === item.date.toDateString());
 
   return (
-    <Pressable
-      onPress={() => onPressClass(item)}
+    <TouchableOpacity
+      hitSlop={4}
       className={cn(
         'absolute left-0 right-0 overflow-hidden rounded-lg px-3 py-1',
         'border border-gray-300 dark:border-gray-700',
         'bg-primary/10 dark:bg-primary/20'
       )}
-      style={{ top: item.top, height: item.height }}>
+      onPressOut={() => onPressClass(item)}
+      style={{ top: item.top, height: item.height, minHeight: 48 }}>
       <View className="flex-row items-center justify-between">
         <Text variant="subhead" className="mr-2 flex-shrink font-semibold">
           {item.title}
@@ -115,15 +116,17 @@ const ClassItem = ({
         {item.nestedItems.map((nestedItem, index) => {
           const nestedTop = index * (NESTED_ITEM_FIXED_HEIGHT + NESTED_ITEM_VERTICAL_GAP);
           return (
-            <Pressable
+            <TouchableOpacity
               key={nestedItem.id}
               onPress={() => onPressItem(nestedItem)}
+              hitSlop={4}
               style={{
                 top: nestedTop,
                 height: NESTED_ITEM_FIXED_HEIGHT,
                 position: 'absolute',
                 left: 0,
                 right: 0,
+                minHeight: 32,
               }}
               className={cn(
                 'flex-row items-center justify-between rounded px-2 py-0.5',
@@ -132,11 +135,11 @@ const ClassItem = ({
               <Text variant="caption1" className="flex-1 font-medium" numberOfLines={1}>
                 {nestedItem.title}
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -345,7 +348,7 @@ export const CalendarDayView = ({
         ))}
 
         {layout.layoutedOthers.map((item) => (
-          <Pressable
+          <TouchableOpacity
             key={item.id}
             onPress={() => onPressItem(item)}
             className={cn(
@@ -362,7 +365,7 @@ export const CalendarDayView = ({
                 {item.title}
               </Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>

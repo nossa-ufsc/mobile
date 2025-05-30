@@ -196,7 +196,7 @@ export const CalendarItemSheet = ({
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Data e Hora</Text>
+            <Text className="text-[17px] text-foreground">Data</Text>
             <DatePicker
               locale="pt-BR"
               mode="datetime"

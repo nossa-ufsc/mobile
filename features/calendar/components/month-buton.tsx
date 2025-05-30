@@ -11,7 +11,8 @@ export const MonthButton = () => {
 
   return (
     <TouchableOpacity
-      onPress={() => setIsExpanded(!isExpanded)}
+      onPressIn={() => setIsExpanded(!isExpanded)}
+      hitSlop={8}
       className="flex-row items-center gap-1 px-2">
       <Text variant="title3">{MONTHS[currentDate.getMonth()]}</Text>
       <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={16} color={colors.grey2} />

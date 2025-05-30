@@ -14,7 +14,7 @@ export const ThemeToggle = () => {
         className="items-center justify-center"
         key={`toggle-${colorScheme}`}
         entering={ZoomInRotate}>
-        <Pressable onPress={toggleColorScheme} className="opacity-80">
+        <Pressable onPressIn={toggleColorScheme}>
           {colorScheme === 'dark'
             ? ({ pressed }) => (
                 <View className={cn('px-0.5', pressed && 'opacity-50')}>

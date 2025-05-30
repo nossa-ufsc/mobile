@@ -14,7 +14,7 @@ import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
 import { usePostHog } from 'posthog-react-native';
 import { useRouter } from 'expo-router';
 
-const isDev = false;
+const isDev = __DEV__;
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;

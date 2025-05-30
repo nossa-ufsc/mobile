@@ -1,25 +1,15 @@
+import { useColorScheme } from '@/utils/use-color-scheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { forwardRef } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
 export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void }>(
   ({ onPress }, ref) => {
+    const { colors } = useColorScheme();
     return (
-      <Pressable onPress={onPress}>
-        {({ pressed }) => (
-          <FontAwesome
-            name="gear"
-            size={25}
-            color="gray"
-            style={[
-              styles.headerRight,
-              {
-                opacity: pressed ? 0.5 : 1,
-              },
-            ]}
-          />
-        )}
-      </Pressable>
+      <TouchableOpacity onPressIn={onPress}>
+        <FontAwesome name="gear" size={25} color={colors.grey2} style={[styles.headerRight]} />
+      </TouchableOpacity>
     );
   }
 );
