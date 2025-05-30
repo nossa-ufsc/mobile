@@ -47,7 +47,8 @@
           ]
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -86,6 +87,7 @@
       "buildNumber": "32"
     },
     "android": {
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -95,12 +97,20 @@
       "intentFilters": [
         {
           "action": "VIEW",
-          "data": [{ "scheme": "nossa-ufsc" }],
+          "data": [
+            {
+              "scheme": "nossa-ufsc"
+            }
+          ],
           "category": ["BROWSABLE", "DEFAULT"]
         },
         {
           "action": "VIEW",
-          "data": [{ "scheme": "tccleal" }],
+          "data": [
+            {
+              "scheme": "tccleal"
+            }
+          ],
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ]

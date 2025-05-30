@@ -62,7 +62,7 @@ export const WeekDaySelector = ({
             </Text>
             <View
               className={cn(
-                'h-10 w-10 items-center justify-center rounded-full',
+                'h-10 w-10 items-center justify-center overflow-hidden rounded-full',
                 selectedDay === day.dayIndex ? 'bg-primary' : 'bg-transparent'
               )}>
               <Text

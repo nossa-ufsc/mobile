@@ -1,17 +1,5 @@
-## Still missing:
+## Pending:
 
-[x] - Widgets
-[x] - Notifications setup
-[x] - Events/Parties Logic
-[x] - Calendar/reminders Logic
-[x] - Show next calendar items on the subject details
-[x] - Show calendar item for the day in subject card on home screen
-[x] - Populate calendar with subjects for current semester
-[x] - Onboarding flow
-[x] - Class calendar item bottom sheet
-[x] - Create new CalendarClassItem and isolate logic there, only calculate consecutive classes once and also link the absances directly
-[x] - RU menu
-[x] - Keyboard view weird on bottom sheets
-[x] - Android view on add absence sheet
-[x] - showActionSheetWithOptions no bottom padding android
-[x] - pre commit hook (husky, linter, name pattern etc)
+[ ] - Watch https://github.com/supabase/supabase-js/issues/1400 and migrate out of @next version to stable release. Currently necesary due to Supabase compatibility error with Expo SDK53.
+
+[ ] - Watch https://github.com/software-mansion/react-native-screens/issues/432 and migrate out of the nightly version. Currently necessary due to headerRight not working with Expo SDK53.

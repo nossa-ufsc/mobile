@@ -10,12 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-scheme';
 import { NAV_THEME } from '@/theme';
-import { registerWidgetTaskHandler } from 'react-native-android-widget';
-import { widgetTaskHandler } from '@/features/widget/widget-task-handler';
 import { PostHogProvider } from 'posthog-react-native';
-
-registerWidgetTaskHandler(widgetTaskHandler);
-
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -37,7 +32,7 @@ export default function RootLayout() {
         apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
         options={{
           host: 'https://us.i.posthog.com',
-          disabled: __DEV__,
+          // disabled: __DEV__,
         }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <QueryClientProvider client={queryClient}>

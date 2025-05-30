@@ -1,5 +1,4 @@
-import { User, Subject, CAGRSystemResponse } from '@/types';
-import { formatNumericTime, getEndTime, cagrDayIndexToJsIndex } from '@/utils/time-mapping';
+import { User, Subject } from '@/types';
 
 export const mockFetchUserInformation = async (): Promise<User> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -14,203 +13,109 @@ export const mockFetchUserInformation = async (): Promise<User> => {
 export const mockFetchSubjects = async (): Promise<Subject[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const mockCAGRResponse: CAGRSystemResponse = {
-    disciplinas: [
-      {
-        nome: 'História e Teoria da Arquitetura I',
-        codigoDisciplina: 'ARQ7101',
-        numeroAulas: 4,
-      },
-      {
-        nome: 'Desenho Arquitetônico I',
-        codigoDisciplina: 'ARQ7102',
-        numeroAulas: 6,
-      },
-      {
-        nome: 'Projeto Arquitetônico I',
-        codigoDisciplina: 'ARQ7103',
-        numeroAulas: 8,
-      },
-      {
-        nome: 'Urbanismo e Paisagismo I',
-        codigoDisciplina: 'ARQ7104',
-        numeroAulas: 4,
-      },
-      {
-        nome: 'Materiais e Técnicas Construtivas I',
-        codigoDisciplina: 'ARQ7105',
-        numeroAulas: 4,
-      },
-    ],
-    horarios: [
-      {
-        codigoDisciplina: 'ARQ7101',
-        codigoTurma: '01208A',
-        diaSemana: 2,
-        horario: '0820',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-108',
-      },
-      {
-        codigoDisciplina: 'ARQ7101',
-        codigoTurma: '01208A',
-        diaSemana: 2,
-        horario: '0910',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-108',
-      },
-      {
-        codigoDisciplina: 'ARQ7102',
-        codigoTurma: '01208A',
-        diaSemana: 3,
-        horario: '1330',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-205',
-      },
-      {
-        codigoDisciplina: 'ARQ7102',
-        codigoTurma: '01208A',
-        diaSemana: 3,
-        horario: '1420',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-205',
-      },
-      {
-        codigoDisciplina: 'ARQ7102',
-        codigoTurma: '01208A',
-        diaSemana: 3,
-        horario: '1510',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-205',
-      },
-      {
-        codigoDisciplina: 'ARQ7103',
-        codigoTurma: '01208A',
-        diaSemana: 4,
-        horario: '0820',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-301',
-      },
-      {
-        codigoDisciplina: 'ARQ7103',
-        codigoTurma: '01208A',
-        diaSemana: 4,
-        horario: '0910',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-301',
-      },
-      {
-        codigoDisciplina: 'ARQ7103',
-        codigoTurma: '01208A',
-        diaSemana: 4,
-        horario: '1010',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-301',
-      },
-      {
-        codigoDisciplina: 'ARQ7103',
-        codigoTurma: '01208A',
-        diaSemana: 4,
-        horario: '1100',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-301',
-      },
-      {
-        codigoDisciplina: 'ARQ7104',
-        codigoTurma: '01208A',
-        diaSemana: 5,
-        horario: '1330',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-202',
-      },
-      {
-        codigoDisciplina: 'ARQ7104',
-        codigoTurma: '01208A',
-        diaSemana: 5,
-        horario: '1420',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-202',
-      },
-      {
-        codigoDisciplina: 'ARQ7105',
-        codigoTurma: '01208A',
-        diaSemana: 6,
-        horario: '1010',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-105',
-      },
-      {
-        codigoDisciplina: 'ARQ7105',
-        codigoTurma: '01208A',
-        diaSemana: 6,
-        horario: '1100',
-        localizacaoCentro: 'CTC',
-        localizacaoEspacoFisico: 'ARQ-105',
-      },
-    ],
-    professores: [
-      {
-        codigoDisciplina: 'ARQ7101',
-        professores: [{ nomeProfessor: 'Ana Carolina Santos' }],
-      },
-      {
-        codigoDisciplina: 'ARQ7102',
-        professores: [{ nomeProfessor: 'Roberto Oliveira' }],
-      },
-      {
-        codigoDisciplina: 'ARQ7103',
-        professores: [{ nomeProfessor: 'Mariana Costa' }, { nomeProfessor: 'Pedro Mendes' }],
-      },
-      {
-        codigoDisciplina: 'ARQ7104',
-        professores: [{ nomeProfessor: 'Luiz Fernando Almeida' }],
-      },
-      {
-        codigoDisciplina: 'ARQ7105',
-        professores: [{ nomeProfessor: 'Carlos Eduardo Lima' }],
-      },
-    ],
-  };
-
-  const subjects: Subject[] = [];
-
-  mockCAGRResponse.disciplinas?.forEach((subject) => {
-    const subjectTimes =
-      mockCAGRResponse.horarios
-        ?.filter((schedule) => schedule.codigoDisciplina === subject.codigoDisciplina)
-        .map((schedule) => {
-          const numericTime = parseInt(schedule.horario, 10);
-          const formattedStartTime = formatNumericTime(numericTime);
-          return {
-            weekDay: cagrDayIndexToJsIndex(schedule.diaSemana),
-            startTime: formattedStartTime,
-            endTime: getEndTime(formattedStartTime),
-            center: schedule.localizacaoCentro,
-            room: schedule.localizacaoEspacoFisico,
-          };
-        }) ?? [];
-
-    const professorData = mockCAGRResponse.professores?.find(
-      (p) => p.codigoDisciplina === subject.codigoDisciplina
-    );
-    const professors = professorData?.professores.map((p) => p.nomeProfessor) ?? [];
-
-    const classGroup =
-      mockCAGRResponse.horarios
-        ?.find((h) => h.codigoDisciplina === subject.codigoDisciplina)
-        ?.codigoTurma.trim() ?? '';
-
-    subjects.push({
-      id: subject.codigoDisciplina,
-      name: subject.nome,
-      code: subject.codigoDisciplina,
-      classGroup,
-      weeklyClassCount: subject.numeroAulas,
+  return [
+    {
+      id: 'ARQ7101',
+      name: 'História e Teoria da Arquitetura I',
+      code: 'ARQ7101',
+      classGroup: '01208A',
+      weeklyClassCount: 2,
       absences: [],
-      professors,
-      schedule: subjectTimes,
-    });
-  });
-
-  return subjects;
+      professors: ['Ana Carolina Santos'],
+      schedule: [
+        {
+          weekDay: 1,
+          startTime: '08:20',
+          endTime: '09:10',
+          center: 'CTC',
+          room: 'ARQ108',
+        },
+        {
+          weekDay: 1,
+          startTime: '09:10',
+          endTime: '10:00',
+          center: 'CTC',
+          room: 'ARQ108',
+        },
+      ],
+    },
+    {
+      id: 'ARQ7102',
+      name: 'Desenho Arquitetônico I',
+      code: 'ARQ7102',
+      classGroup: '01208A',
+      weeklyClassCount: 4,
+      absences: [],
+      professors: ['Roberto Oliveira'],
+      schedule: [
+        {
+          weekDay: 2,
+          startTime: '18:30',
+          endTime: '19:20',
+          center: 'CTC',
+          room: 'ARQ205',
+        },
+        {
+          weekDay: 2,
+          startTime: '19:20',
+          endTime: '20:10',
+          center: 'CTC',
+          room: 'ARQ205',
+        },
+        {
+          weekDay: 4,
+          startTime: '18:30',
+          endTime: '19:20',
+          center: 'CTC',
+          room: 'ARQ205',
+        },
+        {
+          weekDay: 4,
+          startTime: '19:20',
+          endTime: '20:10',
+          center: 'CTC',
+          room: 'ARQ205',
+        },
+      ],
+    },
+    {
+      id: 'ARQ7103',
+      name: 'Projeto Arquitetônico I',
+      code: 'ARQ7103',
+      classGroup: '01208A',
+      weeklyClassCount: 4,
+      absences: [],
+      professors: ['Mariana Costa'],
+      schedule: [
+        {
+          weekDay: 3,
+          startTime: '20:20',
+          endTime: '21:10',
+          center: 'CTC',
+          room: 'ARQ301',
+        },
+        {
+          weekDay: 3,
+          startTime: '21:10',
+          endTime: '22:00',
+          center: 'CTC',
+          room: 'ARQ301',
+        },
+        {
+          weekDay: 5,
+          startTime: '20:20',
+          endTime: '21:10',
+          center: 'CTC',
+          room: 'ARQ301',
+        },
+        {
+          weekDay: 5,
+          startTime: '21:10',
+          endTime: '22:00',
+          center: 'CTC',
+          room: 'ARQ301',
+        },
+      ],
+    },
+  ];
 };

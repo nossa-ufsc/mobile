@@ -1,5 +1,4 @@
 import { View, Image, Platform } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Event } from '@/types';
 import { Text } from '@/ui/text';
 import { formatDateTime } from '../utils/format-date-time';
@@ -31,16 +30,16 @@ export const EventCard = ({ event }: EventCardProps) => {
           {startDateTime.formattedDate}
         </Text>
       </View>
-      <LinearGradient
-        colors={['rgba(18, 14, 27, 0.1)', 'rgba(18, 14, 27, 0.9)', 'rgba(18, 14, 27, 1)']}
+      <View
+        className="bg-black/50"
         style={{
           position: 'absolute',
-          bottom: 0,
+          bottom: 8,
           height: isAndroid ? 90 : 80,
           width: '100%',
-          padding: 4,
           borderBottomLeftRadius: 12,
           borderBottomRightRadius: 12,
+          paddingHorizontal: 4,
         }}>
         <View className="pl-1.5">
           <Text variant="title3" className="text-white" adjustsFontSizeToFit numberOfLines={1}>
@@ -53,7 +52,7 @@ export const EventCard = ({ event }: EventCardProps) => {
             Enviado por {event.created_by.name}
           </Text>
         </View>
-      </LinearGradient>
+      </View>
     </View>
   );
 };

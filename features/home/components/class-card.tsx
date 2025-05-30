@@ -85,7 +85,7 @@ export const ClassCard = ({
     <TouchableOpacity className="mb-4 rounded-2xl bg-card p-4 shadow-sm" onPress={onPress}>
       <View className="mb-2 flex-row items-start justify-between">
         <Pressable onPress={onPress} className="mr-3 flex-1 active:opacity-70">
-          <Text className="text-lg font-semibold" numberOfLines={3}>
+          <Text className="text-lg font-semibold" numberOfLines={1} adjustsFontSizeToFit>
             {subject.name}
           </Text>
           <Text className="text-sm text-muted-foreground">

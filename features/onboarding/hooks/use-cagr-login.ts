@@ -287,7 +287,9 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
       if (error) {
         console.error('Error signing in anonymously:', error);
-        posthog.capture('error_signing_in_anonymously', { error });
+        posthog.capture('error_signing_in_anonymously', {
+          error: error.message,
+        });
       }
 
       // small delay to fetch user information nicely

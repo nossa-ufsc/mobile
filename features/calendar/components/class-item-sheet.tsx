@@ -15,7 +15,7 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
   const { bottom } = useSafeAreaInsets();
   const existingAbsence = absences.find((entry) => entry.date === item.date.toDateString());
 
-  const maxAbsences = item.consecutiveClasses + 1 || 1;
+  const maxAbsences = item.consecutiveClasses ? item.consecutiveClasses + 1 : 1;
   const absenceOptions = Array.from({ length: maxAbsences }, (_, i) => i + 1);
 
   const handleAddAbsence = (count: number) => {

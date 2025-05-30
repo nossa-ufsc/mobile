@@ -226,7 +226,7 @@ export const MonthSelector = ({
                   </Text>
                   <View
                     className={cn(
-                      'h-10 w-10 items-center justify-center rounded-full',
+                      'h-10 w-10 items-center justify-center overflow-hidden rounded-full',
                       day.isSelected ? 'bg-primary' : 'bg-transparent'
                     )}>
                     <Text
@@ -275,7 +275,7 @@ export const MonthSelector = ({
                           testID={`${testID}-day-${day.number}`}>
                           <View
                             className={cn(
-                              'h-10 w-10 items-center justify-center rounded-full',
+                              'h-10 w-10 items-center justify-center overflow-hidden rounded-full',
                               day.isSelected ? 'bg-primary' : 'bg-transparent'
                             )}>
                             <Text
