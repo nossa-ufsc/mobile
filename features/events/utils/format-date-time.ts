@@ -2,7 +2,7 @@ export const formatDateTime = (dateString: string) => {
   const date = new Date(dateString);
   const formattedDate = date.toLocaleDateString('pt-BR', {
     day: '2-digit',
-    month: 'short',
+    month: '2-digit',
   });
   const formattedTime = date.toLocaleTimeString('pt-BR', {
     hour: '2-digit',

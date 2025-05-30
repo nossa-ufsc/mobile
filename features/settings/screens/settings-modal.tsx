@@ -188,7 +188,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400 shadow-sm">
                 <MaterialCommunityIcons name="calendar-clock" size={24} color="white" />
               </View>
-              <Text variant="body">Duração do Semestre</Text>
+              <Text variant="body">Semestre</Text>
             </View>
             <View className="flex-row items-center">
               <Text variant="subhead" color="primary" className="mr-2">
