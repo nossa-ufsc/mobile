@@ -97,7 +97,10 @@ export const ClassCard = ({
 
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
-            <Pressable hitSlop={8} className="pt-1 active:opacity-50">
+            <Pressable
+              onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              hitSlop={8}
+              className="pt-1 active:opacity-50">
               <Ionicons name="ellipsis-horizontal" size={20} color={colors.foreground} />
             </Pressable>
           </DropdownMenu.Trigger>

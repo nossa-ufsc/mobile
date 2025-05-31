@@ -108,7 +108,13 @@ export const CalendarHome = () => {
 
   return (
     <Container>
-      <MonthSelector selectedDay={selectedDay} onSelectDay={setSelectedDay} />
+      <MonthSelector
+        selectedDay={selectedDay}
+        onSelectDay={(day) => {
+          Haptics.selectionAsync();
+          setSelectedDay(day);
+        }}
+      />
       <GestureDetector gesture={combinedGesture}>
         <CalendarDayView
           onPressClass={handlePressClass}

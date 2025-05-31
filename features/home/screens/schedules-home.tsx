@@ -25,11 +25,11 @@ export const SchedulesHome = () => {
       if (event.velocityX > 0) {
         const newDay = selectedDay === 0 ? 6 : selectedDay - 1;
         runOnJS(setSelectedDay)(newDay);
-        Haptics.selectionAsync();
+        runOnJS(Haptics.selectionAsync)();
       } else {
         const newDay = selectedDay === 6 ? 0 : selectedDay + 1;
         runOnJS(setSelectedDay)(newDay);
-        Haptics.selectionAsync();
+        runOnJS(Haptics.selectionAsync)();
       }
     });
 
