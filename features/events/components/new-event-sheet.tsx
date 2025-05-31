@@ -20,7 +20,7 @@ interface NewEventSheetProps {
 
 export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
   const { colors } = useColorScheme();
-  const { user, campus } = useEnvironmentStore();
+  const { user, campus, isGuest } = useEnvironmentStore();
 
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
@@ -133,7 +133,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           ) : (
             <Text className="text-lg font-bold">Prévia do Evento</Text>
           )}
-          <Pressable onPress={handleSubmit} disabled={isPublishing}>
+          <Pressable onPress={handleSubmit} disabled={isPublishing || isGuest}>
             <Text
               className={cn('text-[17px] font-normal text-primary', isPublishing && 'opacity-50')}>
               Publicar
@@ -142,7 +142,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
         </View>
 
         <View className="flex-1 px-4 pt-4">
-          <Text variant="subhead" color="primary" className="mb-4 mt-2">
+          <Text variant="subhead" color="primary" className="mt-2">
             Confira se as informações estão corretas antes de publicar. Seu nome será exibido como
             criador do evento.
           </Text>

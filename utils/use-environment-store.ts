@@ -28,6 +28,8 @@ interface EnvironmentState {
   setNotificationsEnabled: (enabled: boolean) => void;
   setCampus: (campus: Campus) => void;
   clearEnvironment: () => void;
+  isGuest: boolean;
+  setIsGuest: (isGuest: boolean) => void;
 }
 
 const systemStorageZustandAdadpter = {
@@ -98,6 +100,11 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           notificationsEnabled: true,
           campus: Campus.FLORIANOPOLIS,
         });
+      },
+
+      isGuest: false,
+      setIsGuest: (isGuest) => {
+        set({ isGuest });
       },
     }),
     {

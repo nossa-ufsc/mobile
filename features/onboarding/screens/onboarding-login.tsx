@@ -7,6 +7,7 @@ import { useColorScheme } from '@/utils/use-color-scheme';
 import { Container } from '@/ui/container';
 import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
 import { router } from 'expo-router';
+import { useEnvironmentStore } from '@/utils/use-environment-store';
 
 type Step = {
   icon: 'key-outline' | 'shield-checkmark-outline' | 'sync-outline';
@@ -17,6 +18,7 @@ type Step = {
 export const OnboardingLoginScreen = () => {
   const { colors } = useColorScheme();
   const { handleLogin, isLoading } = useCAGRLogin();
+  const { setIsGuest } = useEnvironmentStore();
 
   const steps: Step[] = [
     {
@@ -92,6 +94,7 @@ export const OnboardingLoginScreen = () => {
             onPress={() =>
               handleLogin({
                 onSuccess: () => {
+                  setIsGuest(true);
                   router.push('/(app)/(tabs)/(home)');
                 },
                 isGuest: true,
