@@ -8,7 +8,12 @@ export const HeaderButton = memo(
   forwardRef<View, { onPress?: () => void }>(({ onPress }, ref) => {
     const { colors } = useColorScheme();
     return (
-      <Pressable ref={ref} onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}>
+      <Pressable
+        ref={ref}
+        onPressIn={() => {
+          onPress?.();
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}>
         <FontAwesome className="mr-[15px]" name="gear" size={25} color={colors.grey2} />
       </Pressable>
     );
