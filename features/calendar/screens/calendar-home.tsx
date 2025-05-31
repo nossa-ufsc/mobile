@@ -82,8 +82,10 @@ export const CalendarHome = () => {
 
         if (event.velocityX > 0) {
           runOnJS(changeDate)('prev');
+          Haptics.selectionAsync();
         } else {
           runOnJS(changeDate)('next');
+          Haptics.selectionAsync();
         }
       }),
     Gesture.Tap()
