@@ -47,9 +47,8 @@ export const OnboardingLoginScreen = () => {
           </View>
           <View>
             <Text className="text-base leading-relaxed text-muted-foreground">
-              Para facilitar sua experiência, usamos seu login do CAGR para sincronizar
-              automaticamente suas disciplinas. Seus dados são salvos apenas no seu dispositivo e
-              você não precisará inserir informações manualmente.
+              Use seu login do CAGR para sincronizar suas disciplinas. Seus dados são salvos apenas
+              no seu dispositivo.
             </Text>
           </View>
         </View>
@@ -73,7 +72,7 @@ export const OnboardingLoginScreen = () => {
         </View>
       </Container>
 
-      <View className="mt-auto bg-background px-4 pb-2">
+      <View className="mt-auto flex-col gap-3 bg-background px-4 pb-2">
         <Button
           variant="primary"
           onPress={() =>
@@ -87,6 +86,23 @@ export const OnboardingLoginScreen = () => {
           disabled={isLoading}>
           Entrar
         </Button>
+        <Text color="tertiary" variant="body" className="self-center">
+          Não é aluno?{' '}
+          <Text
+            onPress={() =>
+              handleLogin({
+                onSuccess: () => {
+                  router.push('/(app)/(tabs)/(home)');
+                },
+                isGuest: true,
+              })
+            }
+            variant="body"
+            color="primary"
+            className="underline">
+            Entrar como visitante
+          </Text>
+        </Text>
       </View>
     </View>
   );

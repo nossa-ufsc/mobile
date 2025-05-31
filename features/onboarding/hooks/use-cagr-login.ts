@@ -42,7 +42,7 @@ WebBrowser.maybeCompleteAuthSession();
 export interface UseCAGRLoginResult {
   isAuthenticated: boolean;
   isLoading: boolean;
-  handleLogin: (options: { onSuccess: () => void }) => Promise<void>;
+  handleLogin: (options: { onSuccess: () => void; isGuest?: boolean }) => Promise<void>;
   handleLogout: () => void;
   reloadSubjects: () => Promise<void>;
   handleForcedAuthentication: (code: string) => Promise<void>;
@@ -240,10 +240,16 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     setIsLoading(false);
   };
 
-  const handleLogin = async ({ onSuccess }: { onSuccess: () => void }) => {
+  const handleLogin = async ({
+    onSuccess,
+    isGuest = false,
+  }: {
+    onSuccess: () => void;
+    isGuest?: boolean;
+  }) => {
     setIsLoading(true);
     try {
-      if (isDev) {
+      if (isDev || isGuest) {
         await handleDevLogin();
         onSuccess();
       } else {
