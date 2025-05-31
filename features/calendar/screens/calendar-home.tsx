@@ -15,6 +15,7 @@ import { runOnJS } from 'react-native-reanimated';
 import { ClassItemSheet } from '../components/class-item-sheet';
 import { Text } from '@/ui/text';
 import { useCalendarState } from '../hooks/use-calendar-state';
+import * as Haptics from 'expo-haptics';
 
 export const CalendarHome = () => {
   const calendarSheetRef = useRef<BottomSheetModal>(null);
@@ -123,7 +124,10 @@ export const CalendarHome = () => {
         <Ionicons name="add" size={24} color="white" />
       </Pressable>
 
-      <Sheet ref={calendarSheetRef} enableDynamicSizing>
+      <Sheet
+        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        ref={calendarSheetRef}
+        enableDynamicSizing>
         <CalendarItemSheet
           subjects={subjects}
           onClose={handleClose}
@@ -132,7 +136,10 @@ export const CalendarHome = () => {
         />
       </Sheet>
 
-      <Sheet ref={classSheetRef} enableDynamicSizing>
+      <Sheet
+        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        ref={classSheetRef}
+        enableDynamicSizing>
         {selectedClassItem && <ClassItemSheet item={selectedClassItem} />}
       </Sheet>
     </Container>

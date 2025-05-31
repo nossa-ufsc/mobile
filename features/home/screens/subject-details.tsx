@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { AbsenceSheet } from '../components/absence-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 
 export const SubjectDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -219,7 +220,10 @@ export const SubjectDetails = () => {
         ))}
       </View>
 
-      <Sheet ref={calendarSheetRef} enableDynamicSizing>
+      <Sheet
+        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        ref={calendarSheetRef}
+        enableDynamicSizing>
         <CalendarItemSheet
           subjects={subjects}
           onClose={handleClose}
@@ -228,7 +232,10 @@ export const SubjectDetails = () => {
         />
       </Sheet>
 
-      <Sheet ref={absenceSheetRef} enableDynamicSizing>
+      <Sheet
+        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        ref={absenceSheetRef}
+        enableDynamicSizing>
         <AbsenceSheet
           onSubmit={(date, count) => addAbsence(date, count, true)}
           onClose={handleCloseAbsence}

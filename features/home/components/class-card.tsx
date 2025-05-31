@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 
 interface ClassCardProps {
   subject: Subject;
@@ -49,6 +50,7 @@ export const ClassCard = ({
       );
       options.push('Cancelar');
       const cancelButtonIndex = options.length - 1;
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
       showActionSheetWithOptions(
         {

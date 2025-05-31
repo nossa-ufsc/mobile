@@ -9,6 +9,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Sheet } from '@/ui/bottom-sheet';
 import { NewEventSheet } from '../components/new-event-sheet';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 
 export const EventsHome = () => {
   const { data: events, isLoading, refetch } = useEvents();
@@ -48,7 +49,10 @@ export const EventsHome = () => {
         <Ionicons name="add" size={24} color="white" />
       </Pressable>
 
-      <Sheet enableDynamicSizing ref={eventSheetRef}>
+      <Sheet
+        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        enableDynamicSizing
+        ref={eventSheetRef}>
         <NewEventSheet onClose={handleClose} onSuccess={refetch} />
       </Sheet>
     </Container>

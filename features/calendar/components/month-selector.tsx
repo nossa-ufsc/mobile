@@ -13,6 +13,7 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { WEEKDAY_NAMES } from '@/utils/const';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
+import * as Haptics from 'expo-haptics';
 
 interface MonthSelectorProps {
   selectedDay: Date;
@@ -40,6 +41,7 @@ export const MonthSelector = ({
       stiffness: 200,
       mass: 0.5,
     });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }, [isExpanded]);
 
   useEffect(() => {
@@ -60,12 +62,14 @@ export const MonthSelector = ({
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() - 1);
     setCurrentDate(newDate);
+    Haptics.selectionAsync();
   }, [currentDate, setCurrentDate]);
 
   const handleNextMonth = useCallback(() => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + 1);
     setCurrentDate(newDate);
+    Haptics.selectionAsync();
   }, [currentDate, setCurrentDate]);
 
   const handlePrevWeek = useCallback(() => {
@@ -73,6 +77,7 @@ export const MonthSelector = ({
     newDate.setDate(newDate.getDate() - 7);
     setCurrentDate(newDate);
     setSelectedDay(newDate);
+    Haptics.selectionAsync();
   }, [currentDate, setCurrentDate]);
 
   const handleNextWeek = useCallback(() => {
@@ -80,6 +85,7 @@ export const MonthSelector = ({
     newDate.setDate(newDate.getDate() + 7);
     setCurrentDate(newDate);
     setSelectedDay(newDate);
+    Haptics.selectionAsync();
   }, [currentDate, setCurrentDate]);
 
   // Pan gesture for calendar interactions:

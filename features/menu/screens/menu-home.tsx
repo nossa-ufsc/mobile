@@ -8,6 +8,7 @@ import { useMenu } from '../hooks/use-menu';
 import { MenuDisplay } from '../components/menu-display';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
+import * as Haptics from 'expo-haptics';
 
 export const MenuHome = () => {
   const { selectedDay, setSelectedDay } = useMenuStore();
@@ -40,7 +41,10 @@ export const MenuHome = () => {
           <WeekDaySelector
             className="mt-4"
             selectedDay={selectedDay}
-            onSelectDay={setSelectedDay}
+            onSelectDay={(day) => {
+              Haptics.selectionAsync();
+              setSelectedDay(day);
+            }}
           />
 
           <MenuDisplay menu={menu} isLoading={isLoading} error={error} />

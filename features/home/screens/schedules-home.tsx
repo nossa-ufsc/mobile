@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 import { getDateFromDayIndex } from '@/features/calendar/utils/get-date-from-day-index';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { Text } from '@/ui/text';
+import * as Haptics from 'expo-haptics';
 
 export const SchedulesHome = () => {
   const { selectedDay, setSelectedDay } = useScheduleStore();
@@ -24,9 +25,11 @@ export const SchedulesHome = () => {
       if (event.velocityX > 0) {
         const newDay = selectedDay === 0 ? 6 : selectedDay - 1;
         runOnJS(setSelectedDay)(newDay);
+        Haptics.selectionAsync();
       } else {
         const newDay = selectedDay === 6 ? 0 : selectedDay + 1;
         runOnJS(setSelectedDay)(newDay);
+        Haptics.selectionAsync();
       }
     });
 
@@ -50,7 +53,10 @@ export const SchedulesHome = () => {
           <WeekDaySelector
             className="mt-4"
             selectedDay={selectedDay}
-            onSelectDay={setSelectedDay}
+            onSelectDay={(day) => {
+              Haptics.selectionAsync();
+              setSelectedDay(day);
+            }}
           />
 
           <Container scrollable autoPadding={false}>
