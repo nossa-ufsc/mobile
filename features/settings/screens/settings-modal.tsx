@@ -26,6 +26,7 @@ export const SettingsModal = () => {
     setNotificationsEnabled,
     campus,
     setCampus,
+    isGuest,
   } = useEnvironmentStore();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
@@ -258,17 +259,19 @@ export const SettingsModal = () => {
           Usuário
         </Text>
         <View className="mb-6 rounded-lg bg-card">
-          <TouchableOpacity
-            onPress={handleScheduleActions}
-            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
-            <View className="flex-row items-center gap-3">
-              <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400 shadow-sm">
-                <MaterialCommunityIcons name="timetable" size={24} color="white" />
+          {!isGuest && (
+            <TouchableOpacity
+              onPress={handleScheduleActions}
+              className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
+              <View className="flex-row items-center gap-3">
+                <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400 shadow-sm">
+                  <MaterialCommunityIcons name="timetable" size={24} color="white" />
+                </View>
+                <Text variant="body">Gerenciar Grade</Text>
               </View>
-              <Text variant="body">Gerenciar Grade</Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
-          </TouchableOpacity>
+              <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
             onPress={confirmLogout}
