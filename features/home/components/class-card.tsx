@@ -35,8 +35,8 @@ export const ClassCard = ({
 }: ClassCardProps) => {
   const { absences, totalAbsences, maxAbsences, remainingAbsences, addAbsence, removeAbsence } =
     useSubjectAbsence(subject.id);
-  const isHighAbsence = remainingAbsences < 3;
-  const isMediumAbsence = remainingAbsences < 8;
+  const isHighAbsence = remainingAbsences < Math.ceil(maxAbsences * 0.15);
+  const isMediumAbsence = remainingAbsences < Math.ceil(maxAbsences * 0.4);
   const { getItemsByDateAndSubject } = useCalendar();
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -99,7 +99,7 @@ export const ClassCard = ({
           <DropdownMenu.Trigger>
             <Pressable
               onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-              hitSlop={8}
+              hitSlop={24}
               className="pt-1 active:opacity-50">
               <Ionicons name="ellipsis-horizontal" size={20} color={colors.foreground} />
             </Pressable>

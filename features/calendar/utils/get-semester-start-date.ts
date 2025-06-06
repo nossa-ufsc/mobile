@@ -1,20 +1,22 @@
 export const getSemesterStartDate = (): Date => {
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth();
+  const month = now.getMonth(); // 0 = January, ..., 11 = December
 
   let startMonth: number;
+  let startDay: number;
 
-  if (month >= 2 && month <= 6) {
-    startMonth = 2;
-  } else if (month >= 7 && month <= 11) {
-    startMonth = 7;
+  if (month >= 0 && month <= 5) {
+    // Jan (0) to Jun (5)
+    startMonth = 2; // March (2)
+    startDay = 8;
   } else {
-    startMonth = 7;
-    now.setFullYear(year - 1);
+    // Jul (6) to Dec (11)
+    startMonth = 7; // August (7)
+    startDay = 8;
   }
 
-  const startDate = new Date(now.getFullYear(), startMonth, 1);
+  const startDate = new Date(year, startMonth, startDay);
   startDate.setHours(0, 0, 0, 0);
 
   return startDate;
