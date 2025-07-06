@@ -27,21 +27,21 @@ export const EventsHome = () => {
     return <EventsLoadingState />;
   }
 
-  if (!events?.length) {
-    return <EventsEmptyState handleAddPress={handleAddPress} />;
-  }
-
   return (
     <Container>
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <EventCard event={item} />}
-        contentContainerClassName="p-4"
-        showsVerticalScrollIndicator={false}
-        refreshing={isLoading}
-        onRefresh={refetch}
-      />
+      {!events?.length ? (
+        <EventsEmptyState />
+      ) : (
+        <FlatList
+          data={events}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <EventCard event={item} />}
+          contentContainerClassName="p-4"
+          showsVerticalScrollIndicator={false}
+          refreshing={isLoading}
+          onRefresh={refetch}
+        />
+      )}
 
       <Pressable
         onPress={handleAddPress}
