@@ -28,7 +28,7 @@ export const EventsHome = () => {
   }
 
   if (!events?.length) {
-    return <EventsEmptyState />;
+    return <EventsEmptyState handleAddPress={handleAddPress} />;
   }
 
   return (

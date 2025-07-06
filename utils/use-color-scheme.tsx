@@ -2,32 +2,49 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { useColorScheme as useNativewindColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Platform } from 'react-native';
+import { MMKV } from 'react-native-mmkv';
 
 import { COLORS } from '@/theme/colors';
+
+const themeStorage = new MMKV({
+  id: 'theme-storage',
+});
 
 function useColorScheme() {
   const { colorScheme, setColorScheme: setNativeWindColorScheme } = useNativewindColorScheme();
 
-  async function setColorScheme(colorScheme: 'light' | 'dark') {
-    setNativeWindColorScheme(colorScheme);
+  React.useEffect(() => {
+    const stored = themeStorage.getString('theme');
+    if (stored === 'light' || stored === 'dark') {
+      setNativeWindColorScheme(stored);
+    }
+  }, []);
+
+  async function setColorScheme(newColorScheme: 'light' | 'dark') {
+    setNativeWindColorScheme(newColorScheme);
+    themeStorage.set('theme', newColorScheme);
+
     if (Platform.OS !== 'android') return;
     try {
-      await setNavigationBar(colorScheme);
+      await setNavigationBar(newColorScheme);
     } catch (error) {
       console.error('useColorScheme.tsx", "setColorScheme', error);
     }
   }
 
   function toggleColorScheme() {
-    return setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+    const newScheme = colorScheme === 'light' ? 'dark' : 'light';
+    return setColorScheme(newScheme);
   }
 
+  const effectiveColorScheme = colorScheme ?? 'light';
+
   return {
-    colorScheme: colorScheme ?? 'light',
-    isDarkColorScheme: colorScheme === 'dark',
+    colorScheme: effectiveColorScheme,
+    isDarkColorScheme: effectiveColorScheme === 'dark',
     setColorScheme,
     toggleColorScheme,
-    colors: COLORS[colorScheme ?? 'light'],
+    colors: COLORS[effectiveColorScheme],
   };
 }
 
