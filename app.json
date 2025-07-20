@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nossa UFSC",
     "slug": "nossaUFSC",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "scheme": "nossa-ufsc",
     "web": {
       "bundler": "metro",
