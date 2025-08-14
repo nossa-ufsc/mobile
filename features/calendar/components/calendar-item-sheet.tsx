@@ -47,10 +47,13 @@ export const CalendarItemSheet = ({
   const [notificationEnabled, setNotificationEnabled] = useState(
     initialItem?.notificationEnabled ?? false
   );
+  const [notificationDateManuallySet, setNotificationDateManuallySet] = useState(
+    Boolean(initialItem?.notificationDate)
+  );
   const [notificationDate, setNotificationDate] = useState(
     initialItem?.notificationDate
       ? new Date(initialItem.notificationDate)
-      : new Date(date.getTime() + 24 * 60 * 60 * 1000)
+      : new Date(date.getTime() - 24 * 60 * 60 * 1000)
   );
 
   const selectedType = ITEM_TYPES.find((t) => t.value === type);
@@ -58,8 +61,8 @@ export const CalendarItemSheet = ({
   const handleDateChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate) {
       setDate(selectedDate);
-      if (notificationDate <= selectedDate) {
-        setNotificationDate(new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000));
+      if (!notificationDateManuallySet) {
+        setNotificationDate(new Date(selectedDate.getTime() - 24 * 60 * 60 * 1000));
       }
     }
   };
@@ -67,6 +70,7 @@ export const CalendarItemSheet = ({
   const handleNotificationDateChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate) {
       setNotificationDate(selectedDate);
+      setNotificationDateManuallySet(true);
     }
   };
 
@@ -95,7 +99,8 @@ export const CalendarItemSheet = ({
     setSubject(subjects[0]);
     setType('exam');
     setNotificationEnabled(false);
-    setNotificationDate(new Date(date.getTime() + 24 * 60 * 60 * 1000));
+    setNotificationDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
+    setNotificationDateManuallySet(false);
     onClose?.();
   };
 
@@ -228,7 +233,6 @@ export const CalendarItemSheet = ({
                 mode="datetime"
                 onChange={handleNotificationDateChange}
                 value={notificationDate}
-                minimumDate={new Date(date.getTime() + 60 * 1000)}
                 minuteInterval={5}
               />
             </View>
