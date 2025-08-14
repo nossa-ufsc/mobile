@@ -10,7 +10,9 @@ export const OnboardingScreen = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-1" style={{ paddingBottom: insets.bottom, paddingTop: insets.top }}>
+    <View
+      className="flex-1 bg-background"
+      style={{ paddingBottom: insets.bottom, paddingTop: insets.top }}>
       {scene === 'login' && <OnboardingLoginScreen />}
       {scene === 'campus' && <OnboardingCampusScreen onNext={() => setScene('login')} />}
       {scene === 'initial' && <OnboardingInitialScreen onNext={() => setScene('campus')} />}

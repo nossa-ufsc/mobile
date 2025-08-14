@@ -32,7 +32,7 @@ export default function RootLayout() {
         apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
         options={{
           host: 'https://us.i.posthog.com',
-          // disabled: __DEV__,
+          disabled: __DEV__,
         }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <QueryClientProvider client={queryClient}>

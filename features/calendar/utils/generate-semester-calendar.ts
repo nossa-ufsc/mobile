@@ -11,6 +11,8 @@ export const generateSemesterCalendar = (
   const semesterStartDate = new Date(startDate);
 
   semesterStartDate.setHours(0, 0, 0, 0);
+  const startOfFirstWeek = new Date(semesterStartDate);
+  startOfFirstWeek.setDate(startOfFirstWeek.getDate() - startOfFirstWeek.getDay());
 
   for (let week = 0; week < semesterDuration; week++) {
     const classesByDay = new Map<
@@ -18,15 +20,18 @@ export const generateSemesterCalendar = (
       { subject: Subject; date: Date; schedule: Subject['schedule'][0] }[]
     >();
 
+    const weekStart = new Date(startOfFirstWeek);
+    weekStart.setDate(weekStart.getDate() + week * 7);
+
     subjects.forEach((subject) => {
       subject.schedule.forEach((schedule) => {
-        const classDate = new Date(semesterStartDate);
-        const jsWeekDay = schedule.weekDay === 6 ? 0 : schedule.weekDay + 1;
-        classDate.setDate(classDate.getDate() + week * 7 + jsWeekDay);
+        const classDate = new Date(weekStart);
+        classDate.setDate(classDate.getDate() + schedule.weekDay);
 
         const [hours, minutes] = schedule.startTime.split(':').map(Number);
         classDate.setHours(hours, minutes, 0, 0);
 
+        const jsWeekDay = schedule.weekDay;
         const dayClasses = classesByDay.get(jsWeekDay) || [];
         dayClasses.push({ subject, date: classDate, schedule });
         classesByDay.set(jsWeekDay, dayClasses);

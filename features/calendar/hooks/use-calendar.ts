@@ -14,6 +14,7 @@ interface CalendarState {
   classItems: CalendarClassItem[];
   addItemWithoutNotification: (item: CalendarItem) => void;
   addClassItem: (item: CalendarClassItem) => void;
+  setClassItems: (items: CalendarClassItem[]) => void;
   getItemsByDate: (date: Date) => CalendarItem[];
   getClassItemsByDate: (date: Date) => CalendarClassItem[];
   getItemsByDateAndSubject: (date: Date, subject: Subject) => CalendarItem[] | undefined;
@@ -59,6 +60,12 @@ const useCalendarStore = create<CalendarState>()(
       addClassItem: (newItem) => {
         set((state) => ({
           classItems: [...state.classItems, newItem],
+        }));
+      },
+
+      setClassItems: (newItems) => {
+        set(() => ({
+          classItems: newItems,
         }));
       },
 
@@ -109,6 +116,7 @@ export const useCalendar = () => {
     classItems,
     addItemWithoutNotification,
     addClassItem,
+    setClassItems,
     getItemsByDate,
     getClassItemsByDate,
     getItemsByDateAndSubject,
@@ -187,5 +195,6 @@ export const useCalendar = () => {
     clearCalendarWithoutNotification,
     classItems,
     addClassItem,
+    setClassItems,
   };
 };

@@ -1,9 +1,19 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useFocusEffect } from 'expo-router';
 import { TabBarIcon } from '@/ui/tab-bar-icon';
 import { useColorScheme } from '@/utils/use-color-scheme';
+import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
+import { useCallback } from 'react';
 
 export default function TabLayout() {
   const { colors } = useColorScheme();
+  const { setCurrentDate } = useCalendarState();
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentDate(new Date());
+    }, [setCurrentDate])
+  );
+
   return (
     <Tabs
       screenOptions={{
