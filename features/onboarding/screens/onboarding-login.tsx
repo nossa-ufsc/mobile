@@ -88,24 +88,26 @@ export const OnboardingLoginScreen = () => {
           disabled={isLoading}>
           Entrar
         </Button>
-        <Text color="tertiary" variant="body" className="self-center">
-          Não é aluno?{' '}
-          <Text
-            onPress={() =>
-              handleLogin({
-                onSuccess: () => {
-                  setIsGuest(true);
-                  router.push('/(app)/(tabs)/(home)');
-                },
-                isGuest: true,
-              })
-            }
-            variant="body"
-            color="primary"
-            className="underline">
-            Entrar como visitante
+        {__DEV__ && (
+          <Text color="tertiary" variant="body" className="self-center">
+            Não é aluno?{' '}
+            <Text
+              onPress={() =>
+                handleLogin({
+                  onSuccess: () => {
+                    setIsGuest(true);
+                    router.push('/(app)/(tabs)/(home)');
+                  },
+                  isGuest: true,
+                })
+              }
+              variant="body"
+              color="primary"
+              className="underline">
+              Entrar como visitante
+            </Text>
           </Text>
-        </Text>
+        )}
       </View>
     </View>
   );

@@ -30,6 +30,10 @@ interface EnvironmentState {
   clearEnvironment: () => void;
   isGuest: boolean;
   setIsGuest: (isGuest: boolean) => void;
+  // Fix for calendar items not being generated correctly
+  // Remove this after a few months
+  isCalendarFixMigrated: boolean;
+  setIsCalendarFixMigrated: (isCalendarFixMigrated: boolean) => void;
 }
 
 const systemStorageZustandAdadpter = {
@@ -99,12 +103,17 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           notificationDelay: 15,
           notificationsEnabled: true,
           campus: Campus.FLORIANOPOLIS,
+          isGuest: false,
         });
       },
 
       isGuest: false,
       setIsGuest: (isGuest) => {
         set({ isGuest });
+      },
+      isCalendarFixMigrated: false,
+      setIsCalendarFixMigrated: (isCalendarFixMigrated) => {
+        set({ isCalendarFixMigrated });
       },
     }),
     {
