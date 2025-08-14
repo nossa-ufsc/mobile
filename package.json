@@ -10,7 +10,7 @@
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "web": "expo start --web",
     "dev": "bun run start",
-    "build:ios:production": "eas build -p ios --profile production --auto-submit",
+    "build:ios:production": "eas build -p ios --profile production --local",
     "build:ios:development": "eas build -p ios --profile development",
     "build:android:production": "eas build -p android --profile production --local",
     "run:android": "expo prebuild && bun android",

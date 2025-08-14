@@ -3,6 +3,7 @@ import { TabBarIcon } from '@/ui/tab-bar-icon';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
 import { useCallback } from 'react';
+import { useMigrateCalendarItems } from '@/utils/use-migrate-calendar-items';
 
 export default function TabLayout() {
   const { colors } = useColorScheme();
@@ -13,6 +14,8 @@ export default function TabLayout() {
       setCurrentDate(new Date());
     }, [setCurrentDate])
   );
+
+  useMigrateCalendarItems();
 
   return (
     <Tabs

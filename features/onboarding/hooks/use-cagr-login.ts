@@ -56,6 +56,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     isAuthenticated,
     setIsAuthenticated,
     semesterDuration,
+    setIsCalendarFixMigrated,
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
@@ -288,6 +289,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       );
       calendarItems.forEach((item) => addClassItem(item));
       generateClassesNotifications(calendarItems);
+      setIsCalendarFixMigrated(true);
 
       const { error } = await supabase.auth.signInAnonymously();
 
@@ -344,6 +346,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       );
       calendarItems.forEach((item) => addClassItem(item));
       generateClassesNotifications(calendarItems);
+      setIsCalendarFixMigrated(true);
     } catch (error) {
       console.error('Error reloading subjects:', error);
     } finally {

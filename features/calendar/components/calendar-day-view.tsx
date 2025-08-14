@@ -50,7 +50,8 @@ const CLASS_DURATION = 50;
 const OTHER_ITEM_FIXED_HEIGHT = 40;
 const NESTED_ITEM_FIXED_HEIGHT = 30;
 const VERTICAL_GAP = 4;
-const NESTED_ITEM_VERTICAL_GAP = 2;
+const NESTED_ITEM_VERTICAL_GAP = 8;
+const NESTED_ITEMS_HEADER_OFFSET = 40;
 
 interface PositionedItem extends CalendarItem {
   endTime: Date;
@@ -229,7 +230,6 @@ export const CalendarDayView = ({
       const start = classItem.date;
       const top = start.getHours() * HOUR_HEIGHT + (start.getMinutes() / 60) * HOUR_HEIGHT;
       const durH = (classItem.endTime.getTime() - start.getTime()) / (1000 * 60 * 60);
-      const height = Math.max(durH * HOUR_HEIGHT, NESTED_ITEM_FIXED_HEIGHT + VERTICAL_GAP);
 
       const nestedItems: PositionedItem[] = [];
       otherItems.forEach((otherItem) => {
@@ -242,6 +242,18 @@ export const CalendarDayView = ({
       });
 
       nestedItems.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+      const nestedStackHeight =
+        nestedItems.length > 0
+          ? nestedItems.length * NESTED_ITEM_FIXED_HEIGHT +
+            (nestedItems.length - 1) * NESTED_ITEM_VERTICAL_GAP
+          : 0;
+
+      const height = Math.max(
+        durH * HOUR_HEIGHT,
+        nestedStackHeight + NESTED_ITEMS_HEADER_OFFSET,
+        NESTED_ITEM_FIXED_HEIGHT + VERTICAL_GAP
+      );
 
       layoutedClasses.push({ ...classItem, top, height, nestedItems });
     });
