@@ -148,7 +148,15 @@ export const CalendarHome = () => {
         onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         ref={classSheetRef}
         enableDynamicSizing>
-        {selectedClassItem && <ClassItemSheet item={selectedClassItem} />}
+        {selectedClassItem && (
+          <ClassItemSheet
+            onClose={() => {
+              classSheetRef.current?.dismiss();
+              setSelectedClassItem(undefined);
+            }}
+            item={selectedClassItem}
+          />
+        )}
       </Sheet>
     </Container>
   );

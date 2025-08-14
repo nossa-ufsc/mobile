@@ -4,6 +4,7 @@ import { View, Pressable } from 'react-native';
 import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 interface ClassItemSheetProps {
   item: CalendarClassItem;
@@ -38,7 +39,16 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
       contentContainerStyle={{ paddingBottom: 16 + bottom }}
       className="flex-1 px-6 pb-4 pt-2">
       <View className="mb-4 flex-col">
-        <Text className="text-2xl font-bold">{item.subject.name}</Text>
+        <Pressable
+          onPress={() => {
+            onClose?.();
+            router.push(`/(app)/(tabs)/(home)/subject/${item.subject.id}`);
+          }}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.6 : 1,
+          })}>
+          <Text className="text-2xl font-bold">{item.subject.name}</Text>
+        </Pressable>
         <Text variant="subhead" color="secondary" className="mt-1">
           {item.subject.code}
         </Text>

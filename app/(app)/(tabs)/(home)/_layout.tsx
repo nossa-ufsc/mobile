@@ -19,6 +19,8 @@ export default function HomeLayout() {
       <Stack.Screen
         name="subject/[id]"
         options={{
+          headerBackButtonDisplayMode: 'minimal',
+
           headerStyle: { backgroundColor: colors.background },
           title: '',
         }}
