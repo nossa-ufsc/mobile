@@ -45,10 +45,6 @@ export interface Subject {
   absences: AbsenceEntry[];
   professors: string[];
   schedule: SubjectTime[];
-  // When undefined, default should be treated as true in the app
-  classNotificationsEnabled?: boolean;
-  // Map of CalendarClassItem.id -> notificationId
-  classNotificationMap?: Record<string, string>;
 }
 
 export interface SubjectTime {

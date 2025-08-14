@@ -1,6 +1,6 @@
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
-import { View, Pressable, Switch, Alert } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
@@ -15,7 +15,6 @@ import { useColorScheme } from '@/utils/use-color-scheme';
 import { AbsenceSheet } from '../components/absence-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { useNotifications } from '@/utils/use-notifications';
 
 export const SubjectDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -29,14 +28,8 @@ export const SubjectDetails = () => {
   const { colors } = useColorScheme();
   const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
   const insets = useSafeAreaInsets();
-  const notificationsEnabledGlobal = useEnvironmentStore((state) => state.notificationsEnabled);
-  const setSubjects = useEnvironmentStore((state) => state.setSubjects);
-  const { generateClassNotificationsForSubject, cancelClassNotificationsForSubject } =
-    useNotifications();
 
   if (!subjects || !subject) return null;
-
-  const classNotificationsEnabled = subject.classNotificationsEnabled !== false;
 
   const handleAddPress = () => {
     setSelectedItem(undefined);
@@ -73,28 +66,6 @@ export const SubjectDetails = () => {
     absenceSheetRef.current?.present();
   };
 
-  const handleToggleClassNotifications = async (value: boolean) => {
-    if (!subjects) return;
-    if (!notificationsEnabledGlobal) {
-      Alert.alert(
-        'Notificações desativadas',
-        'Ative as notificações nas configurações para gerenciar por matéria.'
-      );
-      return;
-    }
-
-    const updated = subjects.map((s) =>
-      s.id === subject.id ? { ...s, classNotificationsEnabled: value } : s
-    );
-    setSubjects(updated);
-
-    if (value) {
-      await generateClassNotificationsForSubject(subject.id);
-    } else {
-      await cancelClassNotificationsForSubject(subject.id);
-    }
-  };
-
   return (
     <Container contentStyle={{ paddingBottom: insets.bottom }} scrollable className="px-4">
       <View className="pb-4 pt-2">
@@ -110,22 +81,6 @@ export const SubjectDetails = () => {
       </View>
 
       <View className="mb-6 overflow-hidden rounded-2xl bg-card">
-        <View className="flex-row items-center justify-between border-b border-border p-4">
-          <Text variant="title3">Notificações</Text>
-          <Switch
-            value={classNotificationsEnabled}
-            onValueChange={handleToggleClassNotifications}
-            disabled={!notificationsEnabledGlobal}
-            trackColor={{ false: colors.grey, true: colors.primary }}
-          />
-        </View>
-        {!notificationsEnabledGlobal && (
-          <View className="border-b border-border px-4 py-3">
-            <Text variant="footnote" color="tertiary">
-              Ative as notificações nas configurações para gerenciar por matéria.
-            </Text>
-          </View>
-        )}
         <View className="flex-row items-center justify-between border-b border-border p-4">
           <Text variant="title3">Frequência</Text>
           <Pressable hitSlop={8} onPress={handleAddAbsence}>

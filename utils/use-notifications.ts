@@ -2,7 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { useEnvironmentStore } from './use-environment-store';
-import { CalendarClassItem, Subject } from '@/types';
+import { CalendarClassItem } from '@/types';
 import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
 import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
 
@@ -20,7 +20,7 @@ export const useNotifications = () => {
   const [notification, setNotification] = useState<Notifications.Notification>();
   const notificationListener = useRef<Notifications.EventSubscription>(null);
   const responseListener = useRef<Notifications.EventSubscription>(null);
-  const { notificationDelay, notificationsEnabled, subjects, semesterDuration, setSubjects } =
+  const { notificationDelay, notificationsEnabled, subjects, semesterDuration } =
     useEnvironmentStore();
 
   useEffect(() => {
@@ -46,7 +46,12 @@ export const useNotifications = () => {
     };
   }, [notificationsEnabled]);
 
-  const scheduleClassNotification = async (className: string, date: Date, classPlace?: string) => {
+  const scheduleClassNotification = async (
+    className: string,
+    date: Date,
+    notificationsEnabled: boolean,
+    classPlace?: string
+  ) => {
     if (!notificationsEnabled) return;
 
     const notificationDate = new Date(date);
@@ -116,102 +121,22 @@ export const useNotifications = () => {
   const cancelAllNotifications = async () => {
     console.info('All Notifications cancelled');
     await Notifications.cancelAllScheduledNotificationsAsync();
-
-    if (subjects && setSubjects) {
-      const cleared = subjects.map((s) => ({ ...s, classNotificationMap: {} }));
-      setSubjects(cleared);
-    }
   };
 
   const generateClassesNotifications = async (classes?: CalendarClassItem[]) => {
     let calendarItems = classes;
-    if ((!calendarItems || calendarItems.length === 0) && subjects) {
+    if (!classes) {
+      if (!subjects) return;
+
       const semesterStartDate = getSemesterStartDate();
       calendarItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
     }
 
-    if (!calendarItems || calendarItems.length === 0) return;
+    if (!calendarItems) return;
 
-    const subjectIdToMapUpdates: Record<string, Record<string, string>> = {};
-
-    for (const item of calendarItems) {
-      const subjectId = item.subject.id;
-      const subjectInStore = subjects?.find((s) => s.id === subjectId);
-      const isSubjectEnabled = subjectInStore?.classNotificationsEnabled !== false;
-      if (!isSubjectEnabled) continue;
-
-      const id = await scheduleClassNotification(item.subject.name, item.date, item.description);
-      if (id) {
-        if (!subjectIdToMapUpdates[subjectId]) subjectIdToMapUpdates[subjectId] = {};
-        subjectIdToMapUpdates[subjectId][item.id] = id;
-      }
-    }
-
-    if (subjects && setSubjects && Object.keys(subjectIdToMapUpdates).length > 0) {
-      const updated = subjects.map((s) => {
-        const updates = subjectIdToMapUpdates[s.id];
-        if (!updates) return s;
-        return {
-          ...s,
-          classNotificationMap: { ...(s.classNotificationMap ?? {}), ...updates },
-        } as Subject;
-      });
-      setSubjects(updated);
-    }
-  };
-
-  const generateClassNotificationsForSubject = async (subjectId: string) => {
-    if (!subjects) return;
-    const subject = subjects.find((s) => s.id === subjectId);
-    if (!subject) return;
-
-    const semesterStartDate = getSemesterStartDate();
-    const itemsForSubject = generateSemesterCalendar(
-      [subject],
-      semesterDuration,
-      semesterStartDate
-    );
-
-    const updates: Record<string, string> = {};
-    for (const item of itemsForSubject) {
-      const id = await scheduleClassNotification(item.subject.name, item.date, item.description);
-      if (id) {
-        updates[item.id] = id;
-      }
-    }
-
-    if (Object.keys(updates).length > 0) {
-      const updated = subjects.map((s) =>
-        s.id === subjectId
-          ? ({
-              ...s,
-              classNotificationMap: { ...(s.classNotificationMap ?? {}), ...updates },
-            } as Subject)
-          : s
-      );
-      setSubjects(updated);
-    }
-  };
-
-  const cancelClassNotificationsForSubject = async (subjectId: string) => {
-    if (!subjects) return;
-    const subject = subjects.find((s) => s.id === subjectId);
-    if (!subject) return;
-
-    const map = subject.classNotificationMap ?? {};
-    const ids = Object.values(map);
-    for (const id of ids) {
-      try {
-        await cancelNotification(id);
-      } catch (e) {
-        console.warn('Failed to cancel notification', id, e);
-      }
-    }
-
-    const updated = subjects.map((s) =>
-      s.id === subjectId ? ({ ...s, classNotificationMap: {} } as Subject) : s
-    );
-    setSubjects(updated);
+    calendarItems.forEach(async (item) => {
+      await scheduleClassNotification(item.subject.name, item.date, true, item.description);
+    });
   };
 
   return {
@@ -221,8 +146,6 @@ export const useNotifications = () => {
     cancelNotification,
     cancelAllNotifications,
     generateClassesNotifications,
-    generateClassNotificationsForSubject,
-    cancelClassNotificationsForSubject,
   };
 };
 
