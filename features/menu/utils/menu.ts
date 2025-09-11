@@ -30,7 +30,9 @@ export const getMenuForDay = (menu: Menu, dayIndex: number): MenuItem | null => 
     return null;
   }
 
-  return menu.cardapio[dayIndex] || null;
+  const menuDayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+
+  return menu.cardapio[menuDayIndex] || null;
 };
 
 export const hasImageMenu = (menu: Menu): boolean => {

@@ -46,7 +46,7 @@ export const MenuDisplay = ({ menu, isLoading, error }: MenuDisplayProps) => {
 
   const dayMenu = getMenuForDay(menu, selectedDay);
 
-  if (!dayMenu) {
+  if (!dayMenu?.itens.length) {
     return <EmptyState message="Nenhum cardápio disponível para este dia" />;
   }
 

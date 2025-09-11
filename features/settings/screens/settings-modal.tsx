@@ -11,6 +11,7 @@ import { useNotifications } from '@/utils/use-notifications';
 import { Campus } from '@/types';
 import { CAMPUS_LABELS } from '../utils/const';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 export const SettingsModal = () => {
   const { handleLogout, reloadSubjects } = useCAGRLogin();
@@ -298,6 +299,19 @@ export const SettingsModal = () => {
                 <MaterialCommunityIcons name="github" size={24} color="white" />
               </View>
               <Text variant="body">Contribuir com o Código</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              Linking.openURL('mailto:gmedeirosferraz@me.com?subject=Aplicativo%20Nossa%20UFSC')
+            }
+            className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700/80 shadow-sm">
+                <MaterialCommunityIcons name="email" size={24} color="white" />
+              </View>
+              <Text variant="body">Entrar em contato</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>

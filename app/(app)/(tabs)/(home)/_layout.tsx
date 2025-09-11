@@ -20,7 +20,6 @@ export default function HomeLayout() {
         name="subject/[id]"
         options={{
           headerBackButtonDisplayMode: 'minimal',
-
           headerStyle: { backgroundColor: colors.background },
           title: '',
         }}
