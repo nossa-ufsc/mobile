@@ -11,7 +11,6 @@ import { useNotifications } from '@/utils/use-notifications';
 import { Campus } from '@/types';
 import { CAMPUS_LABELS } from '../utils/const';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 
 export const SettingsModal = () => {
   const { handleLogout, reloadSubjects } = useCAGRLogin();
@@ -293,7 +292,7 @@ export const SettingsModal = () => {
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
             onPress={() => Linking.openURL('https://github.com/nossa-ufsc/mobile')}
-            className="flex-row items-center justify-between px-4 py-3">
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700 shadow-sm">
                 <MaterialCommunityIcons name="github" size={24} color="white" />
