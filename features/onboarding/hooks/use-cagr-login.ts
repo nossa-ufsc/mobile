@@ -1,5 +1,6 @@
 import * as AuthSession from 'expo-auth-session';
 import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
 import { CAGRSystemResponse, Subject, User } from '@/types';
@@ -322,33 +323,71 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     await supabase.auth.signOut();
   };
 
+  const confirmReauthentication = (): Promise<boolean> =>
+    new Promise((resolve) => {
+      Alert.alert(
+        'Login necessário',
+        'Sua sessão do CAGR expirou. Você será redirecionado para fazer login novamente e continuar recarregando a grade.',
+        [
+          { text: 'Cancelar', style: 'cancel', onPress: () => resolve(false) },
+          { text: 'Fazer login', onPress: () => resolve(true) },
+        ],
+        { cancelable: false }
+      );
+    });
+
+  const reauthenticate = async (): Promise<string> => {
+    const confirmed = await confirmReauthentication();
+    if (!confirmed) {
+      throw new Error('Autenticação cancelada pelo usuário.');
+    }
+    const result = await promptAsync();
+    if (!result || result.type !== 'success') {
+      throw new Error('Não foi possível autenticar. Tente novamente.');
+    }
+    const { code } = result.params;
+    const newToken = await exchangeCodeForToken(code);
+    await saveAccessToken(newToken);
+    return newToken;
+  };
+
+  const loadSubjectsWithToken = async (token: string) => {
+    const userSubjects = await fetchSubjects(token);
+    setSubjects(userSubjects);
+
+    clearCalendarWithoutNotification();
+
+    await cancelAllNotifications();
+
+    const semesterStartDate = getSemesterStartDate();
+    const calendarItems = generateSemesterCalendar(
+      userSubjects,
+      semesterDuration,
+      semesterStartDate
+    );
+    calendarItems.forEach((item) => addClassItem(item));
+    generateClassesNotifications(calendarItems);
+    setIsCalendarFixMigrated(true);
+  };
+
   const reloadSubjects = async () => {
+    setIsLoading(true);
     try {
-      const token = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+      let token = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+
       if (!token) {
-        console.error('Cannot reload subjects: No access token available');
-        return;
+        token = await reauthenticate();
       }
 
-      setIsLoading(true);
-      const userSubjects = await fetchSubjects(token);
-      setSubjects(userSubjects);
-
-      clearCalendarWithoutNotification();
-
-      await cancelAllNotifications();
-
-      const semesterStartDate = getSemesterStartDate();
-      const calendarItems = generateSemesterCalendar(
-        userSubjects,
-        semesterDuration,
-        semesterStartDate
-      );
-      calendarItems.forEach((item) => addClassItem(item));
-      generateClassesNotifications(calendarItems);
-      setIsCalendarFixMigrated(true);
+      try {
+        await loadSubjectsWithToken(token);
+      } catch {
+        const freshToken = await reauthenticate();
+        await loadSubjectsWithToken(freshToken);
+      }
     } catch (error) {
       console.error('Error reloading subjects:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
