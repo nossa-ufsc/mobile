@@ -4,7 +4,7 @@ import { cn } from '@/utils/cn';
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { CalendarClassItem, CalendarItem } from '@/types';
 import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from 'expo-router';
 
 interface CalendarDayViewProps {
   className?: string;

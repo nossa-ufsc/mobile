@@ -2,7 +2,16 @@ import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, View, TouchableOpacity, Switch, Alert, Linking } from 'react-native';
+import { useState } from 'react';
+import {
+  Platform,
+  View,
+  TouchableOpacity,
+  Switch,
+  Alert,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
@@ -29,6 +38,7 @@ export const SettingsModal = () => {
     isGuest,
   } = useEnvironmentStore();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
+  const [isReloading, setIsReloading] = useState(false);
 
   const handleSemesterDuration = () => {
     const options = ['15 semanas', '16 semanas', '17 semanas', '18 semanas', 'Cancelar'];
@@ -127,7 +137,23 @@ export const SettingsModal = () => {
         {
           text: 'Recarregar',
           style: 'destructive',
-          onPress: reloadSubjects,
+          onPress: async () => {
+            setIsReloading(true);
+            try {
+              await reloadSubjects();
+              Alert.alert('Sucesso', 'Grade recarregada com sucesso!');
+            } catch (error) {
+              const cancelledByUser = error instanceof Error && error.message.includes('cancelada');
+              if (!cancelledByUser) {
+                Alert.alert(
+                  'Erro',
+                  'Não foi possível recarregar a grade. Verifique sua conexão e tente novamente.'
+                );
+              }
+            } finally {
+              setIsReloading(false);
+            }
+          },
         },
       ],
       { cancelable: true }
@@ -177,6 +203,16 @@ export const SettingsModal = () => {
   return (
     <>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      {isReloading && (
+        <View className="absolute inset-0 z-50 items-center justify-center bg-black/40">
+          <View className="items-center rounded-2xl bg-card px-8 py-6">
+            <ActivityIndicator size="large" />
+            <Text variant="subhead" className="mt-3">
+              Recarregando grade...
+            </Text>
+          </View>
+        </View>
+      )}
       <Container scrollable>
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
           Geral

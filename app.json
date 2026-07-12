@@ -48,21 +48,27 @@
         }
       ],
       "expo-localization",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@react-native-community/datetimepicker",
+      "expo-status-bar",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
     },
-    "newArchEnabled": true,
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "appleTeamId": "UCDT8D8B7Q",
       "entitlements": {
-        "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
+        "com.apple.security.application-groups": [
+          "group.nossa-ufsc.data"
+        ]
       },
       "supportsTablet": true,
       "infoPlist": {
@@ -81,13 +87,13 @@
             }
           }
         },
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIDesignRequiresCompatibility": true
       },
       "bundleIdentifier": "com.portal.ufsc",
       "buildNumber": "32"
     },
     "android": {
-      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -102,7 +108,10 @@
               "scheme": "nossa-ufsc"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         },
         {
           "action": "VIEW",
@@ -111,7 +120,10 @@
               "scheme": "tccleal"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -126,7 +138,9 @@
                   "bundleIdentifier": "com.portal.ufsc.widget",
                   "targetName": "widget",
                   "entitlements": {
-                    "com.apple.security.application-groups": ["group.nossa-ufsc.data"]
+                    "com.apple.security.application-groups": [
+                      "group.nossa-ufsc.data"
+                    ]
                   }
                 }
               ]

@@ -2,14 +2,14 @@ import '../global.css';
 import 'expo-dev-client';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { ThemeProvider as NavThemeProvider } from '@react-navigation/native';
-import { Slot } from 'expo-router';
+import { Slot, ThemeProvider as NavThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { useColorScheme, useInitialAndroidBarSync } from '@/utils/use-color-scheme';
 import { NAV_THEME } from '@/theme';
+import { posthogStorage } from '@/utils/posthog-storage';
 import { PostHogProvider } from 'posthog-react-native';
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,6 +33,7 @@ export default function RootLayout() {
         options={{
           host: 'https://us.i.posthog.com',
           disabled: __DEV__,
+          customStorage: posthogStorage,
         }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <QueryClientProvider client={queryClient}>

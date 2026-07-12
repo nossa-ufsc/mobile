@@ -16,6 +16,7 @@ import { ClassItemSheet } from '../components/class-item-sheet';
 import { Text } from '@/ui/text';
 import { useCalendarState } from '../hooks/use-calendar-state';
 import * as Haptics from 'expo-haptics';
+import { SafeAreaView } from 'react-native-screens/experimental';
 
 export const CalendarHome = () => {
   const calendarSheetRef = useRef<BottomSheetModal>(null);
@@ -126,11 +127,18 @@ export const CalendarHome = () => {
         />
       </GestureDetector>
 
-      <Pressable
-        onPress={handleAddPress}
-        className="shadow-primary/20 absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
-        <Ionicons name="add" size={24} color="white" />
-      </Pressable>
+      <SafeAreaView
+        edges={{ bottom: true }}
+        pointerEvents="box-none"
+        style={{ position: 'absolute', inset: 0 }}>
+        <View className="flex-1 items-end justify-end p-6" pointerEvents="box-none">
+          <Pressable
+            onPress={handleAddPress}
+            className="shadow-primary/20 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
+            <Ionicons name="add" size={24} color="white" />
+          </Pressable>
+        </View>
+      </SafeAreaView>
 
       <Sheet
         onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
