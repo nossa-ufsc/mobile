@@ -130,6 +130,12 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       }
 
       const data: CAGRSystemResponse = await response.json();
+
+      // TEMP: log the full CAGR grade response to inspect whether it carries
+      // semester info (e.g. "20262") we can use to fix semester-start anchoring.
+      // Remove once the semester-start fix (Part I) is decided.
+      console.log('[CAGR getGradeHorarioAluno] full response:', JSON.stringify(data, null, 2));
+
       const subjects: Subject[] = [];
 
       data.disciplinas?.forEach((subject) => {

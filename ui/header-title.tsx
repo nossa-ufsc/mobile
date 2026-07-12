@@ -13,3 +13,11 @@ export const HeaderTitle = ({
     </Text>
   );
 };
+
+export const getHeaderTitleItems = (title: string) => [
+  {
+    type: 'custom' as const,
+    element: <HeaderTitle title={title} />,
+    hidesSharedBackground: true,
+  },
+];

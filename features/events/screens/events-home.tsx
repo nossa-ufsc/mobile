@@ -1,4 +1,4 @@
-import { FlatList, Pressable } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import { Container } from '@/ui/container';
 import { useEvents } from '../hooks/use-events';
 import { EventCard } from '../components/event-card';
@@ -10,6 +10,7 @@ import { Sheet } from '@/ui/bottom-sheet';
 import { NewEventSheet } from '../components/new-event-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { SafeAreaView } from 'react-native-screens/experimental';
 
 export const EventsHome = () => {
   const { data: events, isLoading, refetch } = useEvents();
@@ -43,11 +44,18 @@ export const EventsHome = () => {
         />
       )}
 
-      <Pressable
-        onPress={handleAddPress}
-        className="shadow-primary/20 absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
-        <Ionicons name="add" size={24} color="white" />
-      </Pressable>
+      <SafeAreaView
+        edges={{ bottom: true }}
+        pointerEvents="box-none"
+        style={{ position: 'absolute', inset: 0 }}>
+        <View className="flex-1 items-end justify-end p-6" pointerEvents="box-none">
+          <Pressable
+            onPress={handleAddPress}
+            className="shadow-primary/20 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
+            <Ionicons name="add" size={24} color="white" />
+          </Pressable>
+        </View>
+      </SafeAreaView>
 
       <Sheet
         onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
