@@ -1,4 +1,5 @@
 import { FlexWidget, TextWidget } from 'react-native-android-widget';
+import { timeToMinutes } from '@/utils/time-mapping';
 
 interface WidgetEvent {
   name: string;
@@ -22,7 +23,7 @@ export function AndroidScheduleWidget({ classes, currentDate }: AndroidScheduleW
       const eventHour = parseInt(event.endTime.split(':')[0], 10);
       return eventHour >= currentHour;
     })
-    .sort((a, b) => a.startTime.localeCompare(b.startTime))
+    .sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime))
     .slice(0, 3);
 
   return (

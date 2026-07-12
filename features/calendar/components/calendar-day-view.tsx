@@ -159,61 +159,20 @@ export const CalendarDayView = ({
   });
 
   const layout = useMemo(() => {
-    const groupedClasses: { [key: string]: PositionedClassItem[] } = {};
-
-    const sortedClasses = classItems.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    sortedClasses.forEach((item) => {
-      const subjectId = item.subject.id;
-      if (!groupedClasses[subjectId]) {
-        groupedClasses[subjectId] = [];
-      }
-      const classItem: PositionedClassItem = {
-        ...item,
-        date: new Date(item.date),
-        endTime: new Date(new Date(item.date).getTime() + CLASS_DURATION * 60 * 1000),
-        type: 'class',
-      };
-      groupedClasses[subjectId].push(classItem);
-    });
-
-    const mergedClasses: PositionedClassItem[] = [];
-    Object.values(groupedClasses).forEach((subjectClasses) => {
-      let currentGroup: PositionedClassItem | null = null;
-
-      subjectClasses.forEach((classItem) => {
-        if (!currentGroup) {
-          currentGroup = classItem;
-          currentGroup.endTime = new Date(
-            currentGroup.date.getTime() +
-              (currentGroup.consecutiveClasses + 1) * CLASS_DURATION * 60 * 1000
-          );
-          mergedClasses.push(currentGroup);
-          return;
-        }
-
-        const prevBlockEndTime = new Date(
-          currentGroup.date.getTime() + currentGroup.consecutiveClasses * CLASS_DURATION * 60 * 1000
-        );
-        if (classItem.date.getTime() <= prevBlockEndTime.getTime() + 10 * 60 * 1000) {
-          currentGroup.consecutiveClasses = currentGroup.consecutiveClasses + 1;
-          const potentialEndTime = new Date(classItem.date.getTime() + CLASS_DURATION * 60 * 1000);
-          currentGroup.endTime = new Date(
-            Math.max(currentGroup.endTime.getTime(), potentialEndTime.getTime())
-          );
-        } else {
-          currentGroup = classItem;
-          currentGroup.endTime = new Date(currentGroup.date.getTime() + CLASS_DURATION * 60 * 1000);
-          mergedClasses.push(currentGroup);
-        }
-      });
-    });
-
-    mergedClasses.sort((a, b) => a.date.getTime() - b.date.getTime());
+    // Class items already arrive as merged runs (one per consecutive block) from
+    // generateSemesterCalendar, each carrying its true `endDate`. We only need to
+    // position them; no re-merging or duration assumptions required.
+    const positionedClasses: PositionedClassItem[] = classItems
+      .map((item) => {
+        const date = new Date(item.date);
+        // Prefer the real block end; fall back to slot-count * duration for
+        // legacy items persisted before `endDate` existed.
+        const endTime = item.endDate
+          ? new Date(item.endDate)
+          : new Date(date.getTime() + (item.consecutiveClasses + 1) * CLASS_DURATION * 60 * 1000);
+        return { ...item, date, endTime, type: 'class' as const };
+      })
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     const layoutedClasses: LayoutedClass[] = [];
     const otherItems = items
@@ -226,7 +185,7 @@ export const CalendarDayView = ({
 
     const processedOtherIds = new Set<string>();
 
-    mergedClasses.forEach((classItem) => {
+    positionedClasses.forEach((classItem) => {
       const start = classItem.date;
       const top = start.getHours() * HOUR_HEIGHT + (start.getMinutes() / 60) * HOUR_HEIGHT;
       const durH = (classItem.endTime.getTime() - start.getTime()) / (1000 * 60 * 60);

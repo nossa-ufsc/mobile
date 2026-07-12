@@ -15,7 +15,10 @@ import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
 import { usePostHog } from 'posthog-react-native';
 import { useRouter } from 'expo-router';
 
-const isDev = __DEV__;
+// Temporarily disabled so the real CAGR OAuth flow runs in dev builds (instead of
+// the mock login). Set back to `__DEV__` to restore the dev mock. Guest mode still
+// uses the mocks regardless.
+const isDev = false;
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_CAGR_CLIENT_ID;
 const CLIENT_SECRET = process.env.EXPO_PUBLIC_CAGR_CLIENT_SECRET;
@@ -57,6 +60,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     isAuthenticated,
     setIsAuthenticated,
     semesterDuration,
+    setSemester,
     setIsCalendarFixMigrated,
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
@@ -131,10 +135,10 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
       const data: CAGRSystemResponse = await response.json();
 
-      // TEMP: log the full CAGR grade response to inspect whether it carries
-      // semester info (e.g. "20262") we can use to fix semester-start anchoring.
-      // Remove once the semester-start fix (Part I) is decided.
-      console.log('[CAGR getGradeHorarioAluno] full response:', JSON.stringify(data, null, 2));
+      // Persist the semester so the calendar anchors to the correct start date.
+      if (typeof data.semestre === 'number') {
+        setSemester(data.semestre);
+      }
 
       const subjects: Subject[] = [];
 
@@ -288,7 +292,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       const userSubjects = await fetchSubjects(token);
       setSubjects(userSubjects);
 
-      const semesterStartDate = getSemesterStartDate();
+      const semesterStartDate = getSemesterStartDate(useEnvironmentStore.getState().semester);
       const calendarItems = generateSemesterCalendar(
         userSubjects,
         semesterDuration,
@@ -310,7 +314,12 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       // small delay to fetch user information nicely
       setTimeout(() => {
         setIsAuthenticated(true);
-        router.push('/(app)/(tabs)/(home)');
+        // Land on the review/edit screen so the user can pick which classes to
+        // keep and adjust rooms/times before continuing to the home schedule.
+        router.replace({
+          pathname: '/manage-subjects',
+          params: { fromOnboarding: 'true' },
+        });
       }, 1000);
     } catch (error) {
       console.error('Authentication error:', error);
@@ -365,7 +374,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
 
     await cancelAllNotifications();
 
-    const semesterStartDate = getSemesterStartDate();
+    const semesterStartDate = getSemesterStartDate(useEnvironmentStore.getState().semester);
     const calendarItems = generateSemesterCalendar(
       userSubjects,
       semesterDuration,

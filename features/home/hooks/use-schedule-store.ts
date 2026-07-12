@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
-import { numericTimeOrder, isLunchBreak } from '@/utils/time-mapping';
+import { timeToMinutes, areClassesConsecutive } from '@/utils/time-mapping';
+import { getActiveSubjects } from '@/utils/subjects';
 
 interface ScheduleState {
   selectedDay: number;
@@ -18,7 +19,7 @@ export const useClassesForDay = () => {
 
   if (!subjects) return [];
 
-  const allClasses = subjects
+  const allClasses = getActiveSubjects(subjects)
     .flatMap((subject) =>
       (subject.schedule || [])
         .filter((schedule) => schedule?.weekDay === selectedDay)
@@ -41,7 +42,7 @@ export const useClassesForDay = () => {
     );
 
   const sortedClasses = allClasses.sort((a, b) => {
-    return numericTimeOrder[a.time.startTime] - numericTimeOrder[b.time.startTime];
+    return timeToMinutes(a.time.startTime) - timeToMinutes(b.time.startTime);
   });
 
   const groupedClasses = sortedClasses.reduce<
@@ -53,9 +54,10 @@ export const useClassesForDay = () => {
 
     const previousClass = acc[acc.length - 1];
     const isSameSubject = previousClass.subject.id === currentClass.subject.id;
-    const isConsecutive =
-      previousClass.time.endTime === currentClass.time.startTime ||
-      isLunchBreak(previousClass.time.endTime, currentClass.time.startTime);
+    const isConsecutive = areClassesConsecutive(
+      previousClass.time.endTime,
+      currentClass.time.startTime
+    );
 
     if (isSameSubject && isConsecutive) {
       acc[acc.length - 1] = {

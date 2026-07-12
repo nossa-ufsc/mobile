@@ -1,46 +1,32 @@
-import { useCalendar } from '@/features/calendar/hooks/use-calendar';
 import { useEnvironmentStore } from './use-environment-store';
-import { useNotifications } from './use-notifications';
-import { useEffect } from 'react';
-import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
-import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
+import { useRebuildSchedule } from './use-rebuild-schedule';
+import { useEffect, useRef } from 'react';
 
 export const useMigrateCalendarItems = () => {
-  const {
-    isAuthenticated,
-    subjects,
-    semesterDuration,
-    isCalendarFixMigrated,
-    setIsCalendarFixMigrated,
-  } = useEnvironmentStore();
-  const { setClassItems, items, updateItem } = useCalendar();
-  const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
+  const { isAuthenticated, subjects, isCalendarFixMigrated, setIsCalendarFixMigrated } =
+    useEnvironmentStore();
+  const { rebuild } = useRebuildSchedule();
+  // Guards against a second concurrent run while the async rebuild is in flight
+  // (the persisted flag is only set after success, so it can't guard the gap).
+  const isMigrating = useRef(false);
 
   useEffect(() => {
     if (!isAuthenticated) return;
     if (!subjects || subjects.length === 0) return;
     if (isCalendarFixMigrated) return;
+    if (isMigrating.current) return;
 
-    const semesterStartDate = getSemesterStartDate();
-    const classItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
-    setClassItems(classItems);
-    setIsCalendarFixMigrated(true);
+    isMigrating.current = true;
 
     (async () => {
       try {
-        await cancelAllNotifications();
-        await generateClassesNotifications(classItems);
-        const itemsToReschedule = items.filter((it) => it.notificationEnabled);
-        for (const it of itemsToReschedule) {
-          if (!it.notificationDate) continue;
-          await updateItem(it.id, {
-            notificationEnabled: true,
-            notificationDate: it.notificationDate,
-          });
-        }
+        await rebuild(subjects);
+        // Mark migrated only after a successful rebuild so a failure retries later.
+        setIsCalendarFixMigrated(true);
       } catch (error) {
         console.error('Calendar migration scheduling error:', error);
+        isMigrating.current = false;
       }
     })();
-  }, [isAuthenticated, subjects, semesterDuration]);
+  }, [isAuthenticated, subjects]);
 };

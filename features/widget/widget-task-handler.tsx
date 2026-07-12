@@ -1,7 +1,8 @@
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { AndroidScheduleWidget } from './views/android-schedule-widget';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
-import { numericTimeOrder, isLunchBreak } from '@/utils/time-mapping';
+import { timeToMinutes, areClassesConsecutive } from '@/utils/time-mapping';
+import { getActiveSubjects } from '@/utils/subjects';
 
 const nameToWidget = {
   nossa_ufsc_schedule: AndroidScheduleWidget,
@@ -21,7 +22,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     const currentDay = currentDate.getDay();
     const subjects = useEnvironmentStore.getState().subjects || [];
 
-    const allClasses = subjects
+    const allClasses = getActiveSubjects(subjects)
       .flatMap((subject) =>
         (subject.schedule || [])
           .filter((schedule) => schedule?.weekDay === currentDay)
@@ -36,7 +37,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       .filter((classInfo) => classInfo.startTime && classInfo.endTime && classInfo.classroom);
 
     const sortedClasses = allClasses.sort((a, b) => {
-      return numericTimeOrder[a.startTime] - numericTimeOrder[b.startTime];
+      return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
     });
 
     const groupedClasses = sortedClasses.reduce<
@@ -54,9 +55,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
       const previousClass = acc[acc.length - 1];
       const isSameSubject = previousClass.id === currentClass.id;
-      const isConsecutive =
-        previousClass.endTime === currentClass.startTime ||
-        isLunchBreak(previousClass.endTime, currentClass.startTime);
+      const isConsecutive = areClassesConsecutive(previousClass.endTime, currentClass.startTime);
 
       if (isSameSubject && isConsecutive) {
         acc[acc.length - 1] = {

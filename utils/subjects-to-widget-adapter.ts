@@ -1,5 +1,6 @@
 import { Subject } from '@/types';
-import { isLunchBreak } from '@/utils/time-mapping';
+import { timeToMinutes, areClassesConsecutive } from '@/utils/time-mapping';
+import { getActiveSubjects } from '@/utils/subjects';
 
 interface WidgetCalendarEvent {
   name: string;
@@ -21,7 +22,7 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
     data: {} as Record<number, WidgetCalendarEvent[]>,
   };
 
-  subjects.forEach((subject) => {
+  getActiveSubjects(subjects).forEach((subject) => {
     subject.schedule?.forEach((schedule) => {
       if (!schedule?.weekDay && schedule.weekDay !== 0) return;
 
@@ -42,7 +43,7 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
 
   Object.keys(widgetData.data).forEach((day) => {
     const sortedClasses = widgetData.data[Number(day)].sort((a, b) => {
-      return a.time.localeCompare(b.time);
+      return timeToMinutes(a.time) - timeToMinutes(b.time);
     });
 
     const mergedClasses = sortedClasses.reduce<WidgetCalendarEvent[]>((acc, currentClass) => {
@@ -52,9 +53,7 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
 
       const previousClass = acc[acc.length - 1];
       const isSameSubject = previousClass.name === currentClass.name;
-      const isConsecutive =
-        previousClass.finishTime === currentClass.time ||
-        isLunchBreak(previousClass.finishTime, currentClass.time);
+      const isConsecutive = areClassesConsecutive(previousClass.finishTime, currentClass.time);
 
       if (isSameSubject && isConsecutive) {
         acc[acc.length - 1] = {

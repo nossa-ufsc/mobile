@@ -45,6 +45,9 @@ export interface Subject {
   absences: AbsenceEntry[];
   professors: string[];
   schedule: SubjectTime[];
+  // When true, the user has chosen to hide this subject from schedule, calendar,
+  // notifications and widgets. Absent (undefined) means visible — see getActiveSubjects.
+  ignored?: boolean;
 }
 
 export interface SubjectTime {
@@ -56,6 +59,8 @@ export interface SubjectTime {
 }
 
 export interface CAGRSystemResponse {
+  // CAGR semester identifier, format YYYYN (e.g. 20261 = 2026, semester 1).
+  semestre?: number;
   disciplinas?: {
     nome: string;
     codigoDisciplina: string;
@@ -91,6 +96,8 @@ export interface CalendarItem {
 
 export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {
   consecutiveClasses: number;
+  // Actual end of the merged class block (accounts for arbitrary/off-grid times).
+  endDate: Date;
 }
 
 export interface MenuItem {

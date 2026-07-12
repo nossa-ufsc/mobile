@@ -15,16 +15,6 @@ export const timeMapping: Record<string, string> = {
   '21:10': '22:00',
 };
 
-export const LUNCH_BREAKS = [
-  { start: '10:00', end: '10:10' },
-  { start: '16:00', end: '16:20' },
-  { start: '20:10', end: '20:20' },
-] as const;
-
-export const isLunchBreak = (endTime: string, startTime: string): boolean => {
-  return LUNCH_BREAKS.some((break_) => break_.start === endTime && break_.end === startTime);
-};
-
 export const numericTimeMapping: Record<number, string> = {
   730: '07:30',
   820: '08:20',
@@ -42,29 +32,40 @@ export const numericTimeMapping: Record<number, string> = {
   2110: '21:10',
 };
 
-export const numericTimeOrder: Record<string, number> = {
-  '07:30': 0,
-  '08:20': 1,
-  '09:10': 2,
-  '10:10': 3,
-  '11:00': 4,
-  '13:30': 5,
-  '14:20': 6,
-  '15:10': 7,
-  '16:20': 8,
-  '17:10': 9,
-  '18:30': 10,
-  '19:20': 11,
-  '20:20': 12,
-  '21:10': 13,
-};
-
 export const formatNumericTime = (numericTime: number): string => {
   return numericTimeMapping[numericTime] || numericTime.toString();
 };
 
 export const getEndTime = (startTime: string): string => {
   return timeMapping[startTime] || startTime;
+};
+
+/**
+ * Converts an "HH:MM" string into minutes since midnight.
+ * Returns NaN for malformed/empty input so callers can treat it as invalid.
+ */
+export const timeToMinutes = (time: string): number => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+/**
+ * Max gap (minutes) between one slot ending and the next starting for them to
+ * still count as a single consecutive block. 20 exactly reproduces the previous
+ * grid-based behavior (back-to-back slots have a 0-min gap; the three
+ * institutional lunch breaks are 10/20/10 min) while also absorbing small
+ * manual time adjustments.
+ */
+export const CONSECUTIVE_GAP_TOLERANCE_MINUTES = 20;
+
+/**
+ * Whether two class slots should be merged into a single consecutive block.
+ * Works for arbitrary (off-grid) times: the next slot must start after the
+ * previous one ends, within CONSECUTIVE_GAP_TOLERANCE_MINUTES.
+ */
+export const areClassesConsecutive = (previousEndTime: string, nextStartTime: string): boolean => {
+  const gap = timeToMinutes(nextStartTime) - timeToMinutes(previousEndTime);
+  return gap >= 0 && gap <= CONSECUTIVE_GAP_TOLERANCE_MINUTES;
 };
 
 export const cagrDayIndexToJsIndex = (cagrDayIndex: number): number => {

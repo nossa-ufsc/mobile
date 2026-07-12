@@ -17,6 +17,9 @@ interface EnvironmentState {
   subjects: Subject[] | null;
   isAuthenticated: boolean;
   semesterDuration: number;
+  // CAGR semester identifier (YYYYN, e.g. 20261) from the imported grade; used to
+  // anchor the calendar to the correct semester start. Null for guest/dev.
+  semester: number | null;
   notificationDelay: number;
   notificationsEnabled: boolean;
   campus: Campus | null;
@@ -24,6 +27,7 @@ interface EnvironmentState {
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   setSemesterDuration: (duration: number) => void;
+  setSemester: (semester: number | null) => void;
   setNotificationDelay: (delay: number) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
   setCampus: (campus: Campus) => void;
@@ -34,6 +38,10 @@ interface EnvironmentState {
   // Remove this after a few months
   isCalendarFixMigrated: boolean;
   setIsCalendarFixMigrated: (isCalendarFixMigrated: boolean) => void;
+  // Ids of "What's New" items the user has already seen. Deliberately not reset
+  // on logout so news isn't re-shown on the same device.
+  seenNewsIds: string[];
+  markNewsSeen: (id: string) => void;
 }
 
 const systemStorageZustandAdadpter = {
@@ -56,6 +64,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       subjects: null,
       isAuthenticated: false,
       semesterDuration: 18,
+      semester: null,
       notificationDelay: 15,
       notificationsEnabled: true,
       campus: null,
@@ -82,6 +91,10 @@ export const useEnvironmentStore = create<EnvironmentState>()(
         set({ semesterDuration: duration });
       },
 
+      setSemester: (semester) => {
+        set({ semester });
+      },
+
       setNotificationDelay: (delay) => {
         set({ notificationDelay: delay });
       },
@@ -100,6 +113,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           subjects: null,
           isAuthenticated: false,
           semesterDuration: 18,
+          semester: null,
           notificationDelay: 15,
           notificationsEnabled: true,
           campus: Campus.FLORIANOPOLIS,
@@ -114,6 +128,12 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       isCalendarFixMigrated: false,
       setIsCalendarFixMigrated: (isCalendarFixMigrated) => {
         set({ isCalendarFixMigrated });
+      },
+      seenNewsIds: [],
+      markNewsSeen: (id) => {
+        set((state) =>
+          state.seenNewsIds.includes(id) ? state : { seenNewsIds: [...state.seenNewsIds, id] }
+        );
       },
     }),
     {

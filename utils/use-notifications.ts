@@ -20,7 +20,7 @@ export const useNotifications = () => {
   const [notification, setNotification] = useState<Notifications.Notification>();
   const notificationListener = useRef<Notifications.EventSubscription>(null);
   const responseListener = useRef<Notifications.EventSubscription>(null);
-  const { notificationDelay, notificationsEnabled, subjects, semesterDuration } =
+  const { notificationDelay, notificationsEnabled, subjects, semesterDuration, semester } =
     useEnvironmentStore();
 
   useEffect(() => {
@@ -124,19 +124,25 @@ export const useNotifications = () => {
   };
 
   const generateClassesNotifications = async (classes?: CalendarClassItem[]) => {
+    // Respect the user's setting; read fresh (not the closure) so callers deferred
+    // via setTimeout right after toggling notifications on still see the new value.
+    if (!useEnvironmentStore.getState().notificationsEnabled) return;
+
     let calendarItems = classes;
     if (!classes) {
       if (!subjects) return;
 
-      const semesterStartDate = getSemesterStartDate();
+      const semesterStartDate = getSemesterStartDate(semester);
       calendarItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
     }
 
     if (!calendarItems) return;
 
-    calendarItems.forEach(async (item) => {
-      await scheduleClassNotification(item.subject.name, item.date, true, item.description);
-    });
+    await Promise.all(
+      calendarItems.map((item) =>
+        scheduleClassNotification(item.subject.name, item.date, true, item.description)
+      )
+    );
   };
 
   return {

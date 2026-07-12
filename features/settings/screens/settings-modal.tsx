@@ -1,6 +1,7 @@
 import { useCAGRLogin } from '@/features/onboarding/hooks/use-cagr-login';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
@@ -128,7 +129,7 @@ export const SettingsModal = () => {
   const handleReloadSchedule = async () => {
     Alert.alert(
       'Recarregar Grade',
-      'Ao recarregar a grade, você perderá todos os itens do calendário e faltas registradas. Deseja continuar?',
+      'Ao recarregar a grade, você perderá suas personalizações (salas, horários e disciplinas ocultas), todos os itens do calendário e as faltas registradas. Deseja continuar?',
       [
         {
           text: 'Cancelar',
@@ -213,7 +214,7 @@ export const SettingsModal = () => {
           </View>
         </View>
       )}
-      <Container scrollable>
+      <Container scrollable edges={['right', 'left']}>
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
           Geral
         </Text>
@@ -295,6 +296,18 @@ export const SettingsModal = () => {
           Usuário
         </Text>
         <View className="mb-6 rounded-lg bg-card">
+          <TouchableOpacity
+            onPress={() => router.push('/manage-subjects')}
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400/80 shadow-sm">
+                <MaterialCommunityIcons name="pencil" size={24} color="white" />
+              </View>
+              <Text variant="body">Editar disciplinas</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+          </TouchableOpacity>
+
           {!isGuest && (
             <TouchableOpacity
               onPress={handleScheduleActions}

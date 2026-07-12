@@ -13,6 +13,7 @@ export default function AppLayout() {
     <Stack screenOptions={SCREEN_OPTIONS}>
       <Stack.Screen name="(tabs)" options={TABS_OPTIONS} />
       <Stack.Screen name="modal" options={MODAL_OPTIONS} />
+      <Stack.Screen name="manage-subjects" options={MANAGE_SUBJECTS_OPTIONS} />
     </Stack>
   );
 }
@@ -30,4 +31,8 @@ const MODAL_OPTIONS = {
   animation: 'fade_from_bottom', // for android
   title: 'Configurações',
   headerRight: () => <ThemeToggle />,
+} as const;
+
+const MANAGE_SUBJECTS_OPTIONS = {
+  title: 'Editar disciplinas',
 } as const;

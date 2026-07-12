@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CalendarItemSheet } from '../components/calendar-item-sheet';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { getActiveSubjects } from '@/utils/subjects';
 import { Sheet } from '@/ui/bottom-sheet';
 import { CalendarDayView } from '../components/calendar-day-view';
 import { MonthSelector } from '../components/month-selector';
@@ -145,7 +146,7 @@ export const CalendarHome = () => {
         ref={calendarSheetRef}
         enableDynamicSizing>
         <CalendarItemSheet
-          subjects={subjects}
+          subjects={getActiveSubjects(subjects)}
           onClose={handleClose}
           initialItem={selectedItem}
           initialDate={selectedDay}
