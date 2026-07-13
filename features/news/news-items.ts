@@ -7,6 +7,11 @@ export interface NewsItem {
   icon: ComponentProps<typeof MaterialCommunityIcons>['name'];
   title: string;
   description: string;
+  /** Optional external URL surfaced as a tappable link on the slide. */
+  link?: {
+    label: string;
+    url: string;
+  };
 }
 
 // Add a new entry (with a fresh `id`) to announce a feature. Items are shown once
@@ -25,5 +30,16 @@ export const NEWS_ITEMS: NewsItem[] = [
     title: 'Widgets na tela inicial',
     description:
       'Adicione o widget do Nossa UFSC à sua tela inicial e veja as aulas do dia sem abrir o app.',
+  },
+  {
+    id: 'open-source',
+    icon: 'github',
+    title: 'Agora somos open source',
+    description:
+      'Tem alguma ideia ou algo te incomoda no app? Agora o código é aberto: contribua com melhorias e ajude a construir o Nossa UFSC. Toda ajuda é bem-vinda!',
+    link: {
+      label: 'Ver no GitHub',
+      url: 'https://github.com/nossa-ufsc/mobile',
+    },
   },
 ];
