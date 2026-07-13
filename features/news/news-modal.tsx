@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -60,7 +60,7 @@ export const NewsModal = () => {
 
           <PagerView
             ref={pagerRef}
-            style={{ height: 240 }}
+            style={{ height: 280 }}
             initialPage={0}
             onPageSelected={(event) => {
               const index = event.nativeEvent.position;
@@ -79,6 +79,16 @@ export const NewsModal = () => {
                 <Text variant="body" color="tertiary" className="text-center">
                   {item.description}
                 </Text>
+                {item.link && (
+                  <Pressable
+                    onPress={() => Linking.openURL(item.link!.url)}
+                    className="mt-4 flex-row items-center gap-1">
+                    <MaterialCommunityIcons name="open-in-new" size={16} color={colors.primary} />
+                    <Text variant="body" className="text-primary font-medium">
+                      {item.link.label}
+                    </Text>
+                  </Pressable>
+                )}
               </View>
             ))}
           </PagerView>
