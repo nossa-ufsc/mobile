@@ -4,7 +4,6 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
 import { useCallback } from 'react';
-import { useMigrateCalendarItems } from '@/utils/use-migrate-calendar-items';
 
 export default function TabLayout() {
   const { colors } = useColorScheme();
@@ -15,8 +14,6 @@ export default function TabLayout() {
       setCurrentDate(new Date());
     }, [setCurrentDate])
   );
-
-  useMigrateCalendarItems();
 
   return (
     <NativeTabs iconColor={{ default: colors.grey4, selected: colors.grey }}>

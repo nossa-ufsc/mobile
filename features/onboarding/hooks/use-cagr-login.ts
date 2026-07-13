@@ -61,7 +61,6 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     setIsAuthenticated,
     semesterDuration,
     setSemester,
-    setIsCalendarFixMigrated,
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
@@ -292,16 +291,6 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
       const userSubjects = await fetchSubjects(token);
       setSubjects(userSubjects);
 
-      const semesterStartDate = getSemesterStartDate(useEnvironmentStore.getState().semester);
-      const calendarItems = generateSemesterCalendar(
-        userSubjects,
-        semesterDuration,
-        semesterStartDate
-      );
-      calendarItems.forEach((item) => addClassItem(item));
-      generateClassesNotifications(calendarItems);
-      setIsCalendarFixMigrated(true);
-
       const { error } = await supabase.auth.signInAnonymously();
 
       if (error) {
@@ -382,7 +371,6 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     );
     calendarItems.forEach((item) => addClassItem(item));
     generateClassesNotifications(calendarItems);
-    setIsCalendarFixMigrated(true);
   };
 
   const reloadSubjects = async () => {

@@ -22,8 +22,12 @@ export const useRebuildSchedule = () => {
     const classItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
     setClassItems(classItems);
 
-    await cancelAllNotifications();
-    await generateClassesNotifications(classItems);
+    try {
+      await cancelAllNotifications();
+      await generateClassesNotifications(classItems);
+    } catch (error) {
+      console.error('Error rebuilding class notifications:', error);
+    }
 
     // cancelAllNotifications also cleared the tasks/exams notifications; reschedule
     // the ones the user had enabled.
@@ -31,10 +35,14 @@ export const useRebuildSchedule = () => {
       (item) => item.notificationEnabled && item.notificationDate
     );
     for (const item of itemsToReschedule) {
-      await updateItem(item.id, {
-        notificationEnabled: true,
-        notificationDate: item.notificationDate,
-      });
+      try {
+        await updateItem(item.id, {
+          notificationEnabled: true,
+          notificationDate: item.notificationDate,
+        });
+      } catch (error) {
+        console.error('Error rebuilding calendar item notification:', error);
+      }
     }
   };
 

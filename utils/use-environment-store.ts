@@ -34,10 +34,6 @@ interface EnvironmentState {
   clearEnvironment: () => void;
   isGuest: boolean;
   setIsGuest: (isGuest: boolean) => void;
-  // Fix for calendar items not being generated correctly
-  // Remove this after a few months
-  isCalendarFixMigrated: boolean;
-  setIsCalendarFixMigrated: (isCalendarFixMigrated: boolean) => void;
   // Ids of "What's New" items the user has already seen. Deliberately not reset
   // on logout so news isn't re-shown on the same device.
   seenNewsIds: string[];
@@ -124,10 +120,6 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       isGuest: false,
       setIsGuest: (isGuest) => {
         set({ isGuest });
-      },
-      isCalendarFixMigrated: false,
-      setIsCalendarFixMigrated: (isCalendarFixMigrated) => {
-        set({ isCalendarFixMigrated });
       },
       seenNewsIds: [],
       markNewsSeen: (id) => {

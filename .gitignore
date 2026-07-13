@@ -28,3 +28,15 @@ android
 
 # Environment variables
 .env
+.env.apple
+.env.android
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Local build artifacts
+*.ipa
+*.aab
