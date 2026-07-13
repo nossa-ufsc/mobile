@@ -14,7 +14,7 @@ import DateTimePicker, {
   DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -146,7 +146,10 @@ const TimeField = ({
 
 export const ManageSubjectsScreen = () => {
   const router = useRouter();
-  const { fromOnboarding } = useLocalSearchParams<{ fromOnboarding?: string }>();
+  const { fromOnboarding, subjectId } = useLocalSearchParams<{
+    fromOnboarding?: string;
+    subjectId?: string;
+  }>();
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const { bottom } = useSafeAreaInsets();
@@ -157,8 +160,8 @@ export const ManageSubjectsScreen = () => {
 
   const [draft, setDraft] = useState<Subject[]>(() => toDraft(subjects));
   const [isSaving, setIsSaving] = useState(false);
-  // Subject cards start collapsed; the user expands one to edit its schedule.
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>(subjectId ? [subjectId] : []);
+  const displayedDraft = subjectId ? draft.filter((subject) => subject.id === subjectId) : draft;
 
   const toggleExpanded = (subjectId: string) => {
     setExpandedIds((current) =>
@@ -260,6 +263,22 @@ export const ManageSubjectsScreen = () => {
 
   return (
     <Container>
+      {fromOnboarding !== 'true' && (
+        <Stack.Screen
+          options={{
+            title: subjectId ? 'Editar disciplina' : 'Editar disciplinas',
+            headerLeft: () => (
+              <Pressable
+                onPress={() => router.back()}
+                hitSlop={8}
+                style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <MaterialCommunityIcons name="close" size={24} color={colors.primary} />
+              </Pressable>
+            ),
+          }}
+        />
+      )}
+
       <ScrollView
         className="flex-1 px-4"
         contentContainerClassName="py-4"
@@ -272,13 +291,13 @@ export const ManageSubjectsScreen = () => {
           cada aula. As alterações valem para seu horário, calendário, notificações e widgets.
         </Text>
 
-        {draft.length === 0 && (
+        {displayedDraft.length === 0 && (
           <Text variant="body" color="tertiary" className="mt-8 text-center">
             Nenhuma disciplina para gerenciar.
           </Text>
         )}
 
-        {draft.map((subject) => {
+        {displayedDraft.map((subject) => {
           const isExpanded = expandedIds.includes(subject.id);
           const showSchedule = !subject.ignored && isExpanded;
           return (

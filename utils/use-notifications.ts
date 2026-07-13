@@ -65,6 +65,8 @@ export const useNotifications = () => {
     notificationDate.setHours(newHours);
     notificationDate.setMinutes(newMinutes);
 
+    if (notificationDate.getTime() <= Date.now()) return;
+
     console.info('Class Notification scheduled', {
       title: `Aula em ${delayMinutes} minutos`,
       body: `${className} ${classPlace ? `em ${classPlace}` : ''} às ${date.toLocaleTimeString()}`,
@@ -91,6 +93,8 @@ export const useNotifications = () => {
     if (!notificationsEnabled) return;
 
     const notificationDate = new Date(date);
+
+    if (notificationDate.getTime() <= Date.now()) return;
 
     console.info('Calendar Item Notification scheduled', {
       title: `Lembrete: ${title}`,
@@ -138,11 +142,16 @@ export const useNotifications = () => {
 
     if (!calendarItems) return;
 
-    await Promise.all(
+    const results = await Promise.allSettled(
       calendarItems.map((item) =>
         scheduleClassNotification(item.subject.name, item.date, true, item.description)
       )
     );
+
+    const failures = results.filter((result) => result.status === 'rejected');
+    if (failures.length > 0) {
+      console.error('Error scheduling class notifications:', failures);
+    }
   };
 
   return {

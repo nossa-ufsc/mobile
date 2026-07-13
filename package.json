@@ -11,8 +11,14 @@
     "web": "expo start --web",
     "dev": "bun run start",
     "build:ios:production": "eas build -p ios --profile production --local",
+    "build:ios:production:submit": "bash scripts/ios-build.sh production --submit",
+    "build:ios:preview": "bash scripts/ios-build.sh preview",
     "build:ios:development": "eas build -p ios --profile development",
+    "submit:ios": "bash scripts/ios-submit.sh",
     "build:android:production": "eas build -p android --profile production --local",
+    "build:android:production:submit": "bash scripts/android-build.sh production --submit",
+    "build:android:preview": "bash scripts/android-build.sh preview",
+    "submit:android": "bash scripts/android-submit.sh",
     "run:android": "expo prebuild && bun android",
     "run:ios": "expo prebuild && bun ios",
     "prepare": "husky"
@@ -106,5 +112,6 @@
   "private": true,
   "patchedDependencies": {
     "react-native-ios-utilities@5.2.0": "patches/react-native-ios-utilities@5.2.0.patch"
-  }
+  },
+  "packageManager": "pnpm@10.31.0+sha512.e3927388bfaa8078ceb79b748ffc1e8274e84d75163e67bc22e06c0d3aed43dd153151cbf11d7f8301ff4acb98c68bdc5cadf6989532801ffafe3b3e4a63c268"
 }
