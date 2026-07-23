@@ -1,5 +1,7 @@
 import { FlexWidget, TextWidget } from 'react-native-android-widget';
 import { timeToMinutes } from '@/utils/time-mapping';
+import { i18n } from '@/utils/i18n';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 interface WidgetEvent {
   name: string;
@@ -14,8 +16,10 @@ interface AndroidScheduleWidgetProps {
 }
 
 export function AndroidScheduleWidget({ classes, currentDate }: AndroidScheduleWidgetProps) {
-  const weekday = new Intl.DateTimeFormat('pt-BR', { weekday: 'short' }).format(currentDate);
-  const day = new Intl.DateTimeFormat('pt-BR', { day: 'numeric' }).format(currentDate);
+  const weekday = new Intl.DateTimeFormat(getDateLocale(), { weekday: 'short' }).format(
+    currentDate
+  );
+  const day = new Intl.DateTimeFormat(getDateLocale(), { day: 'numeric' }).format(currentDate);
 
   const currentHour = currentDate.getHours();
   const filteredEvents = classes
@@ -72,7 +76,7 @@ export function AndroidScheduleWidget({ classes, currentDate }: AndroidScheduleW
           }}>
           {filteredEvents.length === 0 ? (
             <TextWidget
-              text="Nenhuma aula hoje."
+              text={i18n.t('widget.noClasses')}
               style={{
                 fontSize: 14,
                 color: '#000000',
@@ -98,7 +102,11 @@ export function AndroidScheduleWidget({ classes, currentDate }: AndroidScheduleW
                   }}
                 />
                 <TextWidget
-                  text={`${event.startTime} - ${event.endTime} em ${event.classroom}`}
+                  text={i18n.t('widget.classTime', {
+                    start: event.startTime,
+                    end: event.endTime,
+                    classroom: event.classroom,
+                  })}
                   style={{
                     fontSize: 12,
                     color: '#666666',

@@ -14,15 +14,7 @@
     "classUnit_one": "class",
     "classUnit_other": "classes",
     "weekdaysAbbr": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    "weekdaysFull": [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
+    "weekdaysFull": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     "weekdayLetters": ["M", "T", "W", "T", "F", "S", "S"],
     "months": [
       "January",
