@@ -1,9 +1,11 @@
 import { Redirect, Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ThemeToggle } from '@/ui/theme-toggle';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 
 export default function AppLayout() {
   const { isAuthenticated } = useEnvironmentStore();
+  const { t } = useTranslation();
 
   if (!isAuthenticated) {
     return <Redirect href="/onboarding" />;
@@ -12,8 +14,21 @@ export default function AppLayout() {
   return (
     <Stack screenOptions={SCREEN_OPTIONS}>
       <Stack.Screen name="(tabs)" options={TABS_OPTIONS} />
-      <Stack.Screen name="modal" options={MODAL_OPTIONS} />
-      <Stack.Screen name="manage-subjects" options={MANAGE_SUBJECTS_OPTIONS} />
+      <Stack.Screen
+        name="modal"
+        options={{
+          presentation: 'modal',
+          animation: 'fade_from_bottom', // for android
+          title: t('settings.title'),
+          headerRight: () => <ThemeToggle />,
+        }}
+      />
+      <Stack.Screen
+        name="manage-subjects"
+        options={{
+          title: t('subjects.editSubjects'),
+        }}
+      />
     </Stack>
   );
 }
@@ -24,15 +39,4 @@ const SCREEN_OPTIONS = {
 
 const TABS_OPTIONS = {
   headerShown: false,
-} as const;
-
-const MODAL_OPTIONS = {
-  presentation: 'modal',
-  animation: 'fade_from_bottom', // for android
-  title: 'Configurações',
-  headerRight: () => <ThemeToggle />,
-} as const;
-
-const MANAGE_SUBJECTS_OPTIONS = {
-  title: 'Editar disciplinas',
 } as const;

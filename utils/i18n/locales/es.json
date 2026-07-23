@@ -38,6 +38,7 @@
     "events": "Eventos"
   },
   "settings": {
+    "title": "Configuración",
     "sections": {
       "general": "General",
       "notifications": "Notificaciones",
@@ -232,5 +233,10 @@
   "widget": {
     "noClasses": "No hay clases hoy.",
     "classTime": "{{start}} - {{end}} en {{classroom}}"
+  },
+  "notFound": {
+    "title": "¡Ups!",
+    "message": "Esta pantalla no existe.",
+    "goHome": "Ir a la pantalla de inicio"
   }
 }
