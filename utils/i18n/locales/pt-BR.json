@@ -1,0 +1,240 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "add": "Adicionar",
+    "delete": "Excluir",
+    "remove": "Remover",
+    "start": "Início",
+    "error": "Erro",
+    "success": "Sucesso",
+    "classCount_one": "{{count}} aula",
+    "classCount_other": "{{count}} aulas",
+    "weekdaysAbbr": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+    "weekdaysFull": [
+      "Domingo",
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado"
+    ],
+    "weekdayLetters": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "months": [
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro"
+    ]
+  },
+  "tabs": {
+    "home": "Horários",
+    "calendar": "Calendário",
+    "menu": "Cardápio",
+    "events": "Eventos"
+  },
+  "settings": {
+    "sections": {
+      "general": "Geral",
+      "notifications": "Notificações",
+      "user": "Usuário",
+      "community": "Comunidade"
+    },
+    "semester": "Semestre",
+    "campus": "Campus",
+    "notifications": "Notificações",
+    "notificationDelay": "Antecedência",
+    "editSubjects": "Editar disciplinas",
+    "manageSchedule": "Gerenciar Grade",
+    "logout": "Sair da conta",
+    "contribute": "Contribuir com o Código",
+    "contact": "Entrar em contato",
+    "language": "Idioma",
+    "languageOptions": {
+      "system": "Automático",
+      "ptBR": "Português",
+      "enUS": "English",
+      "es": "Español"
+    },
+    "semesterDurationTitle": "Duração do Semestre",
+    "semesterDurationMessage": "Escolha a duração do semestre",
+    "weeks_one": "{{count}} semana",
+    "weeks_other": "{{count}} semanas",
+    "campusTitle": "Campus",
+    "campusMessage": "Escolha o seu campus",
+    "notificationDelayTitle": "Antecedência das Notificações",
+    "notificationDelayMessage": "Escolha com quanto tempo de antecedência você quer ser notificado das aulas",
+    "minutes_one": "{{count}} minuto",
+    "minutes_other": "{{count}} minutos",
+    "manageScheduleTitle": "Gerenciar Grade",
+    "reloadSchedule": "Recarregar grade",
+    "reloadingSchedule": "Recarregando grade...",
+    "reloadScheduleTitle": "Recarregar Grade",
+    "reloadScheduleMessage": "Ao recarregar a grade, você perderá suas personalizações (salas, horários e disciplinas ocultas), todos os itens do calendário e as faltas registradas. Deseja continuar?",
+    "reload": "Recarregar",
+    "reloadSuccessMessage": "Grade recarregada com sucesso!",
+    "reloadErrorMessage": "Não foi possível recarregar a grade. Verifique sua conexão e tente novamente.",
+    "logoutTitle": "Sair da conta",
+    "logoutMessage": "Ao sair da conta, você perderá todas as suas configurações e dados salvos. Deseja continuar?",
+    "logoutConfirm": "Sair"
+  },
+  "home": {
+    "noSubjectsTitle": "Nenhuma disciplina cadastrada",
+    "noSubjectsSubtitle": "Cadastre suas disciplinas para ver seu horário",
+    "noClassesTitle": "Nenhuma aula hoje",
+    "noClassesSubtitle": "Aproveite seu tempo livre para estudar ou descansar"
+  },
+  "subjectDetails": {
+    "edit": "Editar",
+    "frequency": "Frequência",
+    "registeredAbsences": "Faltas Registradas",
+    "max": "Máximo",
+    "remaining": "Restantes",
+    "noAbsences": "Nenhuma falta registrada",
+    "activities": "Atividades",
+    "noActivities": "Nenhuma atividade encontrada",
+    "schedule": "Horários"
+  },
+  "classCard": {
+    "addAbsenceTitle": "Adicionar Falta",
+    "howManyClasses": "Quantas aulas você faltou?",
+    "removeAbsence": "Remover falta",
+    "addAbsence": "Adicionar falta",
+    "viewDetails": "Ver detalhes",
+    "absenceRegistered_one": "Falta registrada ({{count}} aula)",
+    "absenceRegistered_other": "Falta registrada ({{count}} aulas)",
+    "absencesLabel": "faltas"
+  },
+  "absenceSheet": {
+    "title": "Adicionar Falta",
+    "date": "Data",
+    "classCountLabel": "Quantidade de Aulas",
+    "submit": "Adicionar"
+  },
+  "calendarItemSheet": {
+    "types": {
+      "exam": "Prova",
+      "task": "Lembrete",
+      "assignment": "Trabalho"
+    },
+    "deleteTitle": "Excluir Item",
+    "deleteMessage": "Tem certeza que deseja excluir este item?",
+    "titlePlaceholder": "Digite o título",
+    "descriptionPlaceholder": "Digite uma observação (opcional)",
+    "date": "Data",
+    "notification": "Notificação",
+    "selectSubject": "Selecione uma disciplina"
+  },
+  "classItemSheet": {
+    "schedule": "Horário",
+    "start": "Início",
+    "duration": "Duração",
+    "location": "Local",
+    "registeredAbsences": "Faltas Registradas",
+    "registerAbsence": "Registrar Falta"
+  },
+  "events": {
+    "back": "Voltar",
+    "previewTitle": "Prévia do Evento",
+    "publish": "Publicar",
+    "newEvent": "Novo Evento",
+    "preview": "Visualizar",
+    "namePlaceholder": "Nome do evento",
+    "locationPlaceholder": "Local do evento",
+    "start": "Início",
+    "end": "Término",
+    "tapToChangeImage": "Toque para alterar a imagem",
+    "tapToSelectImage": "Toque para selecionar uma imagem",
+    "fillRequiredFields": "Preencha todos os campos obrigatórios",
+    "endDateAfterStart": "A data de término deve ser posterior à data de início",
+    "devPublishBlocked": "Não é possível publicar eventos no ambiente de desenvolvimento",
+    "createEventFailed": "Não foi possível criar o evento. Tente novamente.",
+    "previewDisclaimer": "Confira se as informações estão corretas antes de publicar. Seu nome será exibido como criador do evento.",
+    "publishDisclaimer": "Ao publicar este evento, você concorda em ser responsável pelo seu conteúdo.\n\nSeu nome ({{name}}) e matrícula ({{enrollment}}) serão armazenados.",
+    "emptyTitle": "Nenhum evento encontrado",
+    "emptySubtitle": "Não existem eventos agendados para o seu campus.",
+    "sentBy": "Enviado por {{name}}"
+  },
+  "subjects": {
+    "editSubject": "Editar disciplina",
+    "editSubjects": "Editar disciplinas",
+    "helperText": "Desative as disciplinas que não quer acompanhar e ajuste o dia, a sala ou o horário de cada aula. As alterações valem para seu horário, calendário, notificações e widgets.",
+    "noneToManage": "Nenhuma disciplina para gerenciar.",
+    "weekdayPickerTitle": "Dia da semana",
+    "noSchedules": "Sem horários cadastrados.",
+    "start": "Início",
+    "end": "Fim",
+    "room": "Sala",
+    "roomPlaceholder": "Sala",
+    "done": "Concluído",
+    "saveFailed": "Não foi possível salvar suas alterações. Tente novamente."
+  },
+  "menu": {
+    "noMenuTitle": "Nenhum cardápio",
+    "loadError": "Não foi possível carregar o cardápio",
+    "noMenuForDay": "Nenhum cardápio disponível para este dia",
+    "outdatedWarning": "Este cardápio pode estar desatualizado"
+  },
+  "onboarding": {
+    "initial": {
+      "title": "Bem-vindo!",
+      "subtitle": "Nossa UFSC é seu companheiro diário para gerenciar sua vida acadêmica. Acompanhe suas faltas, provas e eventos em um só lugar.",
+      "step1Title": "Gerencie seus horários",
+      "step1Description": "Acompanhe e gerencie suas matérias e faltas de forma fácil e organizada.",
+      "step2Title": "Eventos e Festas",
+      "step2Description": "Fique por dentro dos próximos eventos e festas da UFSC para não perder nenhuma diversão.",
+      "step3Title": "Contribua com o Código",
+      "step3Description": "Ajude a melhorar o app contribuindo com código, sugestões ou reportando problemas.",
+      "start": "Começar"
+    },
+    "campus": {
+      "title": "Selecione seu Campus",
+      "subtitle": "Escolha o seu Campus para continuar. Essa informação é necessária para sincronizarmos os eventos e o cardápio do R.U.",
+      "next": "Próximo"
+    },
+    "login": {
+      "title": "Entre com o seu ID UFSC",
+      "subtitle": "Use seu login do CAGR para sincronizar suas disciplinas. Seus dados são salvos apenas no seu dispositivo.",
+      "step1Title": "Login Único",
+      "step1Description": "Use suas credenciais do idUFSC para acessar todas as funcionalidades do app.",
+      "step2Title": "Dados Seguros",
+      "step2Description": "Seus dados são salvos apenas no seu dispositivo de forma segura.",
+      "step3Title": "Sincronização Automática",
+      "step3Description": "Suas disciplinas são sincronizadas automaticamente com o CAGR.",
+      "enter": "Entrar",
+      "notStudent": "Não é aluno?",
+      "enterAsGuest": "Entrar como visitante"
+    }
+  },
+  "cagrLogin": {
+    "reauthRequiredTitle": "Login necessário",
+    "reauthRequiredMessage": "Sua sessão do CAGR expirou. Você será redirecionado para fazer login novamente e continuar recarregando a grade.",
+    "loginAgain": "Fazer login",
+    "authCancelled": "Autenticação cancelada pelo usuário.",
+    "authFailed": "Não foi possível autenticar. Tente novamente."
+  },
+  "news": {
+    "header": "Novidades",
+    "next": "Próximo",
+    "gotIt": "Entendi"
+  },
+  "notifications": {
+    "classTitle": "Aula em {{minutes}} minutos",
+    "classBodyWithPlace": "{{className}} em {{place}} às {{time}}",
+    "classBodyNoPlace": "{{className}} às {{time}}",
+    "reminderTitle": "Lembrete: {{title}}"
+  },
+  "widget": {
+    "noClasses": "Nenhuma aula hoje.",
+    "classTime": "{{start}} - {{end}} em {{classroom}}"
+  }
+}

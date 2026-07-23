@@ -1,0 +1,240 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add",
+    "delete": "Delete",
+    "remove": "Remove",
+    "start": "Start",
+    "error": "Error",
+    "success": "Success",
+    "classCount_one": "{{count}} class",
+    "classCount_other": "{{count}} classes",
+    "weekdaysAbbr": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "weekdaysFull": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "weekdayLetters": ["M", "T", "W", "T", "F", "S", "S"],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ]
+  },
+  "tabs": {
+    "home": "Schedule",
+    "calendar": "Calendar",
+    "menu": "Menu",
+    "events": "Events"
+  },
+  "settings": {
+    "sections": {
+      "general": "General",
+      "notifications": "Notifications",
+      "user": "Account",
+      "community": "Community"
+    },
+    "semester": "Semester",
+    "campus": "Campus",
+    "notifications": "Notifications",
+    "notificationDelay": "Notice period",
+    "editSubjects": "Edit subjects",
+    "manageSchedule": "Manage Schedule",
+    "logout": "Log out",
+    "contribute": "Contribute to the Code",
+    "contact": "Contact us",
+    "language": "Language",
+    "languageOptions": {
+      "system": "Automatic",
+      "ptBR": "Português",
+      "enUS": "English",
+      "es": "Español"
+    },
+    "semesterDurationTitle": "Semester Duration",
+    "semesterDurationMessage": "Choose the semester duration",
+    "weeks_one": "{{count}} week",
+    "weeks_other": "{{count}} weeks",
+    "campusTitle": "Campus",
+    "campusMessage": "Choose your campus",
+    "notificationDelayTitle": "Notification Notice Period",
+    "notificationDelayMessage": "Choose how far in advance you want to be notified about your classes",
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes",
+    "manageScheduleTitle": "Manage Schedule",
+    "reloadSchedule": "Reload schedule",
+    "reloadingSchedule": "Reloading schedule...",
+    "reloadScheduleTitle": "Reload Schedule",
+    "reloadScheduleMessage": "Reloading the schedule will erase your customizations (rooms, times and hidden subjects), all calendar items and recorded absences. Do you want to continue?",
+    "reload": "Reload",
+    "reloadSuccessMessage": "Schedule reloaded successfully!",
+    "reloadErrorMessage": "Couldn't reload the schedule. Check your connection and try again.",
+    "logoutTitle": "Log out",
+    "logoutMessage": "Logging out will erase all your settings and saved data. Do you want to continue?",
+    "logoutConfirm": "Log out"
+  },
+  "home": {
+    "noSubjectsTitle": "No subjects added",
+    "noSubjectsSubtitle": "Add your subjects to see your schedule",
+    "noClassesTitle": "No classes today",
+    "noClassesSubtitle": "Enjoy your free time to study or rest"
+  },
+  "subjectDetails": {
+    "edit": "Edit",
+    "frequency": "Attendance",
+    "registeredAbsences": "Recorded Absences",
+    "max": "Maximum",
+    "remaining": "Remaining",
+    "noAbsences": "No absences recorded",
+    "activities": "Activities",
+    "noActivities": "No activities found",
+    "schedule": "Schedule"
+  },
+  "classCard": {
+    "addAbsenceTitle": "Add Absence",
+    "howManyClasses": "How many classes did you miss?",
+    "removeAbsence": "Remove absence",
+    "addAbsence": "Add absence",
+    "viewDetails": "View details",
+    "absenceRegistered_one": "Absence recorded ({{count}} class)",
+    "absenceRegistered_other": "Absence recorded ({{count}} classes)",
+    "absencesLabel": "absences"
+  },
+  "absenceSheet": {
+    "title": "Add Absence",
+    "date": "Date",
+    "classCountLabel": "Number of Classes",
+    "submit": "Add"
+  },
+  "calendarItemSheet": {
+    "types": {
+      "exam": "Exam",
+      "task": "Reminder",
+      "assignment": "Assignment"
+    },
+    "deleteTitle": "Delete Item",
+    "deleteMessage": "Are you sure you want to delete this item?",
+    "titlePlaceholder": "Enter a title",
+    "descriptionPlaceholder": "Enter a note (optional)",
+    "date": "Date",
+    "notification": "Notification",
+    "selectSubject": "Select a subject"
+  },
+  "classItemSheet": {
+    "schedule": "Schedule",
+    "start": "Start",
+    "duration": "Duration",
+    "location": "Location",
+    "registeredAbsences": "Recorded Absences",
+    "registerAbsence": "Record Absence"
+  },
+  "events": {
+    "back": "Back",
+    "previewTitle": "Event Preview",
+    "publish": "Publish",
+    "newEvent": "New Event",
+    "preview": "Preview",
+    "namePlaceholder": "Event name",
+    "locationPlaceholder": "Event location",
+    "start": "Start",
+    "end": "End",
+    "tapToChangeImage": "Tap to change image",
+    "tapToSelectImage": "Tap to select an image",
+    "fillRequiredFields": "Fill in all required fields",
+    "endDateAfterStart": "The end date must be after the start date",
+    "devPublishBlocked": "Events can't be published from the development environment",
+    "createEventFailed": "Couldn't create the event. Please try again.",
+    "previewDisclaimer": "Check that the information is correct before publishing. Your name will be shown as the event's creator.",
+    "publishDisclaimer": "By publishing this event, you agree to be responsible for its content.\n\nYour name ({{name}}) and student ID ({{enrollment}}) will be stored.",
+    "emptyTitle": "No events found",
+    "emptySubtitle": "There are no events scheduled for your campus.",
+    "sentBy": "Posted by {{name}}"
+  },
+  "subjects": {
+    "editSubject": "Edit subject",
+    "editSubjects": "Edit subjects",
+    "helperText": "Turn off the subjects you don't want to track and adjust the day, room or time of each class. Changes apply to your schedule, calendar, notifications and widgets.",
+    "noneToManage": "No subjects to manage.",
+    "weekdayPickerTitle": "Day of the week",
+    "noSchedules": "No schedules added.",
+    "start": "Start",
+    "end": "End",
+    "room": "Room",
+    "roomPlaceholder": "Room",
+    "done": "Done",
+    "saveFailed": "Couldn't save your changes. Please try again."
+  },
+  "menu": {
+    "noMenuTitle": "No menu",
+    "loadError": "Couldn't load the menu",
+    "noMenuForDay": "No menu available for this day",
+    "outdatedWarning": "This menu may be outdated"
+  },
+  "onboarding": {
+    "initial": {
+      "title": "Welcome!",
+      "subtitle": "Nossa UFSC is your daily companion for managing your academic life. Keep track of your absences, exams and events in one place.",
+      "step1Title": "Manage your schedule",
+      "step1Description": "Track and manage your subjects and absences in an easy, organized way.",
+      "step2Title": "Events and Parties",
+      "step2Description": "Stay up to date with upcoming UFSC events and parties so you don't miss the fun.",
+      "step3Title": "Contribute to the Code",
+      "step3Description": "Help improve the app by contributing code, suggestions or reporting issues.",
+      "start": "Get Started"
+    },
+    "campus": {
+      "title": "Select your Campus",
+      "subtitle": "Choose your Campus to continue. This information is needed to sync events and the cafeteria menu.",
+      "next": "Next"
+    },
+    "login": {
+      "title": "Sign in with your UFSC ID",
+      "subtitle": "Use your CAGR login to sync your subjects. Your data is stored only on your device.",
+      "step1Title": "Single Sign-On",
+      "step1Description": "Use your idUFSC credentials to access all the app's features.",
+      "step2Title": "Secure Data",
+      "step2Description": "Your data is stored securely, only on your device.",
+      "step3Title": "Automatic Sync",
+      "step3Description": "Your subjects are automatically synced with CAGR.",
+      "enter": "Sign In",
+      "notStudent": "Not a student?",
+      "enterAsGuest": "Continue as guest"
+    }
+  },
+  "cagrLogin": {
+    "reauthRequiredTitle": "Login required",
+    "reauthRequiredMessage": "Your CAGR session has expired. You'll be redirected to sign in again to continue reloading the schedule.",
+    "loginAgain": "Sign in",
+    "authCancelled": "Authentication cancelled by the user.",
+    "authFailed": "Couldn't authenticate. Please try again."
+  },
+  "news": {
+    "header": "What's New",
+    "next": "Next",
+    "gotIt": "Got it"
+  },
+  "notifications": {
+    "classTitle": "Class in {{minutes}} minutes",
+    "classBodyWithPlace": "{{className}} at {{place}} at {{time}}",
+    "classBodyNoPlace": "{{className}} at {{time}}",
+    "reminderTitle": "Reminder: {{title}}"
+  },
+  "widget": {
+    "noClasses": "No classes today.",
+    "classTime": "{{start}} - {{end}} at {{classroom}}"
+  }
+}

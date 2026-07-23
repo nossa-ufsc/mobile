@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { Subject, User, Campus } from '@/types';
 import { ExtensionStorage } from '@bacons/apple-targets';
 import { convertSubjectsToWidgetFormat } from './subjects-to-widget-adapter';
+import { i18n, detectDeviceLanguage, SupportedLanguage } from './i18n';
 
 import { MMKV } from 'react-native-mmkv';
 
@@ -38,6 +39,9 @@ interface EnvironmentState {
   // on logout so news isn't re-shown on the same device.
   seenNewsIds: string[];
   markNewsSeen: (id: string) => void;
+  // User-selected language override. Null means "follow the device locale".
+  language: SupportedLanguage | null;
+  setLanguage: (language: SupportedLanguage | null) => void;
 }
 
 const systemStorageZustandAdadpter = {
@@ -127,6 +131,12 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           state.seenNewsIds.includes(id) ? state : { seenNewsIds: [...state.seenNewsIds, id] }
         );
       },
+
+      language: null,
+      setLanguage: (language) => {
+        set({ language });
+        i18n.changeLanguage(language ?? detectDeviceLanguage());
+      },
     }),
     {
       name: 'environment-storage',
@@ -134,3 +144,10 @@ export const useEnvironmentStore = create<EnvironmentState>()(
     }
   )
 );
+
+// MMKV-backed persistence hydrates synchronously, so the persisted language
+// preference (if any) is already available right after store creation.
+const persistedLanguage = useEnvironmentStore.getState().language;
+if (persistedLanguage) {
+  i18n.changeLanguage(persistedLanguage);
+}
