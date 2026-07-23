@@ -6,6 +6,8 @@ import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/ui/button';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 interface AbsenceSheetProps {
   onSubmit: (date: Date, count: number) => void;
@@ -13,6 +15,7 @@ interface AbsenceSheetProps {
 }
 
 export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
+  const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
   const [date, setDate] = useState(new Date());
   const [count, setCount] = useState(1);
@@ -33,20 +36,20 @@ export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
       contentContainerStyle={{ paddingBottom: 16 + bottom }}
       className="flex-1 px-6 pt-2">
       <View className="mb-6">
-        <Text className="text-2xl font-bold">Adicionar Falta</Text>
+        <Text className="text-2xl font-bold">{t('absenceSheet.title')}</Text>
       </View>
 
       <View className="mb-4 gap-6">
         <View className="gap-2">
           <Text color="primary" variant="subhead">
-            Data
+            {t('absenceSheet.date')}
           </Text>
-          <DatePicker locale="pt-BR" mode="date" onChange={handleDateChange} value={date} />
+          <DatePicker locale={getDateLocale()} mode="date" onChange={handleDateChange} value={date} />
         </View>
 
         <View className="gap-2">
           <Text color="primary" variant="subhead">
-            Quantidade de Aulas
+            {t('absenceSheet.classCountLabel')}
           </Text>
           <View className="flex-row gap-2">
             {[1, 2, 3, 4].map((number) => (
@@ -70,7 +73,7 @@ export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
         style={{ marginBottom: Platform.OS === 'android' ? bottom + 8 : 0 }}
         onPress={handleSubmit}
         className="mt-12">
-        <Text className="font-medium text-white">Adicionar</Text>
+        <Text className="font-medium text-white">{t('absenceSheet.submit')}</Text>
       </Button>
     </BottomSheetScrollView>
   );

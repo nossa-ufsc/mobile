@@ -4,9 +4,11 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   const { setCurrentDate } = useCalendarState();
 
   useFocusEffect(
@@ -18,7 +20,7 @@ export default function TabLayout() {
   return (
     <NativeTabs iconColor={{ default: colors.grey4, selected: colors.grey }}>
       <NativeTabs.Trigger name="(home)">
-        <NativeTabs.Trigger.Label>Horários</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.home')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'house', selected: 'house.fill' }}
           src={<NativeTabs.Trigger.VectorIcon family={Ionicons} name="home" />}
@@ -26,7 +28,7 @@ export default function TabLayout() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(calendar)">
-        <NativeTabs.Trigger.Label>Calendário</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.calendar')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf="calendar"
           src={<NativeTabs.Trigger.VectorIcon family={Ionicons} name="calendar" />}
@@ -34,7 +36,7 @@ export default function TabLayout() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(menu)">
-        <NativeTabs.Trigger.Label>Cardápio</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.menu')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf="fork.knife"
           src={<NativeTabs.Trigger.VectorIcon family={Ionicons} name="restaurant" />}
@@ -42,7 +44,7 @@ export default function TabLayout() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(events)">
-        <NativeTabs.Trigger.Label>Eventos</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.events')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf="mappin.and.ellipse"
           src={<NativeTabs.Trigger.VectorIcon family={Ionicons} name="location" />}

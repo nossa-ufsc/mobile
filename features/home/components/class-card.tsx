@@ -12,6 +12,8 @@ import { useColorScheme } from '@/utils/use-color-scheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 interface ClassCardProps {
   subject: Subject;
@@ -39,16 +41,16 @@ export const ClassCard = ({
   const isMediumAbsence = remainingAbsences < Math.ceil(maxAbsences * 0.4);
   const { getItemsByDateAndSubject } = useCalendar();
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   const { showActionSheetWithOptions } = useActionSheet();
   const { bottom } = useSafeAreaInsets();
 
   const handleAddAbsence = () => {
     if (consecutiveClasses > 0) {
-      const options = Array.from(
-        { length: consecutiveClasses + 1 },
-        (_, i) => `${i + 1} aula${i > 0 ? 's' : ''}`
+      const options = Array.from({ length: consecutiveClasses + 1 }, (_, i) =>
+        t('common.classCount', { count: i + 1 })
       );
-      options.push('Cancelar');
+      options.push(t('common.cancel'));
       const cancelButtonIndex = options.length - 1;
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
@@ -56,8 +58,8 @@ export const ClassCard = ({
         {
           options,
           cancelButtonIndex,
-          title: 'Adicionar Falta',
-          message: 'Quantas aulas você faltou?',
+          title: t('classCard.addAbsenceTitle'),
+          message: t('classCard.howManyClasses'),
           containerStyle: {
             paddingBottom: bottom + 8,
           },
@@ -91,7 +93,7 @@ export const ClassCard = ({
             {subject.name}
           </Text>
           <Text className="text-sm text-muted-foreground">
-            {subject.code} - Turma {subject.classGroup}
+            {subject.code} - {t('common.classGroup', { group: subject.classGroup })}
           </Text>
         </Pressable>
 
@@ -109,11 +111,11 @@ export const ClassCard = ({
               key="absence"
               onSelect={hasAbsenceForClass ? handleRemoveAbsence : handleAddAbsence}>
               <DropdownMenu.ItemTitle>
-                {hasAbsenceForClass ? 'Remover falta' : 'Adicionar falta'}
+                {hasAbsenceForClass ? t('classCard.removeAbsence') : t('classCard.addAbsence')}
               </DropdownMenu.ItemTitle>
             </DropdownMenu.Item>
             <DropdownMenu.Item key="details" onSelect={onPress}>
-              <DropdownMenu.ItemTitle>Ver detalhes</DropdownMenu.ItemTitle>
+              <DropdownMenu.ItemTitle>{t('classCard.viewDetails')}</DropdownMenu.ItemTitle>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
@@ -122,7 +124,7 @@ export const ClassCard = ({
       {hasAbsenceForClass && (
         <View className="bg-destructive/10 mt-2 rounded-lg px-3 py-2">
           <Text className="text-sm text-destructive">
-            Falta registrada ({classAbsences[0].count} aula{classAbsences[0].count > 1 ? 's' : ''})
+            {t('classCard.absenceRegistered', { count: classAbsences[0].count })}
           </Text>
         </View>
       )}
@@ -150,7 +152,7 @@ export const ClassCard = ({
               {totalAbsences}
             </Text>
             <Text variant="caption2" color="tertiary">
-              faltas
+              {t('classCard.absencesLabel')}
             </Text>
           </View>
           <View className="mt-1 w-16">
@@ -181,7 +183,7 @@ export const ClassCard = ({
                 {item.title}
               </Text>
               <Text variant="subhead" color="tertiary" numberOfLines={1}>
-                {new Date(item.date).toLocaleTimeString('pt-BR', {
+                {new Date(item.date).toLocaleTimeString(getDateLocale(), {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}

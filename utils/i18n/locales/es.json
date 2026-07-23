@@ -8,8 +8,11 @@
     "start": "Inicio",
     "error": "Error",
     "success": "Éxito",
+    "classGroup": "Grupo {{group}}",
     "classCount_one": "{{count}} clase",
     "classCount_other": "{{count}} clases",
+    "classUnit_one": "clase",
+    "classUnit_other": "clases",
     "weekdaysAbbr": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
     "weekdaysFull": [
       "Domingo",
@@ -132,6 +135,7 @@
     "descriptionPlaceholder": "Escribe una nota (opcional)",
     "date": "Fecha",
     "notification": "Notificación",
+    "notificationTime": "Hora",
     "selectSubject": "Selecciona una asignatura"
   },
   "classItemSheet": {

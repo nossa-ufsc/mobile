@@ -8,8 +8,11 @@
     "start": "Start",
     "error": "Error",
     "success": "Success",
+    "classGroup": "Class {{group}}",
     "classCount_one": "{{count}} class",
     "classCount_other": "{{count}} classes",
+    "classUnit_one": "class",
+    "classUnit_other": "classes",
     "weekdaysAbbr": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     "weekdaysFull": [
       "Sunday",
@@ -132,6 +135,7 @@
     "descriptionPlaceholder": "Enter a note (optional)",
     "date": "Date",
     "notification": "Notification",
+    "notificationTime": "Time",
     "selectSubject": "Select a subject"
   },
   "classItemSheet": {

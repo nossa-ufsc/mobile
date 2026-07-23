@@ -11,6 +11,8 @@ import { cn } from '@/utils/cn';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DatePicker } from '@/ui/date-picker';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 interface CalendarItemSheetProps {
   subjects: Subject[];
@@ -20,12 +22,6 @@ interface CalendarItemSheetProps {
   initialDate?: Date;
 }
 
-const ITEM_TYPES: { label: string; value: CalendarItem['type'] }[] = [
-  { label: 'Prova', value: 'exam' },
-  { label: 'Lembrete', value: 'task' },
-  { label: 'Trabalho', value: 'assignment' },
-];
-
 export const CalendarItemSheet = ({
   subjects,
   initialSubject,
@@ -33,9 +29,16 @@ export const CalendarItemSheet = ({
   initialDate,
   onClose,
 }: CalendarItemSheetProps) => {
+  const { t } = useTranslation();
   const { colors } = useColorScheme();
   const { addItem, updateItem, removeItem } = useCalendar();
   const { bottom } = useSafeAreaInsets();
+
+  const ITEM_TYPES: { label: string; value: CalendarItem['type'] }[] = [
+    { label: t('calendarItemSheet.types.exam'), value: 'exam' },
+    { label: t('calendarItemSheet.types.task'), value: 'task' },
+    { label: t('calendarItemSheet.types.assignment'), value: 'assignment' },
+  ];
 
   const [title, setTitle] = useState(initialItem?.title ?? '');
   const [description, setDescription] = useState(initialItem?.description ?? '');
@@ -105,13 +108,13 @@ export const CalendarItemSheet = ({
   };
 
   const handleRemove = () => {
-    Alert.alert('Excluir Item', 'Tem certeza que deseja excluir este item?', [
+    Alert.alert(t('calendarItemSheet.deleteTitle'), t('calendarItemSheet.deleteMessage'), [
       {
-        text: 'Cancelar',
+        text: t('common.cancel'),
         style: 'cancel',
       },
       {
-        text: 'Excluir',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: () => {
           if (initialItem) {
@@ -131,7 +134,7 @@ export const CalendarItemSheet = ({
         style={{ backgroundColor: colors.card }}
         className="flex-row items-center justify-between px-4 pb-3 pt-1">
         <Pressable onPress={onClose}>
-          <Text className="text-[17px] font-normal text-[#FF3B30]">Cancelar</Text>
+          <Text className="text-[17px] font-normal text-[#FF3B30]">{t('common.cancel')}</Text>
         </Pressable>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
@@ -160,7 +163,7 @@ export const CalendarItemSheet = ({
               'text-[17px] font-normal text-primary',
               (!title || !subject) && 'opacity-50'
             )}>
-            {initialItem ? 'Salvar' : 'Adicionar'}
+            {initialItem ? t('common.save') : t('common.add')}
           </Text>
         </Pressable>
       </View>
@@ -168,7 +171,7 @@ export const CalendarItemSheet = ({
       <View className="flex-1 px-4 pt-4">
         <View className="mb-4">
           <BottomSheetTextInput
-            placeholder="Digite o título"
+            placeholder={t('calendarItemSheet.titlePlaceholder')}
             value={title}
             onChangeText={setTitle}
             className="rounded-xl px-4 py-3 text-[17px]"
@@ -182,7 +185,7 @@ export const CalendarItemSheet = ({
 
         <View className="mb-4">
           <BottomSheetTextInput
-            placeholder="Digite uma observação (opcional)"
+            placeholder={t('calendarItemSheet.descriptionPlaceholder')}
             value={description}
             onChangeText={setDescription}
             multiline
@@ -201,9 +204,9 @@ export const CalendarItemSheet = ({
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Data</Text>
+            <Text className="text-[17px] text-foreground">{t('calendarItemSheet.date')}</Text>
             <DatePicker
-              locale="pt-BR"
+              locale={getDateLocale()}
               mode="datetime"
               onChange={handleDateChange}
               value={date}
@@ -218,7 +221,9 @@ export const CalendarItemSheet = ({
           <View
             style={{ paddingBottom: notificationEnabled ? 12 : 0 }}
             className="flex-row items-center justify-between">
-            <Text className="text-[17px] text-foreground">Notificação</Text>
+            <Text className="text-[17px] text-foreground">
+              {t('calendarItemSheet.notification')}
+            </Text>
             <Switch
               value={notificationEnabled}
               onValueChange={setNotificationEnabled}
@@ -227,9 +232,11 @@ export const CalendarItemSheet = ({
           </View>
           {notificationEnabled && (
             <View className="flex-row items-center justify-between rounded-xl border-t border-gray-200 pt-3 dark:border-gray-600">
-              <Text className="text-[17px] text-foreground">Horário</Text>
+              <Text className="text-[17px] text-foreground">
+                {t('calendarItemSheet.notificationTime')}
+              </Text>
               <DatePicker
-                locale="pt-BR"
+                locale={getDateLocale()}
                 mode="datetime"
                 onChange={handleNotificationDateChange}
                 value={notificationDate}
@@ -246,7 +253,7 @@ export const CalendarItemSheet = ({
                 <DropdownMenu.Trigger>
                   <Pressable className="flex-row items-center justify-between px-4 py-3">
                     <Text className="text-[17px] text-foreground">
-                      {subject ? subject.name : 'Selecione uma disciplina'}
+                      {subject ? subject.name : t('calendarItemSheet.selectSubject')}
                     </Text>
                     <Ionicons name="chevron-down" size={20} color={colors.grey3} />
                   </Pressable>
@@ -275,7 +282,7 @@ export const CalendarItemSheet = ({
               marginBottom: bottom + 8,
             }}>
             <Ionicons name="trash-outline" size={24} color="#FF3B30" className="mr-2" />
-            <Text className="text-[17px] text-[#FF3B30]">Excluir</Text>
+            <Text className="text-[17px] text-[#FF3B30]">{t('common.delete')}</Text>
           </Pressable>
         )}
       </View>

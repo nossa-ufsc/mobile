@@ -8,8 +8,11 @@
     "start": "Início",
     "error": "Erro",
     "success": "Sucesso",
+    "classGroup": "Turma {{group}}",
     "classCount_one": "{{count}} aula",
     "classCount_other": "{{count}} aulas",
+    "classUnit_one": "aula",
+    "classUnit_other": "aulas",
     "weekdaysAbbr": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "weekdaysFull": [
       "Domingo",
@@ -132,6 +135,7 @@
     "descriptionPlaceholder": "Digite uma observação (opcional)",
     "date": "Data",
     "notification": "Notificação",
+    "notificationTime": "Horário",
     "selectSubject": "Selecione uma disciplina"
   },
   "classItemSheet": {

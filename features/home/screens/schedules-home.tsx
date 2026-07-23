@@ -11,8 +11,10 @@ import { getDateFromDayIndex } from '@/features/calendar/utils/get-date-from-day
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { Text } from '@/ui/text';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 
 export const SchedulesHome = () => {
+  const { t } = useTranslation();
   const { selectedDay, setSelectedDay } = useScheduleStore();
   const classesForDay = useClassesForDay();
   const subjects = useEnvironmentStore((state) => state.subjects);
@@ -37,9 +39,9 @@ export const SchedulesHome = () => {
     return (
       <Container>
         <View className="flex-1 items-center justify-center pt-36">
-          <Text className="text-lg font-medium">Nenhuma disciplina cadastrada</Text>
+          <Text className="text-lg font-medium">{t('home.noSubjectsTitle')}</Text>
           <Text className="mt-2 text-center text-muted-foreground">
-            Cadastre suas disciplinas para ver seu horário
+            {t('home.noSubjectsSubtitle')}
           </Text>
         </View>
       </Container>
