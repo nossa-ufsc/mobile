@@ -48,7 +48,10 @@ export const SettingsModal = () => {
 
   const handleSemesterDuration = () => {
     const weekOptions = [15, 16, 17, 18];
-    const options = [...weekOptions.map((w) => t('settings.weeks', { count: w })), t('common.cancel')];
+    const options = [
+      ...weekOptions.map((w) => t('settings.weeks', { count: w })),
+      t('common.cancel'),
+    ];
     const cancelButtonIndex = options.length - 1;
 
     showActionSheetWithOptions(
@@ -175,7 +178,9 @@ export const SettingsModal = () => {
               await reloadSubjects();
               Alert.alert(t('common.success'), t('settings.reloadSuccessMessage'));
             } catch (error) {
-              const cancelledByUser = error instanceof Error && error.message.includes('cancelada');
+              const cancelledByUser =
+                error instanceof Error &&
+                (error as Error & { cancelledByUser?: boolean }).cancelledByUser;
               if (!cancelledByUser) {
                 Alert.alert(t('common.error'), t('settings.reloadErrorMessage'));
               }

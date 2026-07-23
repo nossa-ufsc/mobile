@@ -1,5 +1,6 @@
 import { TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
@@ -12,6 +13,7 @@ import { cn } from '@/utils/cn';
 
 export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   const campuses = Object.entries(CAMPUS_LABELS);
   const setCampus = useEnvironmentStore((state) => state.setCampus);
   const selectedCampus = useEnvironmentStore((state) => state.campus);
@@ -22,13 +24,12 @@ export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
         <View className="space-y-4">
           <View>
             <Text className="mb-2 text-4xl font-bold" style={{ color: colors.foreground }}>
-              Selecione seu Campus
+              {t('onboarding.campus.title')}
             </Text>
           </View>
           <View>
             <Text className="text-base leading-relaxed text-muted-foreground">
-              Escolha o seu Campus para continuar. Essa informação é necessária para sincronizarmos
-              os eventos e o cardápio do R.U.
+              {t('onboarding.campus.subtitle')}
             </Text>
           </View>
         </View>
@@ -55,7 +56,7 @@ export const OnboardingCampusScreen = ({ onNext }: { onNext: () => void }) => {
 
       <View className="mt-auto bg-background px-4 pb-2">
         <Button onPress={onNext} variant="primary">
-          Próximo
+          {t('onboarding.campus.next')}
         </Button>
       </View>
     </View>

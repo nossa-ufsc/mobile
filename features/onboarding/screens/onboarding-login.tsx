@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
@@ -17,24 +18,25 @@ type Step = {
 
 export const OnboardingLoginScreen = () => {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   const { handleLogin, isLoading } = useCAGRLogin();
   const { setIsGuest } = useEnvironmentStore();
 
   const steps: Step[] = [
     {
       icon: 'key-outline',
-      title: 'Login Único',
-      description: 'Use suas credenciais do idUFSC para acessar todas as funcionalidades do app.',
+      title: t('onboarding.login.step1Title'),
+      description: t('onboarding.login.step1Description'),
     },
     {
       icon: 'shield-checkmark-outline',
-      title: 'Dados Seguros',
-      description: 'Seus dados são salvos apenas no seu dispositivo de forma segura.',
+      title: t('onboarding.login.step2Title'),
+      description: t('onboarding.login.step2Description'),
     },
     {
       icon: 'sync-outline',
-      title: 'Sincronização Automática',
-      description: 'Suas disciplinas são sincronizadas automaticamente com o CAGR.',
+      title: t('onboarding.login.step3Title'),
+      description: t('onboarding.login.step3Description'),
     },
   ];
 
@@ -44,13 +46,12 @@ export const OnboardingLoginScreen = () => {
         <View className="space-y-4">
           <View>
             <Text className="mb-2 text-4xl font-bold" style={{ color: colors.foreground }}>
-              Entre com o seu ID UFSC
+              {t('onboarding.login.title')}
             </Text>
           </View>
           <View>
             <Text className="text-base leading-relaxed text-muted-foreground">
-              Use seu login do CAGR para sincronizar suas disciplinas. Seus dados são salvos apenas
-              no seu dispositivo.
+              {t('onboarding.login.subtitle')}
             </Text>
           </View>
         </View>
@@ -86,11 +87,11 @@ export const OnboardingLoginScreen = () => {
           }
           isLoading={isLoading}
           disabled={isLoading}>
-          Entrar
+          {t('onboarding.login.enter')}
         </Button>
         {__DEV__ && (
           <Text color="tertiary" variant="body" className="self-center">
-            Não é aluno?{' '}
+            {t('onboarding.login.notStudent')}{' '}
             <Text
               onPress={() =>
                 handleLogin({
@@ -104,7 +105,7 @@ export const OnboardingLoginScreen = () => {
               variant="body"
               color="primary"
               className="underline">
-              Entrar como visitante
+              {t('onboarding.login.enterAsGuest')}
             </Text>
           </Text>
         )}

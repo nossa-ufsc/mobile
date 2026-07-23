@@ -166,7 +166,9 @@ export const SubjectDetails = () => {
                     key={entry.id}
                     className="mb-3 flex-row items-center justify-between rounded-xl bg-[#f3f3f7] p-4 dark:bg-[#1b1b1f]">
                     <View>
-                      <Text variant="callout">{t('common.classCount', { count: entry.count })}</Text>
+                      <Text variant="callout">
+                        {t('common.classCount', { count: entry.count })}
+                      </Text>
                       <Text variant="caption2" color="tertiary">
                         {new Date(entry.date).toLocaleDateString(getDateLocale())}
                       </Text>

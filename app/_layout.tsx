@@ -1,4 +1,3 @@
-import '@/utils/i18n';
 import '../global.css';
 import 'expo-dev-client';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';

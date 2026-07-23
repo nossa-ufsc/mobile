@@ -44,7 +44,12 @@ export const AbsenceSheet = ({ onSubmit, onClose }: AbsenceSheetProps) => {
           <Text color="primary" variant="subhead">
             {t('absenceSheet.date')}
           </Text>
-          <DatePicker locale={getDateLocale()} mode="date" onChange={handleDateChange} value={date} />
+          <DatePicker
+            locale={getDateLocale()}
+            mode="date"
+            onChange={handleDateChange}
+            value={date}
+          />
         </View>
 
         <View className="gap-2">

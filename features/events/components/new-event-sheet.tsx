@@ -13,12 +13,15 @@ import { supabase } from '@/utils/supabase';
 import { cn } from '@/utils/cn';
 import { DatePicker } from '@/ui/date-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 interface NewEventSheetProps {
   onClose?: () => void;
   onSuccess?: () => void;
 }
 
 export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
+  const { t } = useTranslation();
   const { colors } = useColorScheme();
   const { user, campus, isGuest } = useEnvironmentStore();
 
@@ -49,12 +52,12 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
 
   const handlePreview = () => {
     if (!name || !location || !image) {
-      Alert.alert('Erro', 'Preencha todos os campos obrigatórios');
+      Alert.alert(t('common.error'), t('events.fillRequiredFields'));
       return;
     }
 
     if (endDate < startDate) {
-      Alert.alert('Erro', 'A data de término deve ser posterior à data de início');
+      Alert.alert(t('common.error'), t('events.endDateAfterStart'));
       return;
     }
 
@@ -87,7 +90,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
 
   const handleSubmit = async () => {
     if (__DEV__) {
-      Alert.alert('Não é possível publicar eventos no ambiente de desenvolvimento');
+      Alert.alert(t('events.devPublishBlocked'));
       return;
     }
 
@@ -96,7 +99,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
       await onSubmit();
     } catch (error) {
       console.error('Error publishing event:', error);
-      Alert.alert('Erro', 'Não foi possível criar o evento. Tente novamente.');
+      Alert.alert(t('common.error'), t('events.createEventFailed'));
     } finally {
       setIsPublishing(false);
     }
@@ -126,34 +129,34 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           style={{ backgroundColor: colors.card }}
           className="flex-row items-center justify-between px-4 pb-3 pt-1">
           <Pressable onPress={() => setIsPreviewMode(false)}>
-            <Text className="text-[17px] font-normal text-[#FF3B30]">Voltar</Text>
+            <Text className="text-[17px] font-normal text-[#FF3B30]">{t('events.back')}</Text>
           </Pressable>
           {isPublishing ? (
             <ActivityIndicator className="ml-4" size="small" color={colors.primary} />
           ) : (
-            <Text className="text-lg font-bold">Prévia do Evento</Text>
+            <Text className="text-lg font-bold">{t('events.previewTitle')}</Text>
           )}
           <Pressable onPress={handleSubmit} disabled={isPublishing || isGuest}>
             <Text
               className={cn('text-[17px] font-normal text-primary', isPublishing && 'opacity-50')}>
-              Publicar
+              {t('events.publish')}
             </Text>
           </Pressable>
         </View>
 
         <View className="flex-1 px-4 pt-4">
           <Text variant="subhead" color="primary" className="mt-2">
-            Confira se as informações estão corretas antes de publicar. Seu nome será exibido como
-            criador do evento.
+            {t('events.previewDisclaimer')}
           </Text>
           <EventCard event={previewData} />
           <Text
             variant="subhead"
             color="primary"
             className="bg-destructive/20 mt-4 rounded-lg px-4 py-2">
-            Ao publicar este evento, você concorda em ser responsável pelo seu conteúdo.{'\n'}
-            {'\n'}
-            Seu nome ({user!.name}) e matrícula ({user!.enrollmentNumber}) serão armazenados.
+            {t('events.publishDisclaimer', {
+              name: user!.name,
+              enrollment: user!.enrollmentNumber,
+            })}
           </Text>
         </View>
       </BottomSheetScrollView>
@@ -168,16 +171,16 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
         style={{ backgroundColor: colors.card }}
         className="flex-row items-center justify-between px-4 pb-3 pt-1">
         <Pressable onPress={onClose}>
-          <Text className="text-[17px] font-normal text-[#FF3B30]">Cancelar</Text>
+          <Text className="text-[17px] font-normal text-[#FF3B30]">{t('common.cancel')}</Text>
         </Pressable>
-        <Text className="text-lg font-bold">Novo Evento</Text>
+        <Text className="text-lg font-bold">{t('events.newEvent')}</Text>
         <Pressable onPress={handlePreview} disabled={!name || !location || !image}>
           <Text
             className={cn(
               'text-[17px] font-normal text-primary',
               (!name || !location || !image) && 'opacity-50'
             )}>
-            Visualizar
+            {t('events.preview')}
           </Text>
         </Pressable>
       </View>
@@ -185,7 +188,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
       <View className="flex-1 px-4 pt-4">
         <View className="mb-4">
           <BottomSheetTextInput
-            placeholder="Nome do evento"
+            placeholder={t('events.namePlaceholder')}
             value={name}
             onChangeText={setName}
             className="rounded-xl px-4 py-3 text-[17px]"
@@ -199,7 +202,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
 
         <View className="mb-4">
           <BottomSheetTextInput
-            placeholder="Local do evento"
+            placeholder={t('events.locationPlaceholder')}
             value={location}
             onChangeText={setLocation}
             className="rounded-xl px-4 py-3 text-[17px]"
@@ -215,9 +218,9 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Início</Text>
+            <Text className="text-[17px] text-foreground">{t('events.start')}</Text>
             <DatePicker
-              locale="pt-BR"
+              locale={getDateLocale()}
               mode="datetime"
               onChange={(_, date) => date && setStartDate(date)}
               value={startDate}
@@ -231,9 +234,9 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
           <View
             style={{ backgroundColor: colors.card }}
             className="flex-row items-center justify-between rounded-xl px-4 py-3">
-            <Text className="text-[17px] text-foreground">Término</Text>
+            <Text className="text-[17px] text-foreground">{t('events.end')}</Text>
             <DatePicker
-              locale="pt-BR"
+              locale={getDateLocale()}
               mode="datetime"
               onChange={(_, date) => date && setEndDate(date)}
               value={endDate}
@@ -252,7 +255,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
               <Image source={{ uri: image.uri }} className="h-48 w-full" />
               <View className="absolute bottom-0 left-0 right-0 bg-black/50 px-4 py-2">
                 <Text className="text-center text-[15px] text-white">
-                  Toque para alterar a imagem
+                  {t('events.tapToChangeImage')}
                 </Text>
               </View>
             </View>
@@ -260,7 +263,7 @@ export const NewEventSheet = ({ onClose, onSuccess }: NewEventSheetProps) => {
             <View className="h-48 items-center justify-center px-4 py-3">
               <Ionicons name="image-outline" size={48} color={colors.grey3} />
               <Text className="mt-2 text-[15px] text-foreground">
-                Toque para selecionar uma imagem
+                {t('events.tapToSelectImage')}
               </Text>
             </View>
           )}
