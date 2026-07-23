@@ -4,6 +4,7 @@ import { Text } from '@/ui/text';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Platform,
   View,
@@ -16,6 +17,7 @@ import {
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { SupportedLanguage } from '@/utils/i18n';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useNotifications } from '@/utils/use-notifications';
 import { Campus } from '@/types';
@@ -23,6 +25,7 @@ import { CAMPUS_LABELS } from '../utils/const';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const SettingsModal = () => {
+  const { t } = useTranslation();
   const { handleLogout, reloadSubjects } = useCAGRLogin();
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -36,80 +39,108 @@ export const SettingsModal = () => {
     setNotificationsEnabled,
     campus,
     setCampus,
+    language,
+    setLanguage,
     isGuest,
   } = useEnvironmentStore();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
   const [isReloading, setIsReloading] = useState(false);
 
   const handleSemesterDuration = () => {
-    const options = ['15 semanas', '16 semanas', '17 semanas', '18 semanas', 'Cancelar'];
-    const cancelButtonIndex = 4;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        title: 'Duração do Semestre',
-        message: 'Escolha a duração do semestre',
-        containerStyle: {
-          paddingBottom: bottom + 8,
-        },
-      },
-      (selectedIndex) => {
-        if (selectedIndex === cancelButtonIndex) return;
-
-        const weeks =
-          selectedIndex === 0 ? 15 : selectedIndex === 1 ? 16 : selectedIndex === 2 ? 17 : 18;
-        setSemesterDuration(weeks);
-      }
-    );
-  };
-
-  const handleCampusChange = () => {
-    const campusOptions = Object.values(Campus);
-    const options = [...campusOptions.map((c) => CAMPUS_LABELS[c]), 'Cancelar'];
+    const weekOptions = [15, 16, 17, 18];
+    const options = [...weekOptions.map((w) => t('settings.weeks', { count: w })), t('common.cancel')];
     const cancelButtonIndex = options.length - 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        title: 'Campus',
-        message: 'Escolha o seu campus',
+        title: t('settings.semesterDurationTitle'),
+        message: t('settings.semesterDurationMessage'),
         containerStyle: {
           paddingBottom: bottom + 8,
         },
       },
       (selectedIndex) => {
-        if (selectedIndex === cancelButtonIndex) return;
-        setCampus(campusOptions[selectedIndex!]);
+        if (selectedIndex === undefined || selectedIndex === cancelButtonIndex) return;
+        setSemesterDuration(weekOptions[selectedIndex]);
       }
     );
   };
 
-  const handleNotificationDelay = async () => {
-    const options = ['5 minutos', '10 minutos', '15 minutos', '30 minutos', 'Cancelar'];
-    const cancelButtonIndex = 4;
+  const handleCampusChange = () => {
+    const campusOptions = Object.values(Campus);
+    const options = [...campusOptions.map((c) => CAMPUS_LABELS[c]), t('common.cancel')];
+    const cancelButtonIndex = options.length - 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        title: 'Antecedência das Notificações',
-        message: 'Escolha com quanto tempo de antecedência você quer ser notificado das aulas',
+        title: t('settings.campusTitle'),
+        message: t('settings.campusMessage'),
+        containerStyle: {
+          paddingBottom: bottom + 8,
+        },
+      },
+      (selectedIndex) => {
+        if (selectedIndex === undefined || selectedIndex === cancelButtonIndex) return;
+        setCampus(campusOptions[selectedIndex]);
+      }
+    );
+  };
+
+  const handleNotificationDelay = async () => {
+    const minuteOptions = [5, 10, 15, 30];
+    const options = [
+      ...minuteOptions.map((m) => t('settings.minutes', { count: m })),
+      t('common.cancel'),
+    ];
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        title: t('settings.notificationDelayTitle'),
+        message: t('settings.notificationDelayMessage'),
         containerStyle: {
           paddingBottom: bottom + 8,
         },
       },
       async (selectedIndex) => {
-        if (selectedIndex === cancelButtonIndex) return;
-
-        const minutes =
-          selectedIndex === 0 ? 5 : selectedIndex === 1 ? 10 : selectedIndex === 2 ? 15 : 30;
+        if (selectedIndex === undefined || selectedIndex === cancelButtonIndex) return;
 
         await cancelAllNotifications();
-        setNotificationDelay(minutes);
+        setNotificationDelay(minuteOptions[selectedIndex]);
         await reloadSubjects();
+      }
+    );
+  };
+
+  const handleLanguageChange = () => {
+    const languageOptions: (SupportedLanguage | null)[] = ['pt-BR', 'en-US', 'es', null];
+    const labels = [
+      t('settings.languageOptions.ptBR'),
+      t('settings.languageOptions.enUS'),
+      t('settings.languageOptions.es'),
+      t('settings.languageOptions.system'),
+    ];
+    const options = [...labels, t('common.cancel')];
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        title: t('settings.language'),
+        containerStyle: {
+          paddingBottom: bottom + 8,
+        },
+      },
+      (selectedIndex) => {
+        if (selectedIndex === undefined || selectedIndex === cancelButtonIndex) return;
+        setLanguage(languageOptions[selectedIndex]);
       }
     );
   };
@@ -128,28 +159,25 @@ export const SettingsModal = () => {
 
   const handleReloadSchedule = async () => {
     Alert.alert(
-      'Recarregar Grade',
-      'Ao recarregar a grade, você perderá suas personalizações (salas, horários e disciplinas ocultas), todos os itens do calendário e as faltas registradas. Deseja continuar?',
+      t('settings.reloadScheduleTitle'),
+      t('settings.reloadScheduleMessage'),
       [
         {
-          text: 'Cancelar',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Recarregar',
+          text: t('settings.reload'),
           style: 'destructive',
           onPress: async () => {
             setIsReloading(true);
             try {
               await reloadSubjects();
-              Alert.alert('Sucesso', 'Grade recarregada com sucesso!');
+              Alert.alert(t('common.success'), t('settings.reloadSuccessMessage'));
             } catch (error) {
               const cancelledByUser = error instanceof Error && error.message.includes('cancelada');
               if (!cancelledByUser) {
-                Alert.alert(
-                  'Erro',
-                  'Não foi possível recarregar a grade. Verifique sua conexão e tente novamente.'
-                );
+                Alert.alert(t('common.error'), t('settings.reloadErrorMessage'));
               }
             } finally {
               setIsReloading(false);
@@ -162,14 +190,14 @@ export const SettingsModal = () => {
   };
 
   const handleScheduleActions = () => {
-    const options = ['Recarregar grade', 'Cancelar'];
+    const options = [t('settings.reloadSchedule'), t('common.cancel')];
     const cancelButtonIndex = 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        title: 'Gerenciar Grade',
+        title: t('settings.manageScheduleTitle'),
         containerStyle: {
           paddingBottom: bottom + 8,
         },
@@ -184,15 +212,15 @@ export const SettingsModal = () => {
 
   const confirmLogout = () => {
     Alert.alert(
-      'Sair da conta',
-      'Ao sair da conta, você perderá todas as suas configurações e dados salvos. Deseja continuar?',
+      t('settings.logoutTitle'),
+      t('settings.logoutMessage'),
       [
         {
-          text: 'Cancelar',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Sair',
+          text: t('settings.logoutConfirm'),
           style: 'destructive',
           onPress: handleLogout,
         },
@@ -209,14 +237,14 @@ export const SettingsModal = () => {
           <View className="items-center rounded-2xl bg-card px-8 py-6">
             <ActivityIndicator size="large" />
             <Text variant="subhead" className="mt-3">
-              Recarregando grade...
+              {t('settings.reloadingSchedule')}
             </Text>
           </View>
         </View>
       )}
       <Container scrollable edges={['right', 'left']}>
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
-          Geral
+          {t('settings.sections.general')}
         </Text>
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
@@ -226,11 +254,11 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400 shadow-sm">
                 <MaterialCommunityIcons name="calendar-clock" size={24} color="white" />
               </View>
-              <Text variant="body">Semestre</Text>
+              <Text variant="body">{t('settings.semester')}</Text>
             </View>
             <View className="flex-row items-center">
               <Text variant="subhead" color="primary" className="mr-2">
-                {semesterDuration} semanas
+                {t('settings.weeks', { count: semesterDuration })}
               </Text>
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </View>
@@ -238,12 +266,12 @@ export const SettingsModal = () => {
 
           <TouchableOpacity
             onPress={handleCampusChange}
-            className="flex-row items-center justify-between px-4 py-3">
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400/80 shadow-sm">
                 <MaterialCommunityIcons name="school" size={24} color="white" />
               </View>
-              <Text variant="body">Campus</Text>
+              <Text variant="body">{t('settings.campus')}</Text>
             </View>
             <View className="flex-row items-center">
               <Text variant="subhead" color="primary" className="mr-2">
@@ -252,10 +280,33 @@ export const SettingsModal = () => {
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleLanguageChange}
+            className="flex-row items-center justify-between px-4 py-3">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400/60 shadow-sm">
+                <MaterialCommunityIcons name="translate" size={24} color="white" />
+              </View>
+              <Text variant="body">{t('settings.language')}</Text>
+            </View>
+            <View className="flex-row items-center">
+              <Text variant="subhead" color="primary" className="mr-2">
+                {language === 'pt-BR'
+                  ? t('settings.languageOptions.ptBR')
+                  : language === 'en-US'
+                    ? t('settings.languageOptions.enUS')
+                    : language === 'es'
+                      ? t('settings.languageOptions.es')
+                      : t('settings.languageOptions.system')}
+              </Text>
+              <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+            </View>
+          </TouchableOpacity>
         </View>
 
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
-          Notificações
+          {t('settings.sections.notifications')}
         </Text>
         <View className="mb-6 rounded-lg bg-card">
           <View className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
@@ -263,7 +314,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-red-400 shadow-sm">
                 <MaterialCommunityIcons name="bell-ring" size={24} color="white" />
               </View>
-              <Text variant="body">Notificações</Text>
+              <Text variant="body">{t('settings.notifications')}</Text>
             </View>
             <Switch
               value={notificationsEnabled}
@@ -280,11 +331,11 @@ export const SettingsModal = () => {
                 <View className="h-8 w-8 items-center justify-center rounded-md bg-red-400/80 shadow-sm">
                   <MaterialCommunityIcons name="clock-time-four" size={24} color="white" />
                 </View>
-                <Text variant="body">Antecedência</Text>
+                <Text variant="body">{t('settings.notificationDelay')}</Text>
               </View>
               <View className="flex-row items-center">
                 <Text variant="subhead" color="primary" className="mr-2">
-                  {notificationDelay} minutos
+                  {t('settings.minutes', { count: notificationDelay })}
                 </Text>
                 <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
               </View>
@@ -293,7 +344,7 @@ export const SettingsModal = () => {
         </View>
 
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
-          Usuário
+          {t('settings.sections.user')}
         </Text>
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
@@ -303,7 +354,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400/80 shadow-sm">
                 <MaterialCommunityIcons name="pencil" size={24} color="white" />
               </View>
-              <Text variant="body">Editar disciplinas</Text>
+              <Text variant="body">{t('settings.editSubjects')}</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
@@ -316,7 +367,7 @@ export const SettingsModal = () => {
                 <View className="h-8 w-8 items-center justify-center rounded-md bg-blue-400 shadow-sm">
                   <MaterialCommunityIcons name="timetable" size={24} color="white" />
                 </View>
-                <Text variant="body">Gerenciar Grade</Text>
+                <Text variant="body">{t('settings.manageSchedule')}</Text>
               </View>
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
             </TouchableOpacity>
@@ -329,14 +380,14 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-red-500 shadow-sm">
                 <MaterialCommunityIcons name="logout" size={24} color="white" />
               </View>
-              <Text variant="body">Sair da conta</Text>
+              <Text variant="body">{t('settings.logout')}</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
         </View>
 
         <Text variant="footnote" className="mb-2 px-2 text-gray-500">
-          Comunidade
+          {t('settings.sections.community')}
         </Text>
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
@@ -346,7 +397,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700 shadow-sm">
                 <MaterialCommunityIcons name="github" size={24} color="white" />
               </View>
-              <Text variant="body">Contribuir com o Código</Text>
+              <Text variant="body">{t('settings.contribute')}</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
@@ -359,7 +410,7 @@ export const SettingsModal = () => {
               <View className="h-8 w-8 items-center justify-center rounded-md bg-gray-700/80 shadow-sm">
                 <MaterialCommunityIcons name="email" size={24} color="white" />
               </View>
-              <Text variant="body">Entrar em contato</Text>
+              <Text variant="body">{t('settings.contact')}</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
           </TouchableOpacity>
