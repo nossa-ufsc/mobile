@@ -18,6 +18,7 @@ import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
@@ -27,18 +28,7 @@ import { timeToMinutes } from '@/utils/time-mapping';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { useRebuildSchedule } from '@/utils/use-rebuild-schedule';
 import { useColorScheme } from '@/utils/use-color-scheme';
-
-const WEEKDAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-// UFSC classes run Monday–Saturday; the picker offers those days.
-const WEEKDAY_OPTIONS = [
-  { label: 'Segunda-feira', weekDay: 1 },
-  { label: 'Terça-feira', weekDay: 2 },
-  { label: 'Quarta-feira', weekDay: 3 },
-  { label: 'Quinta-feira', weekDay: 4 },
-  { label: 'Sexta-feira', weekDay: 5 },
-  { label: 'Sábado', weekDay: 6 },
-];
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 const timeStringToDate = (time: string): Date => {
   const [hours, minutes] = time.split(':').map(Number);
@@ -83,6 +73,7 @@ const TimeField = ({
   onChange: (time: string) => void;
 }) => {
   const { colorScheme } = useColorScheme();
+  const { t } = useTranslation();
   const [showIOSPicker, setShowIOSPicker] = useState(false);
   const date = timeStringToDate(value);
 
@@ -128,13 +119,13 @@ const TimeField = ({
                 value={date}
                 mode="time"
                 display="spinner"
-                locale="pt-BR"
+                locale={getDateLocale()}
                 themeVariant={colorScheme}
                 minimumDate={minimumDate}
                 onChange={handleChange}
               />
               <Button size="lg" onPress={() => setShowIOSPicker(false)}>
-                Concluir
+                {t('subjects.done')}
               </Button>
             </Pressable>
           </Pressable>
@@ -146,6 +137,7 @@ const TimeField = ({
 
 export const ManageSubjectsScreen = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { fromOnboarding, subjectId } = useLocalSearchParams<{
     fromOnboarding?: string;
     subjectId?: string;
@@ -153,6 +145,14 @@ export const ManageSubjectsScreen = () => {
   const { colors } = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const { bottom } = useSafeAreaInsets();
+
+  const weekdayLabels = t('common.weekdaysAbbr', { returnObjects: true }) as string[];
+  const weekdaysFull = t('common.weekdaysFull', { returnObjects: true }) as string[];
+  // UFSC classes run Monday–Saturday; the picker offers those days.
+  const weekdayOptions = [1, 2, 3, 4, 5, 6].map((weekDay) => ({
+    label: weekdaysFull[weekDay],
+    weekDay,
+  }));
 
   const subjects = useEnvironmentStore((state) => state.subjects);
   const setSubjects = useEnvironmentStore((state) => state.setSubjects);
@@ -226,19 +226,19 @@ export const ManageSubjectsScreen = () => {
   };
 
   const pickWeekDay = (subjectId: string, slotIndex: number) => {
-    const options = [...WEEKDAY_OPTIONS.map((option) => option.label), 'Cancelar'];
+    const options = [...weekdayOptions.map((option) => option.label), t('common.cancel')];
     const cancelButtonIndex = options.length - 1;
 
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
-        title: 'Dia da semana',
+        title: t('subjects.weekdayPickerTitle'),
         containerStyle: { paddingBottom: bottom + 8 },
       },
       (selectedIndex) => {
         if (selectedIndex == null || selectedIndex === cancelButtonIndex) return;
-        updateSlot(subjectId, slotIndex, { weekDay: WEEKDAY_OPTIONS[selectedIndex].weekDay });
+        updateSlot(subjectId, slotIndex, { weekDay: weekdayOptions[selectedIndex].weekDay });
       }
     );
   };
@@ -256,7 +256,7 @@ export const ManageSubjectsScreen = () => {
       }
     } catch (error) {
       console.error('Error saving subjects:', error);
-      Alert.alert('Erro', 'Não foi possível salvar suas alterações. Tente novamente.');
+      Alert.alert(t('common.error'), t('subjects.saveFailed'));
       setIsSaving(false);
     }
   };
@@ -266,7 +266,7 @@ export const ManageSubjectsScreen = () => {
       {fromOnboarding !== 'true' && (
         <Stack.Screen
           options={{
-            title: subjectId ? 'Editar disciplina' : 'Editar disciplinas',
+            title: subjectId ? t('subjects.editSubject') : t('subjects.editSubjects'),
             headerLeft: () => (
               <Pressable
                 onPress={() => router.back()}
@@ -287,13 +287,12 @@ export const ManageSubjectsScreen = () => {
         keyboardDismissMode="interactive"
         automaticallyAdjustKeyboardInsets>
         <Text variant="footnote" color="tertiary" className="mb-4">
-          Desative as disciplinas que não quer acompanhar e ajuste o dia, a sala ou o horário de
-          cada aula. As alterações valem para seu horário, calendário, notificações e widgets.
+          {t('subjects.helperText')}
         </Text>
 
         {displayedDraft.length === 0 && (
           <Text variant="body" color="tertiary" className="mt-8 text-center">
-            Nenhuma disciplina para gerenciar.
+            {t('subjects.noneToManage')}
           </Text>
         )}
 
@@ -316,7 +315,9 @@ export const ManageSubjectsScreen = () => {
                   </Text>
                   <Text variant="footnote" color="tertiary" numberOfLines={1}>
                     {subject.code}
-                    {subject.classGroup ? ` • Turma ${subject.classGroup}` : ''}
+                    {subject.classGroup
+                      ? ` • ${t('common.classGroup', { group: subject.classGroup })}`
+                      : ''}
                   </Text>
                 </TouchableOpacity>
                 <View className="flex-row items-center gap-3">
@@ -341,7 +342,7 @@ export const ManageSubjectsScreen = () => {
                 <View className="gap-3 p-4">
                   {subject.schedule.length === 0 && (
                     <Text variant="footnote" color="tertiary">
-                      Sem horários cadastrados.
+                      {t('subjects.noSchedules')}
                     </Text>
                   )}
 
@@ -351,14 +352,14 @@ export const ManageSubjectsScreen = () => {
                         onPress={() => pickWeekDay(subject.id, index)}
                         className="flex-row items-center gap-1 self-start">
                         <Text variant="subhead" className="font-medium">
-                          {WEEKDAY_LABELS[slot.weekDay] ?? '—'}
+                          {weekdayLabels[slot.weekDay] ?? '—'}
                         </Text>
                         <MaterialCommunityIcons name="chevron-down" size={18} color={colors.grey} />
                       </TouchableOpacity>
 
                       <View className="flex-row items-center justify-between">
                         <Text variant="footnote" color="tertiary">
-                          Início
+                          {t('subjects.start')}
                         </Text>
                         <TimeField
                           value={slot.startTime}
@@ -368,7 +369,7 @@ export const ManageSubjectsScreen = () => {
 
                       <View className="flex-row items-center justify-between">
                         <Text variant="footnote" color="tertiary">
-                          Fim
+                          {t('subjects.end')}
                         </Text>
                         <TimeField
                           value={slot.endTime}
@@ -379,12 +380,12 @@ export const ManageSubjectsScreen = () => {
 
                       <View className="flex-row items-center justify-between">
                         <Text variant="footnote" color="tertiary">
-                          Sala
+                          {t('subjects.room')}
                         </Text>
                         <TextInput
                           value={slot.room}
                           onChangeText={(room) => updateSlot(subject.id, index, { room })}
-                          placeholder="Sala"
+                          placeholder={t('subjects.roomPlaceholder')}
                           placeholderTextColor={colors.grey2}
                           className="min-w-[96px] rounded-lg bg-background px-3 py-1.5 text-center text-[15px] text-foreground"
                         />
@@ -401,7 +402,7 @@ export const ManageSubjectsScreen = () => {
       <View className="border-t border-border px-4 py-3">
         <Button size="lg" onPress={handleSave} disabled={isSaving} isLoading={isSaving}>
           {/* Non-string child so Button renders its spinner while isLoading. */}
-          <Text variant="body">Salvar</Text>
+          <Text variant="body">{t('common.save')}</Text>
         </Button>
       </View>
     </Container>

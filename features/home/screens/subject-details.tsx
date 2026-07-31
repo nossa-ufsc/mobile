@@ -15,8 +15,11 @@ import { useColorScheme } from '@/utils/use-color-scheme';
 import { AbsenceSheet } from '../components/absence-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 export const SubjectDetails = () => {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const subjects = useEnvironmentStore((state) => state.subjects);
@@ -80,14 +83,17 @@ export const SubjectDetails = () => {
       <Stack.Screen
         options={{
           headerRight: () => (
-            <Pressable accessibilityLabel="Editar" hitSlop={8} onPress={handleEdit}>
+            <Pressable
+              accessibilityLabel={t('subjectDetails.edit')}
+              hitSlop={8}
+              onPress={handleEdit}>
               <Ionicons name="create-outline" size={23} color={colors.primary} />
             </Pressable>
           ),
           unstable_headerRightItems: () => [
             {
               type: 'button',
-              label: 'Editar',
+              label: t('subjectDetails.edit'),
               icon: { type: 'sfSymbol', name: 'pencil' },
               onPress: handleEdit,
               sharesBackground: false,
@@ -101,7 +107,7 @@ export const SubjectDetails = () => {
             {subject.name}
           </Text>
           <Text variant="subhead" color="tertiary">
-            {subject.code} • Turma {subject.classGroup}
+            {subject.code} • {t('common.classGroup', { group: subject.classGroup })}
           </Text>
           <Text variant="footnote" color="tertiary">
             {subject.professors.map((professor) => professor).join(', ')}
@@ -110,7 +116,7 @@ export const SubjectDetails = () => {
 
         <View className="mb-6 overflow-hidden rounded-2xl bg-card">
           <View className="flex-row items-center justify-between border-b border-border p-4">
-            <Text variant="title3">Frequência</Text>
+            <Text variant="title3">{t('subjectDetails.frequency')}</Text>
             <Pressable hitSlop={8} onPress={handleAddAbsence}>
               <Ionicons name="add" size={24} color={colors.foreground} />
             </Pressable>
@@ -123,7 +129,7 @@ export const SubjectDetails = () => {
                   {totalAbsences}
                 </Text>
                 <Text variant="subhead" color="tertiary" className="text-center">
-                  Faltas Registradas
+                  {t('subjectDetails.registeredAbsences')}
                 </Text>
               </View>
               <View className="mb-3 h-[1px] w-full bg-border" />
@@ -133,7 +139,7 @@ export const SubjectDetails = () => {
                     {maxAbsences}
                   </Text>
                   <Text variant="caption2" color="tertiary">
-                    Máximo
+                    {t('subjectDetails.max')}
                   </Text>
                 </View>
                 <View className="h-8 w-[1px] bg-border" />
@@ -142,7 +148,7 @@ export const SubjectDetails = () => {
                     {remainingAbsences}
                   </Text>
                   <Text variant="caption2" color="tertiary">
-                    Restantes
+                    {t('subjectDetails.remaining')}
                   </Text>
                 </View>
               </View>
@@ -150,7 +156,7 @@ export const SubjectDetails = () => {
 
             {absences.length === 0 ? (
               <Text variant="callout" color="tertiary" className="text-center">
-                Nenhuma falta registrada
+                {t('subjectDetails.noAbsences')}
               </Text>
             ) : (
               absences
@@ -161,10 +167,10 @@ export const SubjectDetails = () => {
                     className="mb-3 flex-row items-center justify-between rounded-xl bg-[#f3f3f7] p-4 dark:bg-[#1b1b1f]">
                     <View>
                       <Text variant="callout">
-                        {entry.count} aula{entry.count > 1 ? 's' : ''}
+                        {t('common.classCount', { count: entry.count })}
                       </Text>
                       <Text variant="caption2" color="tertiary">
-                        {new Date(entry.date).toLocaleDateString('pt-BR')}
+                        {new Date(entry.date).toLocaleDateString(getDateLocale())}
                       </Text>
                     </View>
                     <Pressable
@@ -183,7 +189,7 @@ export const SubjectDetails = () => {
 
         <View className="mb-6 overflow-hidden rounded-2xl bg-card">
           <View className="flex-row items-center justify-between border-b border-border p-4">
-            <Text variant="title3">Atividades</Text>
+            <Text variant="title3">{t('subjectDetails.activities')}</Text>
             <Pressable hitSlop={8} onPress={handleAddPress}>
               <Ionicons name="add" size={24} color={colors.foreground} />
             </Pressable>
@@ -191,7 +197,7 @@ export const SubjectDetails = () => {
           {sortedItems.length === 0 ? (
             <View className="p-4">
               <Text variant="callout" color="tertiary" className="text-center">
-                Nenhuma atividade encontrada
+                {t('subjectDetails.noActivities')}
               </Text>
             </View>
           ) : (
@@ -209,7 +215,7 @@ export const SubjectDetails = () => {
                       {item.title}
                     </Text>
                     <Text variant="subhead" color="tertiary">
-                      {new Date(item.date).toLocaleDateString('pt-BR')}
+                      {new Date(item.date).toLocaleDateString(getDateLocale())}
                     </Text>
                   </View>
                   {item.description && (
@@ -225,7 +231,7 @@ export const SubjectDetails = () => {
 
         <View className="mb-6 overflow-hidden rounded-2xl bg-card">
           <View className="border-b border-border p-4">
-            <Text variant="title3">Horários</Text>
+            <Text variant="title3">{t('subjectDetails.schedule')}</Text>
           </View>
           {subject.schedule.map((time, index) => (
             <View
@@ -238,7 +244,7 @@ export const SubjectDetails = () => {
                   {time.startTime} - {time.endTime}
                 </Text>
                 <Text variant="subhead" color="tertiary">
-                  {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][time.weekDay]}
+                  {(t('common.weekdaysAbbr', { returnObjects: true }) as string[])[time.weekDay]}
                 </Text>
               </View>
               <Text variant="footnote" color="tertiary">

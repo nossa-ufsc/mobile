@@ -14,6 +14,7 @@ import { supabase } from '@/utils/supabase';
 import { mockFetchSubjects, mockFetchUserInformation } from '../mocks/cagr-api';
 import { usePostHog } from 'posthog-react-native';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 // Temporarily disabled so the real CAGR OAuth flow runs in dev builds (instead of
 // the mock login). Set back to `__DEV__` to restore the dev mock. Guest mode still
@@ -66,6 +67,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
   const posthog = usePostHog();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -330,11 +332,11 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   const confirmReauthentication = (): Promise<boolean> =>
     new Promise((resolve) => {
       Alert.alert(
-        'Login necessário',
-        'Sua sessão do CAGR expirou. Você será redirecionado para fazer login novamente e continuar recarregando a grade.',
+        t('cagrLogin.reauthRequiredTitle'),
+        t('cagrLogin.reauthRequiredMessage'),
         [
-          { text: 'Cancelar', style: 'cancel', onPress: () => resolve(false) },
-          { text: 'Fazer login', onPress: () => resolve(true) },
+          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+          { text: t('cagrLogin.loginAgain'), onPress: () => resolve(true) },
         ],
         { cancelable: false }
       );
@@ -343,11 +345,13 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
   const reauthenticate = async (): Promise<string> => {
     const confirmed = await confirmReauthentication();
     if (!confirmed) {
-      throw new Error('Autenticação cancelada pelo usuário.');
+      // cancelledByUser is a locale-independent marker checked by callers
+      // (e.g. the schedule-reload flow), since error.message is translated.
+      throw Object.assign(new Error(t('cagrLogin.authCancelled')), { cancelledByUser: true });
     }
     const result = await promptAsync();
     if (!result || result.type !== 'success') {
-      throw new Error('Não foi possível autenticar. Tente novamente.');
+      throw new Error(t('cagrLogin.authFailed'));
     }
     const { code } = result.params;
     const newToken = await exchangeCodeForToken(code);

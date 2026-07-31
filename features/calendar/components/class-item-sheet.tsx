@@ -5,6 +5,8 @@ import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
 
 interface ClassItemSheetProps {
   item: CalendarClassItem;
@@ -12,6 +14,7 @@ interface ClassItemSheetProps {
 }
 
 export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
+  const { t } = useTranslation();
   const { addAbsence, absences, removeAbsence, updateAbsence } = useSubjectAbsence(item.subject.id);
   const { bottom } = useSafeAreaInsets();
   const existingAbsence = absences.find((entry) => entry.date === item.date.toDateString());
@@ -57,26 +60,24 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
       <View className="gap-6">
         <View className="gap-2">
           <Text color="primary" variant="subhead">
-            Horário
+            {t('classItemSheet.schedule')}
           </Text>
           <View className="flex-row items-center gap-2">
             <View className="bg-secondary/5 flex-1 rounded-xl p-4">
               <Text variant="callout">
-                {new Date(item.date).toLocaleTimeString('pt-BR', {
+                {new Date(item.date).toLocaleTimeString(getDateLocale(), {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}
               </Text>
               <Text variant="caption2" color="tertiary">
-                Início
+                {t('classItemSheet.start')}
               </Text>
             </View>
             <View className="bg-secondary/5 flex-1 rounded-xl p-4">
-              <Text variant="callout">
-                {maxAbsences} aula{maxAbsences > 1 ? 's' : ''}
-              </Text>
+              <Text variant="callout">{t('common.classCount', { count: maxAbsences })}</Text>
               <Text variant="caption2" color="tertiary">
-                Duração
+                {t('classItemSheet.duration')}
               </Text>
             </View>
           </View>
@@ -85,7 +86,7 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
         {item.description && (
           <View className="gap-2">
             <Text color="primary" variant="subhead">
-              Local
+              {t('classItemSheet.location')}
             </Text>
             <View className="bg-secondary/5 rounded-xl p-4">
               <Text variant="callout">{item.description}</Text>
@@ -96,12 +97,14 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
         <View className="mb-4 gap-2">
           <View className="flex-row items-center justify-between">
             <Text color="primary" variant="subhead">
-              {existingAbsence ? 'Faltas Registradas' : 'Registrar Falta'}
+              {existingAbsence
+                ? t('classItemSheet.registeredAbsences')
+                : t('classItemSheet.registerAbsence')}
             </Text>
             {existingAbsence && (
               <Pressable onPress={handleRemoveAbsence}>
                 <Text variant="callout" className="text-destructive">
-                  Remover
+                  {t('common.remove')}
                 </Text>
               </Pressable>
             )}
@@ -127,7 +130,7 @@ export const ClassItemSheet = ({ item, onClose }: ClassItemSheetProps) => {
                   variant="caption2"
                   className={existingAbsence?.count === count ? 'text-white' : undefined}
                   color={existingAbsence?.count === count ? undefined : 'tertiary'}>
-                  {count === 1 ? 'aula' : 'aulas'}
+                  {t('common.classUnit', { count })}
                 </Text>
               </Pressable>
             ))}

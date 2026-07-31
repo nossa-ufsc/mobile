@@ -14,6 +14,7 @@ O aplicativo foi criado por alunos para alunos, com o objetivo de modernizar e s
 - **Notificações**: Receba lembretes de aulas, provas e eventos importantes
 - **Interface Moderna**: Design intuitivo e agradável para melhor experiência do usuário
 - **Widgets Nativos**: Acesse rapidamente seus horários direto da tela inicial do seu dispositivo
+- **Múltiplos Idiomas**: Suporte a Português, Inglês e Espanhol, com detecção automática do idioma do dispositivo
 
 ## Executando o Projeto
 
@@ -205,6 +206,29 @@ Utilizamos as seguintes labels para categorizar as issues:
 - `documentation`: Relacionado à documentação
 - `help wanted`: Precisamos de ajuda extra nesta issue
 - `good first issue`: Bom para primeiro contato com o projeto
+
+## Como funciona a Internacionalização (i18n)
+
+O aplicativo usa [react-i18next](https://react.i18next.com/) para suporte a múltiplos idiomas. Português (`pt-BR`) é o idioma padrão e o fallback; Inglês (`en-US`) e Espanhol (`es`) também são suportados.
+
+### Estrutura
+
+- `utils/i18n/index.ts`: inicializa o `i18next`, detecta o idioma do dispositivo via [expo-localization](https://docs.expo.dev/versions/latest/sdk/localization/) e carrega os arquivos de tradução.
+- `utils/i18n/locales/`: um arquivo JSON por idioma (`pt-BR.json`, `en-US.json`, `es.json`), com chaves organizadas por feature (ex: `settings.*`, `home.*`, `events.*`). O `pt-BR.json` é a fonte de verdade.
+- `utils/i18n/get-date-locale.ts`: mapeia o idioma atual para um locale compatível com `Intl`/`toLocaleDateString`, usado nos lugares que formatam datas e horários.
+
+### Como funciona
+
+1. **Detecção**: no boot do app, `detectDeviceLanguage()` lê o idioma do dispositivo e escolhe o idioma suportado mais próximo (`pt`, `en` ou `es`), com `pt-BR` como fallback.
+2. **Preferência do usuário**: o usuário pode sobrescrever a detecção automática em **Configurações → Geral → Idioma**. A escolha é persistida no `useEnvironmentStore` (MMKV) — `language: null` significa "seguir o idioma do sistema".
+3. **Uso nos componentes**: componentes React usam o hook `useTranslation()` do `react-i18next` (`const { t } = useTranslation()`), o que garante que a tela re-renderiza automaticamente quando o idioma muda, sem precisar recarregar o app.
+4. **Widget Android**: como o widget roda em uma JS task separada, sem acesso ao contexto do React (veja a seção de Widgets abaixo), ele lê a instância `i18next` diretamente (`i18n.t(...)`) em vez de usar o hook.
+
+### Adicionando uma nova tradução
+
+1. Adicione a chave em `utils/i18n/locales/pt-BR.json` e replique nos demais arquivos de idioma (`en-US.json`, `es.json`).
+2. Use `t('namespace.chave')` no componente. Para textos com variáveis, use interpolação, ex: `t('events.sentBy', { name })` para a chave `"sentBy": "Enviado por {{name}}"`.
+3. Para pluralização, use as chaves `_one`/`_other` do i18next e passe `{ count }`, ex: `t('common.classCount', { count: 2 })` para as chaves `"classCount_one"`/`"classCount_other"`.
 
 ## Como funcionam os Widgets
 

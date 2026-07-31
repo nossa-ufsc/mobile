@@ -3,7 +3,7 @@ import { Text } from '../../../ui/text';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { cn } from '@/utils/cn';
 import { useMemo } from 'react';
-import { WEEKDAY_NAMES } from '@/utils/const';
+import { useTranslation } from 'react-i18next';
 
 interface WeekDaySelectorProps {
   selectedDay: number;
@@ -19,6 +19,8 @@ export const WeekDaySelector = ({
   className,
 }: WeekDaySelectorProps) => {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
+  const weekdayLetters = t('common.weekdayLetters', { returnObjects: true }) as string[];
 
   const days = useMemo(() => {
     const today = new Date();
@@ -35,12 +37,12 @@ export const WeekDaySelector = ({
       const jsIndex = date.getDay();
       return {
         number: date.getDate(),
-        name: WEEKDAY_NAMES[index],
+        name: weekdayLetters[index],
         dayIndex: jsIndex,
         isToday: date.toDateString() === today.toDateString(),
       };
     });
-  }, []);
+  }, [weekdayLetters]);
 
   return (
     <View

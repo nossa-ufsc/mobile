@@ -9,6 +9,7 @@ import { Button } from '@/ui/button';
 import { cn } from '@/utils/cn';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { useTranslation } from 'react-i18next';
 import { NEWS_ITEMS } from './news-items';
 
 // Module-level so the modal presents at most once per app launch, even if the
@@ -19,6 +20,7 @@ export const NewsModal = () => {
   const sheetRef = useSheetRef();
   const pagerRef = useRef<PagerView>(null);
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   const markNewsSeen = useEnvironmentStore((state) => state.markNewsSeen);
 
   // Snapshot once so marking items seen doesn't shrink the carousel mid-session.
@@ -55,7 +57,7 @@ export const NewsModal = () => {
       <BottomSheetView>
         <View className="px-6 pb-6 pt-2">
           <Text variant="footnote" color="tertiary" className="mb-4 text-center">
-            Novidades
+            {t('news.header')}
           </Text>
 
           <PagerView
@@ -108,7 +110,7 @@ export const NewsModal = () => {
           )}
 
           <Button size="lg" onPress={handleNext} className="mt-2">
-            {isLast ? 'Entendi' : 'Próximo'}
+            {isLast ? t('news.gotIt') : t('news.next')}
           </Button>
         </View>
       </BottomSheetView>

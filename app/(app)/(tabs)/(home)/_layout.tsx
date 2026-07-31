@@ -3,9 +3,11 @@ import { getHeaderTitleItems, HeaderTitle } from '@/ui/header-title';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { NewsModal } from '@/features/news/news-modal';
 import { router, Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 export default function HomeLayout() {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
   return (
     <>
       <Stack screenOptions={SCREEN_OPTIONS}>
@@ -14,8 +16,8 @@ export default function HomeLayout() {
           options={{
             headerRight: () => <HeaderButton onPress={() => router.push('/modal')} />,
             unstable_headerRightItems: () => getSettingsHeaderItems(() => router.push('/modal')),
-            headerLeft: () => <HeaderTitle title="Horários" />,
-            unstable_headerLeftItems: () => getHeaderTitleItems('Horários'),
+            headerLeft: () => <HeaderTitle title={t('tabs.home')} />,
+            unstable_headerLeftItems: () => getHeaderTitleItems(t('tabs.home')),
             title: '',
             headerStyle: { backgroundColor: colors.background },
           }}
