@@ -20,6 +20,11 @@ export {
 
 const queryClient = new QueryClient();
 
+// Em desenvolvimento o PostHog já roda com `disabled: true`, mas o provider lança
+// se `apiKey` for undefined. O placeholder permite iniciar o app sem .env.
+const posthogApiKey =
+  process.env.EXPO_PUBLIC_POSTHOG_API_KEY ?? (__DEV__ ? 'phc-dev-placeholder' : undefined);
+
 export default function RootLayout() {
   useInitialAndroidBarSync();
   const { colorScheme, isDarkColorScheme } = useColorScheme();
@@ -32,7 +37,7 @@ export default function RootLayout() {
       />
       <I18nextProvider i18n={i18n}>
         <PostHogProvider
-          apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
+          apiKey={posthogApiKey}
           options={{
             host: 'https://us.i.posthog.com',
             disabled: __DEV__,
