@@ -1,7 +1,9 @@
 import * as Notifications from 'expo-notifications';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useEnvironmentStore } from './use-environment-store';
+import { getDateLocale } from './i18n/get-date-locale';
 import { CalendarClassItem } from '@/types';
 import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
 import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
@@ -22,6 +24,7 @@ export const useNotifications = () => {
   const responseListener = useRef<Notifications.EventSubscription>(null);
   const { notificationDelay, notificationsEnabled, subjects, semesterDuration, semester } =
     useEnvironmentStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!notificationsEnabled) return;
@@ -67,16 +70,22 @@ export const useNotifications = () => {
 
     if (notificationDate.getTime() <= Date.now()) return;
 
+    const title = t('notifications.classTitle', { minutes: delayMinutes });
+    const time = date.toLocaleTimeString(getDateLocale());
+    const body = classPlace
+      ? t('notifications.classBodyWithPlace', { className, place: classPlace, time })
+      : t('notifications.classBodyNoPlace', { className, time });
+
     console.info('Class Notification scheduled', {
-      title: `Aula em ${delayMinutes} minutos`,
-      body: `${className} ${classPlace ? `em ${classPlace}` : ''} às ${date.toLocaleTimeString()}`,
+      title,
+      body,
       date: notificationDate,
     });
 
     return await Notifications.scheduleNotificationAsync({
       content: {
-        title: `Aula em ${delayMinutes} minutos`,
-        body: `${className} ${classPlace ? `em ${classPlace}` : ''} às ${date.toLocaleTimeString()}`,
+        title,
+        body,
       },
       trigger: {
         date: notificationDate,
@@ -96,8 +105,10 @@ export const useNotifications = () => {
 
     if (notificationDate.getTime() <= Date.now()) return;
 
+    const notificationTitle = t('notifications.reminderTitle', { title });
+
     console.info('Calendar Item Notification scheduled', {
-      title: `Lembrete: ${title}`,
+      title: notificationTitle,
       body: description,
       date: notificationDate,
       type: Notifications.SchedulableTriggerInputTypes.DATE,
@@ -105,7 +116,7 @@ export const useNotifications = () => {
 
     return await Notifications.scheduleNotificationAsync({
       content: {
-        title: `Lembrete: ${title}`,
+        title: notificationTitle,
         body: description,
       },
       trigger: {

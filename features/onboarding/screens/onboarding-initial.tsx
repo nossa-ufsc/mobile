@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
@@ -14,24 +15,23 @@ type Step = {
 
 export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
 
   const steps: Step[] = [
     {
       icon: 'calendar-outline',
-      title: 'Gerencie seus horários',
-      description: 'Acompanhe e gerencie suas matérias e faltas de forma fácil e organizada.',
+      title: t('onboarding.initial.step1Title'),
+      description: t('onboarding.initial.step1Description'),
     },
     {
       icon: 'people-outline',
-      title: 'Eventos e Festas',
-      description:
-        'Fique por dentro dos próximos eventos e festas da UFSC para não perder nenhuma diversão.',
+      title: t('onboarding.initial.step2Title'),
+      description: t('onboarding.initial.step2Description'),
     },
     {
       icon: 'code-outline',
-      title: 'Contribua com o Código',
-      description:
-        'Ajude a melhorar o app contribuindo com código, sugestões ou reportando problemas.',
+      title: t('onboarding.initial.step3Title'),
+      description: t('onboarding.initial.step3Description'),
     },
   ];
 
@@ -41,13 +41,12 @@ export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
         <View className="space-y-4">
           <View>
             <Text className="mb-2 text-4xl font-bold" style={{ color: colors.foreground }}>
-              Bem-vindo!
+              {t('onboarding.initial.title')}
             </Text>
           </View>
           <View>
             <Text className="text-base leading-relaxed text-muted-foreground">
-              Nossa UFSC é seu companheiro diário para gerenciar sua vida acadêmica. Acompanhe suas
-              faltas, provas e eventos em um só lugar.
+              {t('onboarding.initial.subtitle')}
             </Text>
           </View>
         </View>
@@ -73,7 +72,7 @@ export const OnboardingInitialScreen = ({ onNext }: { onNext: () => void }) => {
 
       <View className="mt-auto bg-background px-4 pb-2">
         <Button onPress={onNext} variant="primary">
-          Começar
+          {t('onboarding.initial.start')}
         </Button>
       </View>
     </View>

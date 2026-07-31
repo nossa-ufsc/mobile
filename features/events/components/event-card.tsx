@@ -2,12 +2,14 @@ import { View, Image, Platform } from 'react-native';
 import { Event } from '@/types';
 import { Text } from '@/ui/text';
 import { formatDateTime } from '../utils/format-date-time';
+import { useTranslation } from 'react-i18next';
 
 interface EventCardProps {
   event: Event;
 }
 
 export const EventCard = ({ event }: EventCardProps) => {
+  const { t } = useTranslation();
   const startDateTime = formatDateTime(event.start_date);
   const endDateTime = formatDateTime(event.end_date);
   const isAndroid = Platform.OS === 'android';
@@ -49,7 +51,7 @@ export const EventCard = ({ event }: EventCardProps) => {
             {event.location} • {dateTimeRange}
           </Text>
           <Text variant="footnote" className="text-white" numberOfLines={1} adjustsFontSizeToFit>
-            Enviado por {event.created_by.name}
+            {t('events.sentBy', { name: event.created_by.name })}
           </Text>
         </View>
       </View>

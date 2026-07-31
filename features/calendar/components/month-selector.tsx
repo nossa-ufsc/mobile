@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import { WEEKDAY_NAMES } from '@/utils/const';
+import { useTranslation } from 'react-i18next';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
 
 interface MonthSelectorProps {
@@ -29,6 +29,8 @@ export const MonthSelector = ({
   className,
 }: MonthSelectorProps) => {
   const { colors } = useColorScheme();
+  const { t } = useTranslation();
+  const weekdayLetters = t('common.weekdayLetters', { returnObjects: true }) as string[];
   const { isExpanded, setIsExpanded, currentDate, setCurrentDate, setSelectedDay } =
     useCalendarState();
 
@@ -176,12 +178,12 @@ export const MonthSelector = ({
       return {
         date: new Date(d),
         number: d.getDate(),
-        name: WEEKDAY_NAMES[index],
+        name: weekdayLetters[index],
         isToday: d.toDateString() === today.toDateString(),
         isSelected: d.toDateString() === selectedDay.toDateString(),
       };
     });
-  }, [currentDate, selectedDay]);
+  }, [currentDate, selectedDay, weekdayLetters]);
 
   const monthDays = useMemo(() => {
     if (!isExpanded) return [];
@@ -275,7 +277,7 @@ export const MonthSelector = ({
             <>
               {/* Static weekday labels on top */}
               <View className="my-2 w-full flex-row gap-0.5 pt-[10px]">
-                {WEEKDAY_NAMES.map((name, index) => (
+                {weekdayLetters.map((name, index) => (
                   <View key={index} className="flex-1 items-center">
                     <Text className="text-xs uppercase">{name}</Text>
                   </View>
