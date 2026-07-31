@@ -8,8 +8,7 @@ import { Sheet } from '@/ui/bottom-sheet';
 import { CalendarDayView } from '../components/calendar-day-view';
 import { MonthSelector } from '../components/month-selector';
 import { useCalendar } from '../hooks/use-calendar';
-import { Pressable, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 import { CalendarClassItem, CalendarItem } from '@/types';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -19,6 +18,7 @@ import { useCalendarState } from '../hooks/use-calendar-state';
 import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-screens/experimental';
 import { useTranslation } from 'react-i18next';
+import { Fab } from '@/ui/fab';
 
 export const CalendarHome = () => {
   const { t } = useTranslation();
@@ -130,18 +130,7 @@ export const CalendarHome = () => {
         />
       </GestureDetector>
 
-      <SafeAreaView
-        edges={{ bottom: true }}
-        pointerEvents="box-none"
-        style={{ position: 'absolute', inset: 0 }}>
-        <View className="flex-1 items-end justify-end p-6" pointerEvents="box-none">
-          <Pressable
-            onPress={handleAddPress}
-            className="shadow-primary/20 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg">
-            <Ionicons name="add" size={24} color="white" />
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <Fab onPress={handleAddPress} />
 
       <Sheet
         onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
