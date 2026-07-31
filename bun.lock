@@ -1,6 +1,5 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "nossa-ufsc",
@@ -85,6 +84,7 @@
     },
   },
   "patchedDependencies": {
+    "@react-native-menu/menu@1.2.4": "patches/@react-native-menu%2Fmenu@1.2.4.patch",
     "react-native-ios-utilities@5.2.0": "patches/react-native-ios-utilities@5.2.0.patch",
   },
   "overrides": {
