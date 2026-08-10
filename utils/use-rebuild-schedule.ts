@@ -1,5 +1,9 @@
 import { Subject } from '@/types';
-import { useCalendar } from '@/features/calendar/hooks/use-calendar';
+import {
+  getCalendarItems,
+  removeCalendarItemsWithoutNotification,
+  useCalendar,
+} from '@/features/calendar/hooks/use-calendar';
 import { useEnvironmentStore } from './use-environment-store';
 import { useNotifications } from './use-notifications';
 import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
@@ -14,10 +18,18 @@ import { generateSemesterCalendar } from '@/features/calendar/utils/generate-sem
 export const useRebuildSchedule = () => {
   const semesterDuration = useEnvironmentStore((state) => state.semesterDuration);
   const semester = useEnvironmentStore((state) => state.semester);
-  const { setClassItems, items, updateItem } = useCalendar();
+  const { setClassItems, updateItem } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
   const rebuild = async (subjects: Subject[]) => {
+    const subjectIds = new Set(subjects.map((subject) => subject.id));
+    const orphanedItemIds = getCalendarItems()
+      .filter((item) => !subjectIds.has(item.subject.id))
+      .map((item) => item.id);
+    if (orphanedItemIds.length > 0) {
+      removeCalendarItemsWithoutNotification(orphanedItemIds);
+    }
+
     const semesterStartDate = getSemesterStartDate(semester);
     const classItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
     setClassItems(classItems);
@@ -31,7 +43,7 @@ export const useRebuildSchedule = () => {
 
     // cancelAllNotifications also cleared the tasks/exams notifications; reschedule
     // the ones the user had enabled.
-    const itemsToReschedule = items.filter(
+    const itemsToReschedule = getCalendarItems().filter(
       (item) => item.notificationEnabled && item.notificationDate
     );
     for (const item of itemsToReschedule) {

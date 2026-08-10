@@ -2,9 +2,10 @@ import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { View, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Sheet } from '@/ui/bottom-sheet';
 import { CalendarItemSheet } from '@/features/calendar/components/calendar-item-sheet';
@@ -13,10 +14,10 @@ import { CalendarItem } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { AbsenceSheet } from '../components/absence-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/utils/i18n/get-date-locale';
+import { formatSubjectLabel } from '@/utils/subjects';
 
 export const SubjectDetails = () => {
   const { t } = useTranslation();
@@ -31,7 +32,13 @@ export const SubjectDetails = () => {
   const absenceSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
   const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
-  const insets = useSafeAreaInsets();
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused && subjects && !subject && router.canGoBack()) {
+      router.back();
+    }
+  }, [isFocused, subjects, subject, router]);
 
   if (!subjects || !subject) return null;
 
@@ -101,13 +108,13 @@ export const SubjectDetails = () => {
           ],
         }}
       />
-      <Container contentStyle={{ paddingBottom: insets.bottom }} scrollable className="px-4">
+      <Container scrollable className="px-4">
         <View className="pb-4 pt-2">
           <Text variant="mediumTitle" numberOfLines={2} className="mb-1">
             {subject.name}
           </Text>
           <Text variant="subhead" color="tertiary">
-            {subject.code} • {t('common.classGroup', { group: subject.classGroup })}
+            {formatSubjectLabel(subject, t)}
           </Text>
           <Text variant="footnote" color="tertiary">
             {subject.professors.map((professor) => professor).join(', ')}

@@ -49,6 +49,13 @@ export const timeToMinutes = (time: string): number => {
   return hours * 60 + minutes;
 };
 
+export const minutesToTime = (totalMinutes: number): string => {
+  const clamped = Math.max(0, Math.min(23 * 60 + 59, totalMinutes));
+  const hours = String(Math.floor(clamped / 60)).padStart(2, '0');
+  const minutes = String(clamped % 60).padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
+
 /**
  * Max gap (minutes) between one slot ending and the next starting for them to
  * still count as a single consecutive block. 20 exactly reproduces the previous

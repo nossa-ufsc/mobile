@@ -33,13 +33,7 @@ export const useClassesForDay = () => {
           },
         }))
     )
-    .filter(
-      (classInfo) =>
-        classInfo.time.startTime &&
-        classInfo.time.endTime &&
-        classInfo.time.room &&
-        classInfo.time.center
-    );
+    .filter((classInfo) => classInfo.time.startTime && classInfo.time.endTime);
 
   const sortedClasses = allClasses.sort((a, b) => {
     return timeToMinutes(a.time.startTime) - timeToMinutes(b.time.startTime);

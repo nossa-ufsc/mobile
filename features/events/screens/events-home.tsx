@@ -34,6 +34,7 @@ export const EventsHome = () => {
       ) : (
         <FlatList
           data={events}
+          contentInsetAdjustmentBehavior="automatic"
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <EventCard event={item} />}
           contentContainerClassName="p-4"

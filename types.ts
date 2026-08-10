@@ -48,6 +48,7 @@ export interface Subject {
   // When true, the user has chosen to hide this subject from schedule, calendar,
   // notifications and widgets. Absent (undefined) means visible — see getActiveSubjects.
   ignored?: boolean;
+  manual?: boolean;
 }
 
 export interface SubjectTime {

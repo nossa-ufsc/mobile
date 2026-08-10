@@ -279,6 +279,7 @@ export const CalendarDayView = ({
     <ScrollView
       ref={scrollRef}
       className={cn('flex-1', className)}
+      contentInsetAdjustmentBehavior="automatic"
       showsVerticalScrollIndicator={false}
       contentContainerClassName="relative pb-24">
       {hours.map(({ hour, isNow }) => (

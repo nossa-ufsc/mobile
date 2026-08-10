@@ -18,22 +18,21 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
     return { data: {} };
   }
 
-  const widgetData: WidgetData = {
-    data: {} as Record<number, WidgetCalendarEvent[]>,
-  };
+  const eventsByDay: Record<number, (WidgetCalendarEvent & { subjectId: string })[]> = {};
 
   getActiveSubjects(subjects).forEach((subject) => {
     subject.schedule?.forEach((schedule) => {
       if (!schedule?.weekDay && schedule.weekDay !== 0) return;
 
-      if (!widgetData.data[schedule.weekDay]) {
-        widgetData.data[schedule.weekDay] = [];
+      if (!eventsByDay[schedule.weekDay]) {
+        eventsByDay[schedule.weekDay] = [];
       }
 
-      if (schedule.startTime && schedule.endTime && schedule.room) {
-        widgetData.data[schedule.weekDay].push({
+      if (schedule.startTime && schedule.endTime) {
+        eventsByDay[schedule.weekDay].push({
+          subjectId: subject.id,
           name: subject.name,
-          classroom: schedule.room,
+          classroom: schedule.room || '',
           time: schedule.startTime,
           finishTime: schedule.endTime,
         });
@@ -41,18 +40,20 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
     });
   });
 
-  Object.keys(widgetData.data).forEach((day) => {
-    const sortedClasses = widgetData.data[Number(day)].sort((a, b) => {
+  const widgetData: WidgetData = { data: {} };
+
+  Object.keys(eventsByDay).forEach((day) => {
+    const sortedClasses = eventsByDay[Number(day)].sort((a, b) => {
       return timeToMinutes(a.time) - timeToMinutes(b.time);
     });
 
-    const mergedClasses = sortedClasses.reduce<WidgetCalendarEvent[]>((acc, currentClass) => {
+    const mergedClasses = sortedClasses.reduce<typeof sortedClasses>((acc, currentClass) => {
       if (acc.length === 0) {
         return [currentClass];
       }
 
       const previousClass = acc[acc.length - 1];
-      const isSameSubject = previousClass.name === currentClass.name;
+      const isSameSubject = previousClass.subjectId === currentClass.subjectId;
       const isConsecutive = areClassesConsecutive(previousClass.finishTime, currentClass.time);
 
       if (isSameSubject && isConsecutive) {
@@ -67,7 +68,9 @@ export const convertSubjectsToWidgetFormat = (subjects: Subject[] | null): Widge
       return acc;
     }, []);
 
-    widgetData.data[Number(day)] = mergedClasses;
+    widgetData.data[Number(day)] = mergedClasses.map(
+      ({ subjectId: _subjectId, ...event }) => event
+    );
   });
 
   return widgetData;

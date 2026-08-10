@@ -136,12 +136,14 @@ export const ClassCard = ({
               {time.startTime} - {time.endTime}
             </Text>
           </View>
-          <View className="flex-row items-center gap-1">
-            <Ionicons name="location" size={16} color={colors.grey2} />
-            <Text className="flex-1" variant="subhead" color="tertiary" numberOfLines={1}>
-              {time.room}
-            </Text>
-          </View>
+          {!!time.room && (
+            <View className="flex-row items-center gap-1">
+              <Ionicons name="location" size={16} color={colors.grey2} />
+              <Text className="flex-1" variant="subhead" color="tertiary" numberOfLines={1}>
+                {time.room}
+              </Text>
+            </View>
+          )}
         </View>
         <View className="items-end pb-2">
           <View className="flex-row items-center gap-1">

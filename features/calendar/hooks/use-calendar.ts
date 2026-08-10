@@ -20,6 +20,7 @@ interface CalendarState {
   getItemsByDateAndSubject: (date: Date, subject: Subject) => CalendarItem[] | undefined;
   getItemsBySubject: (subject: Subject) => CalendarItem[];
   removeItemWithoutNotification: (id: string) => void;
+  removeItemsWithoutNotification: (ids: string[]) => void;
   updateItemWithoutNotification: (id: string, item: Partial<CalendarItem>) => void;
   clearCalendarWithoutNotification: () => void;
 }
@@ -93,6 +94,12 @@ const useCalendarStore = create<CalendarState>()(
         }));
       },
 
+      removeItemsWithoutNotification: (ids) => {
+        set((state) => ({
+          items: state.items.filter((item) => !ids.includes(item.id)),
+        }));
+      },
+
       updateItemWithoutNotification: (id, updatedItem) => {
         set((state) => ({
           items: state.items.map((item) => (item.id === id ? { ...item, ...updatedItem } : item)),
@@ -109,6 +116,11 @@ const useCalendarStore = create<CalendarState>()(
     }
   )
 );
+
+export const getCalendarItems = (): CalendarItem[] => useCalendarStore.getState().items;
+
+export const removeCalendarItemsWithoutNotification = (ids: string[]) =>
+  useCalendarStore.getState().removeItemsWithoutNotification(ids);
 
 export const useCalendar = () => {
   const {

@@ -102,11 +102,18 @@ export function AndroidScheduleWidget({ classes, currentDate }: AndroidScheduleW
                   }}
                 />
                 <TextWidget
-                  text={i18n.t('widget.classTime', {
-                    start: event.startTime,
-                    end: event.endTime,
-                    classroom: event.classroom,
-                  })}
+                  text={
+                    event.classroom
+                      ? i18n.t('widget.classTime', {
+                          start: event.startTime,
+                          end: event.endTime,
+                          classroom: event.classroom,
+                        })
+                      : i18n.t('widget.classTimeNoRoom', {
+                          start: event.startTime,
+                          end: event.endTime,
+                        })
+                  }
                   style={{
                     fontSize: 12,
                     color: '#666666',

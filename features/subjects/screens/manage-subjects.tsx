@@ -1,57 +1,23 @@
 import { useState } from 'react';
-import {
-  View,
-  ScrollView,
-  TextInput,
-  Switch,
-  TouchableOpacity,
-  Modal,
-  Pressable,
-  Platform,
-  Alert,
-} from 'react-native';
-import DateTimePicker, {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
+import { View, ScrollView, Pressable, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
-import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { Button } from '@/ui/button';
-import { Subject } from '@/types';
-import { cn } from '@/utils/cn';
-import { timeToMinutes } from '@/utils/time-mapping';
+import { Subject, SubjectTime } from '@/types';
+import { timeToMinutes, minutesToTime } from '@/utils/time-mapping';
+import { generateRandomId } from '@/utils/generate-random-id';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { useRebuildSchedule } from '@/utils/use-rebuild-schedule';
 import { useColorScheme } from '@/utils/use-color-scheme';
-import { getDateLocale } from '@/utils/i18n/get-date-locale';
-
-const timeStringToDate = (time: string): Date => {
-  const [hours, minutes] = time.split(':').map(Number);
-  const date = new Date();
-  date.setHours(hours || 0, minutes || 0, 0, 0);
-  return date;
-};
-
-const dateToTimeString = (date: Date): string => {
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
-};
+import { SubjectCard } from '../components/subject-card';
 
 // Default institutional class length, used to keep the end after the start.
 const DEFAULT_CLASS_MINUTES = 50;
-
-const minutesToTime = (totalMinutes: number): string => {
-  const clamped = Math.max(0, Math.min(23 * 60 + 59, totalMinutes));
-  const hours = String(Math.floor(clamped / 60)).padStart(2, '0');
-  const minutes = String(clamped % 60).padStart(2, '0');
-  return `${hours}:${minutes}`;
-};
 
 // Deep-copies subjects (subject + schedule entries) so edits don't mutate the store.
 const toDraft = (subjects: Subject[] | null): Subject[] =>
@@ -60,80 +26,44 @@ const toDraft = (subjects: Subject[] | null): Subject[] =>
     schedule: subject.schedule.map((slot) => ({ ...slot })),
   }));
 
-// A tappable "HH:MM" pill that opens the native time picker only when pressed.
-// Mounting the native picker lazily (instead of an always-on inline picker) keeps
-// expanding a subject snappy, and the pill stays readable in both light/dark.
-const TimeField = ({
-  value,
-  minimumDate,
-  onChange,
-}: {
-  value: string;
-  minimumDate?: Date;
-  onChange: (time: string) => void;
-}) => {
-  const { colorScheme } = useColorScheme();
-  const { t } = useTranslation();
-  const [showIOSPicker, setShowIOSPicker] = useState(false);
-  const date = timeStringToDate(value);
+const makeSlot = (): SubjectTime => ({
+  weekDay: 1,
+  startTime: '08:20',
+  endTime: minutesToTime(timeToMinutes('08:20') + DEFAULT_CLASS_MINUTES),
+  center: '',
+  room: '',
+});
 
-  const handleChange = (_event: DateTimePickerEvent, selected?: Date) => {
-    if (selected) onChange(dateToTimeString(selected));
-  };
-
-  const open = () => {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open({
-        value: date,
-        mode: 'time',
-        is24Hour: true,
-        minimumDate,
-        onChange: handleChange,
-      });
-    } else {
-      setShowIOSPicker(true);
-    }
-  };
-
-  return (
-    <>
-      <TouchableOpacity
-        onPress={open}
-        className="min-w-[80px] rounded-lg bg-background px-3 py-1.5">
-        <Text variant="body" className="text-center">
-          {value}
-        </Text>
-      </TouchableOpacity>
-
-      {Platform.OS === 'ios' && showIOSPicker && (
-        <Modal
-          transparent
-          visible
-          animationType="fade"
-          onRequestClose={() => setShowIOSPicker(false)}>
-          <Pressable
-            className="flex-1 justify-end bg-black/40"
-            onPress={() => setShowIOSPicker(false)}>
-            <Pressable className="rounded-t-3xl bg-card px-4 pb-10 pt-3" onPress={() => {}}>
-              <DateTimePicker
-                value={date}
-                mode="time"
-                display="spinner"
-                locale={getDateLocale()}
-                themeVariant={colorScheme}
-                minimumDate={minimumDate}
-                onChange={handleChange}
-              />
-              <Button size="lg" onPress={() => setShowIOSPicker(false)}>
-                {t('subjects.done')}
-              </Button>
-            </Pressable>
-          </Pressable>
-        </Modal>
-      )}
-    </>
-  );
+const makeNextSlot = (schedule: SubjectTime[]): SubjectTime => {
+  const last = schedule[schedule.length - 1];
+  if (!last) return makeSlot();
+  return { ...last, weekDay: last.weekDay >= 6 ? 1 : last.weekDay + 1 };
 };
+
+const slotsOverlap = (a: SubjectTime, b: SubjectTime): boolean =>
+  a.weekDay === b.weekDay &&
+  timeToMinutes(a.startTime) < timeToMinutes(b.endTime) &&
+  timeToMinutes(b.startTime) < timeToMinutes(a.endTime);
+
+const conflictsFor = (subject: Subject): number[] =>
+  subject.ignored
+    ? []
+    : subject.schedule.flatMap((slot, index) =>
+        subject.schedule.some(
+          (other, otherIndex) => otherIndex !== index && slotsOverlap(slot, other)
+        )
+          ? [index]
+          : []
+      );
+
+const deriveWeeklyClassCount = (schedule: SubjectTime[]): number =>
+  Math.round(
+    schedule.reduce(
+      (total, slot) =>
+        total + Math.max(0, timeToMinutes(slot.endTime) - timeToMinutes(slot.startTime)),
+      0
+    ) / DEFAULT_CLASS_MINUTES
+  );
 
 export const ManageSubjectsScreen = () => {
   const router = useRouter();
@@ -143,16 +73,7 @@ export const ManageSubjectsScreen = () => {
     subjectId?: string;
   }>();
   const { colors } = useColorScheme();
-  const { showActionSheetWithOptions } = useActionSheet();
   const { bottom } = useSafeAreaInsets();
-
-  const weekdayLabels = t('common.weekdaysAbbr', { returnObjects: true }) as string[];
-  const weekdaysFull = t('common.weekdaysFull', { returnObjects: true }) as string[];
-  // UFSC classes run Monday–Saturday; the picker offers those days.
-  const weekdayOptions = [1, 2, 3, 4, 5, 6].map((weekDay) => ({
-    label: weekdaysFull[weekDay],
-    weekDay,
-  }));
 
   const subjects = useEnvironmentStore((state) => state.subjects);
   const setSubjects = useEnvironmentStore((state) => state.setSubjects);
@@ -161,7 +82,12 @@ export const ManageSubjectsScreen = () => {
   const [draft, setDraft] = useState<Subject[]>(() => toDraft(subjects));
   const [isSaving, setIsSaving] = useState(false);
   const [expandedIds, setExpandedIds] = useState<string[]>(subjectId ? [subjectId] : []);
+
   const displayedDraft = subjectId ? draft.filter((subject) => subject.id === subjectId) : draft;
+  const isValid = displayedDraft.every(
+    (subject) =>
+      (!subject.manual || subject.name.trim().length > 0) && conflictsFor(subject).length === 0
+  );
 
   const toggleExpanded = (subjectId: string) => {
     setExpandedIds((current) =>
@@ -179,75 +105,113 @@ export const ManageSubjectsScreen = () => {
     );
   };
 
-  const updateSlot = (
+  const updateSubjectField = (
     subjectId: string,
-    slotIndex: number,
-    patch: Partial<Subject['schedule'][number]>
+    patch: Partial<Pick<Subject, 'name' | 'code' | 'classGroup'>>
   ) => {
+    setDraft((current) =>
+      current.map((subject) => (subject.id === subjectId ? { ...subject, ...patch } : subject))
+    );
+  };
+
+  const addSubject = () => {
+    const id = generateRandomId();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setDraft((current) => [
+      ...current,
+      {
+        id,
+        name: '',
+        code: '',
+        classGroup: '',
+        weeklyClassCount: 1,
+        absences: [],
+        professors: [],
+        schedule: [makeSlot()],
+        manual: true,
+      },
+    ]);
+    setExpandedIds((current) => [...current, id]);
+  };
+
+  const addSlot = (subjectId: string) => {
+    setDraft((current) =>
+      current.map((subject) =>
+        subject.id === subjectId
+          ? { ...subject, schedule: [...subject.schedule, makeNextSlot(subject.schedule)] }
+          : subject
+      )
+    );
+  };
+
+  const removeSlot = (subjectId: string, slotIndex: number) => {
+    setDraft((current) =>
+      current.map((subject) =>
+        subject.id === subjectId
+          ? { ...subject, schedule: subject.schedule.filter((_, index) => index !== slotIndex) }
+          : subject
+      )
+    );
+  };
+
+  const deleteSubject = (subjectId: string) => {
+    const subject = draft.find((s) => s.id === subjectId);
+    Alert.alert(
+      t('subjects.deleteSubjectTitle'),
+      t('subjects.deleteSubjectMessage', { name: subject?.name || subject?.code || '' }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            setDraft((current) => current.filter((s) => s.id !== subjectId));
+            setExpandedIds((current) => current.filter((id) => id !== subjectId));
+          },
+        },
+      ]
+    );
+  };
+
+  const updateSlot = (subjectId: string, slotIndex: number, patch: Partial<SubjectTime>) => {
     setDraft((current) =>
       current.map((subject) =>
         subject.id === subjectId
           ? {
               ...subject,
-              schedule: subject.schedule.map((slot, index) =>
-                index === slotIndex ? { ...slot, ...patch } : slot
-              ),
+              schedule: subject.schedule.map((slot, index) => {
+                if (index !== slotIndex) return slot;
+                const next = { ...slot, ...patch };
+                if (timeToMinutes(next.endTime) <= timeToMinutes(next.startTime)) {
+                  next.endTime = minutesToTime(
+                    timeToMinutes(next.startTime) + DEFAULT_CLASS_MINUTES
+                  );
+                }
+                return next;
+              }),
             }
           : subject
       )
     );
   };
 
-  // Updates a slot's start or end time while keeping the end strictly after the
-  // start (the end picker also enforces this via minimumDate, but a change to the
-  // start can invalidate an existing end, so we clamp here too).
-  const updateSlotTime = (
-    subjectId: string,
-    slotIndex: number,
-    field: 'startTime' | 'endTime',
-    time: string
-  ) => {
-    setDraft((current) =>
-      current.map((subject) => {
-        if (subject.id !== subjectId) return subject;
-        return {
-          ...subject,
-          schedule: subject.schedule.map((slot, index) => {
-            if (index !== slotIndex) return slot;
-            const next = { ...slot, [field]: time };
-            if (timeToMinutes(next.endTime) <= timeToMinutes(next.startTime)) {
-              next.endTime = minutesToTime(timeToMinutes(next.startTime) + DEFAULT_CLASS_MINUTES);
-            }
-            return next;
-          }),
-        };
-      })
-    );
-  };
-
-  const pickWeekDay = (subjectId: string, slotIndex: number) => {
-    const options = [...weekdayOptions.map((option) => option.label), t('common.cancel')];
-    const cancelButtonIndex = options.length - 1;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        title: t('subjects.weekdayPickerTitle'),
-        containerStyle: { paddingBottom: bottom + 8 },
-      },
-      (selectedIndex) => {
-        if (selectedIndex == null || selectedIndex === cancelButtonIndex) return;
-        updateSlot(subjectId, slotIndex, { weekDay: weekdayOptions[selectedIndex].weekDay });
-      }
-    );
-  };
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      setSubjects(draft);
-      await rebuild(draft);
+      const cleaned = draft.map((subject) =>
+        subject.manual
+          ? {
+              ...subject,
+              name: subject.name.trim(),
+              code: subject.code.trim(),
+              classGroup: subject.classGroup.trim(),
+              weeklyClassCount: deriveWeeklyClassCount(subject.schedule),
+            }
+          : subject
+      );
+
+      setSubjects(cleaned);
+      await rebuild(cleaned);
 
       if (fromOnboarding === 'true') {
         router.replace('/(app)/(tabs)/(home)');
@@ -260,6 +224,10 @@ export const ManageSubjectsScreen = () => {
       setIsSaving(false);
     }
   };
+
+  const showAddButton = !subjectId;
+  const showEmptyState = displayedDraft.length === 0;
+  const addButtonProminent = showEmptyState;
 
   return (
     <Container>
@@ -286,122 +254,69 @@ export const ManageSubjectsScreen = () => {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
         automaticallyAdjustKeyboardInsets>
-        <Text variant="footnote" color="tertiary" className="mb-4">
-          {t('subjects.helperText')}
-        </Text>
-
-        {displayedDraft.length === 0 && (
-          <Text variant="body" color="tertiary" className="mt-8 text-center">
-            {t('subjects.noneToManage')}
+        {showEmptyState ? (
+          subjectId ? (
+            <Text variant="body" color="tertiary" className="mt-8 text-center">
+              {t('subjects.noneToManage')}
+            </Text>
+          ) : (
+            <View className="items-center px-4 pt-24">
+              <Text variant="title3" className="text-center">
+                {t('subjects.emptyTitle')}
+              </Text>
+              <Text variant="subhead" color="tertiary" className="mt-2 text-center">
+                {t('subjects.emptySubtitle')}
+              </Text>
+            </View>
+          )
+        ) : (
+          <Text variant="footnote" color="tertiary" className="mb-4">
+            {t('subjects.helperText')}
           </Text>
         )}
 
-        {displayedDraft.map((subject) => {
-          const isExpanded = expandedIds.includes(subject.id);
-          const showSchedule = !subject.ignored && isExpanded;
-          return (
-            <View key={subject.id} className="mb-4 overflow-hidden rounded-2xl bg-card">
-              <View
-                className={cn(
-                  'flex-row items-center justify-between p-4',
-                  showSchedule && 'border-b border-border'
-                )}>
-                <TouchableOpacity
-                  className="flex-1 pr-3"
-                  disabled={subject.ignored}
-                  onPress={() => toggleExpanded(subject.id)}>
-                  <Text variant="title3" numberOfLines={2}>
-                    {subject.name}
-                  </Text>
-                  <Text variant="footnote" color="tertiary" numberOfLines={1}>
-                    {subject.code}
-                    {subject.classGroup
-                      ? ` • ${t('common.classGroup', { group: subject.classGroup })}`
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
-                <View className="flex-row items-center gap-3">
-                  {!subject.ignored && (
-                    <TouchableOpacity hitSlop={8} onPress={() => toggleExpanded(subject.id)}>
-                      <MaterialCommunityIcons
-                        name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                        size={22}
-                        color={colors.grey}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  <Switch
-                    value={!subject.ignored}
-                    onValueChange={() => toggleIgnored(subject.id)}
-                    trackColor={{ false: colors.grey2, true: colors.primary }}
-                  />
-                </View>
-              </View>
+        {displayedDraft.map((subject) => (
+          <SubjectCard
+            key={subject.id}
+            subject={subject}
+            isExpanded={expandedIds.includes(subject.id)}
+            conflictingSlotIndices={conflictsFor(subject)}
+            onToggleExpanded={() => toggleExpanded(subject.id)}
+            onToggleIgnored={() => toggleIgnored(subject.id)}
+            onDelete={() => deleteSubject(subject.id)}
+            onUpdateField={(patch) => updateSubjectField(subject.id, patch)}
+            onAddSlot={() => addSlot(subject.id)}
+            onRemoveSlot={(slotIndex) => removeSlot(subject.id, slotIndex)}
+            onUpdateSlot={(slotIndex, patch) => updateSlot(subject.id, slotIndex, patch)}
+          />
+        ))}
 
-              {showSchedule && (
-                <View className="gap-3 p-4">
-                  {subject.schedule.length === 0 && (
-                    <Text variant="footnote" color="tertiary">
-                      {t('subjects.noSchedules')}
-                    </Text>
-                  )}
-
-                  {subject.schedule.map((slot, index) => (
-                    <View key={index} className="gap-2 rounded-xl border border-border p-3">
-                      <TouchableOpacity
-                        onPress={() => pickWeekDay(subject.id, index)}
-                        className="flex-row items-center gap-1 self-start">
-                        <Text variant="subhead" className="font-medium">
-                          {weekdayLabels[slot.weekDay] ?? '—'}
-                        </Text>
-                        <MaterialCommunityIcons name="chevron-down" size={18} color={colors.grey} />
-                      </TouchableOpacity>
-
-                      <View className="flex-row items-center justify-between">
-                        <Text variant="footnote" color="tertiary">
-                          {t('subjects.start')}
-                        </Text>
-                        <TimeField
-                          value={slot.startTime}
-                          onChange={(time) => updateSlotTime(subject.id, index, 'startTime', time)}
-                        />
-                      </View>
-
-                      <View className="flex-row items-center justify-between">
-                        <Text variant="footnote" color="tertiary">
-                          {t('subjects.end')}
-                        </Text>
-                        <TimeField
-                          value={slot.endTime}
-                          minimumDate={timeStringToDate(slot.startTime)}
-                          onChange={(time) => updateSlotTime(subject.id, index, 'endTime', time)}
-                        />
-                      </View>
-
-                      <View className="flex-row items-center justify-between">
-                        <Text variant="footnote" color="tertiary">
-                          {t('subjects.room')}
-                        </Text>
-                        <TextInput
-                          value={slot.room}
-                          onChangeText={(room) => updateSlot(subject.id, index, { room })}
-                          placeholder={t('subjects.roomPlaceholder')}
-                          placeholderTextColor={colors.grey2}
-                          className="min-w-[96px] rounded-lg bg-background px-3 py-1.5 text-center text-[15px] text-foreground"
-                        />
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              )}
+        {showAddButton && (
+          <Button
+            variant={addButtonProminent ? 'primary' : 'tonal'}
+            size="lg"
+            className={addButtonProminent ? 'mt-6' : ''}
+            onPress={addSubject}>
+            <View className="flex-row items-center gap-1">
+              <MaterialCommunityIcons
+                name="plus"
+                size={20}
+                color={addButtonProminent ? 'white' : colors.primary}
+              />
+              <Text
+                variant="body"
+                className={
+                  addButtonProminent ? 'font-medium text-white' : 'font-medium text-primary'
+                }>
+                {t('subjects.addSubject')}
+              </Text>
             </View>
-          );
-        })}
+          </Button>
+        )}
       </ScrollView>
 
-      <View className="border-t border-border px-4 py-3">
-        <Button size="lg" onPress={handleSave} disabled={isSaving} isLoading={isSaving}>
-          {/* Non-string child so Button renders its spinner while isLoading. */}
+      <View className="border-t border-border px-4 pt-3" style={{ paddingBottom: bottom + 12 }}>
+        <Button size="lg" onPress={handleSave} disabled={isSaving || !isValid} isLoading={isSaving}>
           <Text variant="body">{t('common.save')}</Text>
         </Button>
       </View>

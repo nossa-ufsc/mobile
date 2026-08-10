@@ -31,7 +31,7 @@ export const ProgressIndicator = React.forwardRef<
     },
     ref
   ) => {
-    const max = maxProp;
+    const max = maxProp > 0 ? maxProp : 1;
     const value = isValidValueNumber(valueProp, max) ? valueProp : 0;
     const progress = useDerivedValue(() => value ?? 0);
 
