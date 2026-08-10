@@ -87,7 +87,8 @@
     "noSubjectsTitle": "No hay asignaturas registradas",
     "noSubjectsSubtitle": "Registra tus asignaturas para ver tu horario",
     "noClassesTitle": "No hay clases hoy",
-    "noClassesSubtitle": "Aprovecha tu tiempo libre para estudiar o descansar"
+    "noClassesSubtitle": "Aprovecha tu tiempo libre para estudiar o descansar",
+    "addSubjectsCta": "Añadir asignaturas"
   },
   "subjectDetails": {
     "edit": "Editar",
@@ -164,7 +165,7 @@
   "subjects": {
     "editSubject": "Editar asignatura",
     "editSubjects": "Editar asignaturas",
-    "helperText": "Desactiva las asignaturas que no quieres seguir y ajusta el día, el aula o el horario de cada clase. Los cambios se aplican a tu horario, calendario, notificaciones y widgets.",
+    "helperText": "Añade asignaturas manualmente, desactiva las que no quieres seguir y ajusta el día, el aula o el horario de cada clase. Los cambios se aplican a tu horario, calendario, notificaciones y widgets.",
     "noneToManage": "No hay asignaturas para gestionar.",
     "weekdayPickerTitle": "Día de la semana",
     "noSchedules": "Sin horarios registrados.",
@@ -173,7 +174,18 @@
     "room": "Aula",
     "roomPlaceholder": "Aula",
     "done": "Listo",
-    "saveFailed": "No se pudieron guardar tus cambios. Inténtalo de nuevo."
+    "saveFailed": "No se pudieron guardar tus cambios. Inténtalo de nuevo.",
+    "addSubject": "Añadir asignatura",
+    "addTime": "Añadir horario",
+    "namePlaceholder": "Nombre de la asignatura",
+    "codePlaceholder": "Código",
+    "classGroupPlaceholder": "Grupo",
+    "deleteSubjectTitle": "Eliminar asignatura",
+    "deleteSubjectMessage": "¿Eliminar \"{{name}}\"? Sus faltas registradas y sus tareas/exámenes también se eliminarán.",
+    "removeTime": "Eliminar horario",
+    "emptyTitle": "No hay asignaturas",
+    "emptySubtitle": "Añade tus asignaturas manualmente para armar tu horario.",
+    "overlapError": "Hay horarios en el mismo día que se superponen. Ajústalos para guardar."
   },
   "menu": {
     "noMenuTitle": "Sin menú",
@@ -232,7 +244,8 @@
   },
   "widget": {
     "noClasses": "No hay clases hoy.",
-    "classTime": "{{start}} - {{end}} en {{classroom}}"
+    "classTime": "{{start}} - {{end}} en {{classroom}}",
+    "classTimeNoRoom": "{{start}} - {{end}}"
   },
   "notFound": {
     "title": "¡Ups!",

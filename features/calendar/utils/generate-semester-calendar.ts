@@ -84,7 +84,9 @@ export const generateSemesterCalendar = (
 
         calendarClassItems.push({
           title: currentClass.subject.name,
-          description: `${currentClass.schedule.room} - ${currentClass.schedule.center}`,
+          description: [currentClass.schedule.room, currentClass.schedule.center]
+            .filter(Boolean)
+            .join(' - '),
           date: currentClass.date,
           endDate,
           subject: currentClass.subject,

@@ -87,7 +87,8 @@
     "noSubjectsTitle": "No subjects added",
     "noSubjectsSubtitle": "Add your subjects to see your schedule",
     "noClassesTitle": "No classes today",
-    "noClassesSubtitle": "Enjoy your free time to study or rest"
+    "noClassesSubtitle": "Enjoy your free time to study or rest",
+    "addSubjectsCta": "Add subjects"
   },
   "subjectDetails": {
     "edit": "Edit",
@@ -164,7 +165,7 @@
   "subjects": {
     "editSubject": "Edit subject",
     "editSubjects": "Edit subjects",
-    "helperText": "Turn off the subjects you don't want to track and adjust the day, room or time of each class. Changes apply to your schedule, calendar, notifications and widgets.",
+    "helperText": "Add subjects manually, turn off the ones you don't want to track and adjust the day, room or time of each class. Changes apply to your schedule, calendar, notifications and widgets.",
     "noneToManage": "No subjects to manage.",
     "weekdayPickerTitle": "Day of the week",
     "noSchedules": "No schedules added.",
@@ -173,7 +174,18 @@
     "room": "Room",
     "roomPlaceholder": "Room",
     "done": "Done",
-    "saveFailed": "Couldn't save your changes. Please try again."
+    "saveFailed": "Couldn't save your changes. Please try again.",
+    "addSubject": "Add subject",
+    "addTime": "Add time",
+    "namePlaceholder": "Subject name",
+    "codePlaceholder": "Code",
+    "classGroupPlaceholder": "Group",
+    "deleteSubjectTitle": "Delete subject",
+    "deleteSubjectMessage": "Delete \"{{name}}\"? Its registered absences and tasks/exams will also be removed.",
+    "removeTime": "Remove time",
+    "emptyTitle": "No subjects",
+    "emptySubtitle": "Add your subjects manually to build your schedule.",
+    "overlapError": "Some times on the same day overlap. Adjust them to save."
   },
   "menu": {
     "noMenuTitle": "No menu",
@@ -232,7 +244,8 @@
   },
   "widget": {
     "noClasses": "No classes today.",
-    "classTime": "{{start}} - {{end}} at {{classroom}}"
+    "classTime": "{{start}} - {{end}} at {{classroom}}",
+    "classTimeNoRoom": "{{start}} - {{end}}"
   },
   "notFound": {
     "title": "Oops!",

@@ -34,7 +34,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
             classroom: schedule.room || '',
           }))
       )
-      .filter((classInfo) => classInfo.startTime && classInfo.endTime && classInfo.classroom);
+      .filter((classInfo) => classInfo.startTime && classInfo.endTime);
 
     const sortedClasses = allClasses.sort((a, b) => {
       return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);

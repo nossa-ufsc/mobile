@@ -8,20 +8,16 @@ import { Sheet } from '@/ui/bottom-sheet';
 import { CalendarDayView } from '../components/calendar-day-view';
 import { MonthSelector } from '../components/month-selector';
 import { useCalendar } from '../hooks/use-calendar';
-import { View } from 'react-native';
 import { CalendarClassItem, CalendarItem } from '@/types';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { ClassItemSheet } from '../components/class-item-sheet';
-import { Text } from '@/ui/text';
 import { useCalendarState } from '../hooks/use-calendar-state';
 import * as Haptics from 'expo-haptics';
-import { SafeAreaView } from 'react-native-screens/experimental';
-import { useTranslation } from 'react-i18next';
 import { Fab } from '@/ui/fab';
+import { NoSubjectsCta } from '@/features/subjects/components/no-subjects-cta';
 
 export const CalendarHome = () => {
-  const { t } = useTranslation();
   const calendarSheetRef = useRef<BottomSheetModal>(null);
   const classSheetRef = useRef<BottomSheetModal>(null);
 
@@ -102,12 +98,7 @@ export const CalendarHome = () => {
   if (!subjects?.length) {
     return (
       <Container>
-        <View className="flex-1 items-center justify-center pt-36">
-          <Text className="text-lg font-medium">{t('home.noSubjectsTitle')}</Text>
-          <Text className="mt-2 text-center text-muted-foreground">
-            {t('home.noSubjectsSubtitle')}
-          </Text>
-        </View>
+        <NoSubjectsCta />
       </Container>
     );
   }
