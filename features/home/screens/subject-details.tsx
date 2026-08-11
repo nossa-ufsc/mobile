@@ -1,8 +1,7 @@
 import { Container } from '@/ui/container';
 import { Text } from '@/ui/text';
 import { View, Pressable } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useIsFocused } from '@react-navigation/native';
+import { Stack, useIsFocused, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
 import { useEffect, useRef, useState } from 'react';

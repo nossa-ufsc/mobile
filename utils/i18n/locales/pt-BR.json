@@ -193,7 +193,9 @@
     "removeTime": "Remover horário",
     "emptyTitle": "Nenhuma disciplina por aqui",
     "emptySubtitle": "Adicione suas disciplinas para montar sua grade de horários.",
-    "overlapError": "Alguns horários estão em conflito no mesmo dia. Ajuste antes de salvar."
+    "overlapError": "Alguns horários estão em conflito no mesmo dia. Ajuste antes de salvar.",
+    "classCountLabel": "Aulas nesse horário",
+    "classCountHint": "Somadas para calcular seu limite de faltas"
   },
   "menu": {
     "noMenuTitle": "Nenhum cardápio",

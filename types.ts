@@ -57,6 +57,7 @@ export interface SubjectTime {
   endTime: string;
   center: string;
   room: string;
+  classCount?: number;
 }
 
 export interface CAGRSystemResponse {

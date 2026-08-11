@@ -185,7 +185,9 @@
     "removeTime": "Remove time",
     "emptyTitle": "No subjects",
     "emptySubtitle": "Add your subjects manually to build your schedule.",
-    "overlapError": "Some times on the same day overlap. Adjust them to save."
+    "overlapError": "Some times on the same day overlap. Adjust them to save.",
+    "classCountLabel": "Classes in this time",
+    "classCountHint": "Summed to calculate your absence limit"
   },
   "menu": {
     "noMenuTitle": "No menu",

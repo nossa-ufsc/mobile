@@ -46,7 +46,8 @@ export const generateSemesterCalendar = (
       );
 
       sortedClasses.forEach((currentClass, index) => {
-        let consecutiveClasses = 0;
+        let consecutiveClasses = (currentClass.schedule.classCount ?? 1) - 1;
+        let mergedSlots = 0;
 
         if (index > 0) {
           const previousClass = sortedClasses[index - 1];
@@ -70,14 +71,15 @@ export const generateSemesterCalendar = (
           );
 
           if (isSameSubject && isConsecutive) {
-            consecutiveClasses++;
+            consecutiveClasses += nextClass.schedule.classCount ?? 1;
+            mergedSlots++;
           } else {
             break;
           }
         }
 
         // The block's true end is the end time of the last slot in the run.
-        const lastMergedClass = sortedClasses[index + consecutiveClasses];
+        const lastMergedClass = sortedClasses[index + mergedSlots];
         const [endHours, endMinutes] = lastMergedClass.schedule.endTime.split(':').map(Number);
         const endDate = new Date(currentClass.date);
         endDate.setHours(endHours, endMinutes, 0, 0);

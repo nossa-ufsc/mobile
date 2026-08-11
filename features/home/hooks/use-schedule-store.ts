@@ -25,6 +25,7 @@ export const useClassesForDay = () => {
         .filter((schedule) => schedule?.weekDay === selectedDay)
         .map((schedule) => ({
           subject,
+          classCount: schedule.classCount ?? 1,
           time: {
             startTime: schedule.startTime || '',
             endTime: schedule.endTime || '',
@@ -43,7 +44,7 @@ export const useClassesForDay = () => {
     ((typeof sortedClasses)[0] & { consecutiveClasses: number })[]
   >((acc, currentClass, index) => {
     if (index === 0) {
-      return [{ ...currentClass, consecutiveClasses: 0 }];
+      return [{ ...currentClass, consecutiveClasses: currentClass.classCount - 1 }];
     }
 
     const previousClass = acc[acc.length - 1];
@@ -56,14 +57,14 @@ export const useClassesForDay = () => {
     if (isSameSubject && isConsecutive) {
       acc[acc.length - 1] = {
         ...previousClass,
-        consecutiveClasses: previousClass.consecutiveClasses + 1,
+        consecutiveClasses: previousClass.consecutiveClasses + currentClass.classCount,
         time: {
           ...previousClass.time,
           endTime: currentClass.time.endTime,
         },
       };
     } else {
-      acc.push({ ...currentClass, consecutiveClasses: 0 });
+      acc.push({ ...currentClass, consecutiveClasses: currentClass.classCount - 1 });
     }
 
     return acc;
