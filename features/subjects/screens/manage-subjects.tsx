@@ -32,6 +32,7 @@ const makeSlot = (): SubjectTime => ({
   endTime: minutesToTime(timeToMinutes('08:20') + DEFAULT_CLASS_MINUTES),
   center: '',
   room: '',
+  classCount: 1,
 });
 
 const makeNextSlot = (schedule: SubjectTime[]): SubjectTime => {
@@ -55,15 +56,6 @@ const conflictsFor = (subject: Subject): number[] =>
           ? [index]
           : []
       );
-
-const deriveWeeklyClassCount = (schedule: SubjectTime[]): number =>
-  Math.round(
-    schedule.reduce(
-      (total, slot) =>
-        total + Math.max(0, timeToMinutes(slot.endTime) - timeToMinutes(slot.startTime)),
-      0
-    ) / DEFAULT_CLASS_MINUTES
-  );
 
 export const ManageSubjectsScreen = () => {
   const router = useRouter();
@@ -205,7 +197,10 @@ export const ManageSubjectsScreen = () => {
               name: subject.name.trim(),
               code: subject.code.trim(),
               classGroup: subject.classGroup.trim(),
-              weeklyClassCount: deriveWeeklyClassCount(subject.schedule),
+              weeklyClassCount: subject.schedule.reduce(
+                (total, slot) => total + (slot.classCount ?? 1),
+                0
+              ),
             }
           : subject
       );

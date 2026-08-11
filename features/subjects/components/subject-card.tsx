@@ -52,6 +52,13 @@ export const SubjectCard = ({
   const showSchedule = !subject.ignored && isExpanded;
   const hasConflicts = !subject.ignored && conflictingSlotIndices.length > 0;
 
+  const stepSlotClassCount = (slotIndex: number, current: number, delta: number) => {
+    const next = Math.max(1, Math.min(10, current + delta));
+    if (next === current) return;
+    Haptics.selectionAsync();
+    onUpdateSlot(slotIndex, { classCount: next });
+  };
+
   const pickWeekDay = (slotIndex: number) => {
     const options = [...weekdayOptions.map((option) => option.label), t('common.cancel')];
     const cancelButtonIndex = options.length - 1;
@@ -227,6 +234,34 @@ export const SubjectCard = ({
                   className="min-w-[96px] rounded-lg bg-background px-3 py-1.5 text-center text-[15px] text-foreground"
                 />
               </View>
+
+              {subject.manual && (
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-1 pr-3">
+                    <Text variant="footnote" color="tertiary">
+                      {t('subjects.classCountLabel')}
+                    </Text>
+                    <Text variant="caption2" color="quarternary">
+                      {t('subjects.classCountHint')}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center gap-3 rounded-lg bg-background px-2 py-1">
+                    <TouchableOpacity
+                      hitSlop={8}
+                      onPress={() => stepSlotClassCount(index, slot.classCount ?? 1, -1)}>
+                      <MaterialCommunityIcons name="minus" size={18} color={colors.primary} />
+                    </TouchableOpacity>
+                    <Text variant="body" className="min-w-[24px] text-center font-medium">
+                      {slot.classCount ?? 1}
+                    </Text>
+                    <TouchableOpacity
+                      hitSlop={8}
+                      onPress={() => stepSlotClassCount(index, slot.classCount ?? 1, 1)}>
+                      <MaterialCommunityIcons name="plus" size={18} color={colors.primary} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
             </View>
           ))}
 

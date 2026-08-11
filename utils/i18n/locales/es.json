@@ -185,7 +185,9 @@
     "removeTime": "Eliminar horario",
     "emptyTitle": "No hay asignaturas",
     "emptySubtitle": "Añade tus asignaturas manualmente para armar tu horario.",
-    "overlapError": "Hay horarios en el mismo día que se superponen. Ajústalos para guardar."
+    "overlapError": "Hay horarios en el mismo día que se superponen. Ajústalos para guardar.",
+    "classCountLabel": "Clases en este horario",
+    "classCountHint": "Se suman para calcular tu límite de faltas"
   },
   "menu": {
     "noMenuTitle": "Sin menú",
