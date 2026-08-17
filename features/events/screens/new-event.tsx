@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Pressable,
@@ -17,43 +17,15 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '@/ui/text';
 import { Container } from '@/ui/container';
 import { DatePicker } from '@/ui/date-picker';
+import { HeaderTextButton, plainHeaderItem } from '@/ui/header-text-button';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { supabase } from '@/utils/supabase';
-import { cn } from '@/utils/cn';
 import { getDateLocale } from '@/utils/i18n/get-date-locale';
 import { Event } from '@/types';
 import { EventCard } from '../components/event-card';
 import { uploadEventImage } from '../utils/upload-image';
 import { normalizeUrl } from '../utils/format-date-time';
-
-const HeaderTextButton = ({
-  label,
-  onPress,
-  disabled,
-  destructive,
-}: {
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-  destructive?: boolean;
-}) => (
-  <Pressable onPress={onPress} disabled={disabled} hitSlop={8}>
-    <Text
-      className={cn(
-        'text-[17px]',
-        destructive ? 'text-[#FF3B30]' : 'font-semibold text-primary',
-        disabled && 'opacity-40'
-      )}>
-      {label}
-    </Text>
-  </Pressable>
-);
-
-/** Item pro header nativo (iOS 26) sem a "bolha" de vidro. */
-const plainHeaderItem = (element: React.ReactElement) => [
-  { type: 'custom' as const, element, hidesSharedBackground: true },
-];
 
 export const NewEvent = () => {
   const { t } = useTranslation();

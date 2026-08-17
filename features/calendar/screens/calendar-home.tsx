@@ -1,9 +1,8 @@
 import { Container } from '@/ui/container';
 import { useRef, useState } from 'react';
+import { router } from 'expo-router';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { CalendarItemSheet } from '../components/calendar-item-sheet';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
-import { getActiveSubjects } from '@/utils/subjects';
 import { Sheet } from '@/ui/bottom-sheet';
 import { CalendarDayView } from '../components/calendar-day-view';
 import { MonthSelector } from '../components/month-selector';
@@ -18,14 +17,12 @@ import { Fab } from '@/ui/fab';
 import { NoSubjectsCta } from '@/features/subjects/components/no-subjects-cta';
 
 export const CalendarHome = () => {
-  const calendarSheetRef = useRef<BottomSheetModal>(null);
   const classSheetRef = useRef<BottomSheetModal>(null);
 
   const { subjects } = useEnvironmentStore();
   const { selectedDay, setSelectedDay } = useCalendarState();
   const { isExpanded, setIsExpanded } = useCalendarState();
   const { getItemsByDate, getClassItemsByDate } = useCalendar();
-  const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
   const [selectedClassItem, setSelectedClassItem] = useState<CalendarClassItem | undefined>(
     undefined
   );
@@ -34,19 +31,11 @@ export const CalendarHome = () => {
   const classItems = getClassItemsByDate(selectedDay);
 
   const handleAddPress = () => {
-    setSelectedItem(undefined);
-    calendarSheetRef.current?.present();
-  };
-
-  const handleClose = () => {
-    calendarSheetRef.current?.dismiss();
-    setSelectedItem(undefined);
-    setSelectedClassItem(undefined);
+    router.push({ pathname: '/calendar-item', params: { date: selectedDay.toISOString() } });
   };
 
   const handlePressItem = (item: CalendarItem) => {
-    setSelectedItem(item);
-    calendarSheetRef.current?.present();
+    router.push({ pathname: '/calendar-item', params: { itemId: item.id } });
   };
 
   const handlePressClass = (item: CalendarClassItem) => {
@@ -122,18 +111,6 @@ export const CalendarHome = () => {
       </GestureDetector>
 
       <Fab onPress={handleAddPress} />
-
-      <Sheet
-        onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        ref={calendarSheetRef}
-        enableDynamicSizing>
-        <CalendarItemSheet
-          subjects={getActiveSubjects(subjects)}
-          onClose={handleClose}
-          initialItem={selectedItem}
-          initialDate={selectedDay}
-        />
-      </Sheet>
 
       <Sheet
         onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}

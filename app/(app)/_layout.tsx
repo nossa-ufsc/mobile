@@ -46,6 +46,14 @@ export default function AppLayout() {
           title: t('events.newEvent'),
         }}
       />
+      <Stack.Screen
+        name="calendar-item"
+        options={{
+          presentation: 'modal',
+          animation: 'fade_from_bottom',
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }

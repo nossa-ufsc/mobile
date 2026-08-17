@@ -4,10 +4,9 @@ import { View, Pressable } from 'react-native';
 import { Stack, useIsFocused, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Sheet } from '@/ui/bottom-sheet';
-import { CalendarItemSheet } from '@/features/calendar/components/calendar-item-sheet';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { CalendarItem } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,10 +26,8 @@ export const SubjectDetails = () => {
   const { getItemsBySubject } = useCalendar();
   const { addAbsence, removeAbsence, maxAbsences, absences, remainingAbsences, totalAbsences } =
     useSubjectAbsence(id);
-  const calendarSheetRef = useRef<BottomSheetModal>(null);
   const absenceSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
-  const [selectedItem, setSelectedItem] = useState<CalendarItem | undefined>(undefined);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -42,13 +39,7 @@ export const SubjectDetails = () => {
   if (!subjects || !subject) return null;
 
   const handleAddPress = () => {
-    setSelectedItem(undefined);
-    calendarSheetRef.current?.present();
-  };
-
-  const handleClose = () => {
-    calendarSheetRef.current?.dismiss();
-    setSelectedItem(undefined);
+    router.push({ pathname: '/calendar-item', params: { subjectId: subject.id } });
   };
 
   const handleCloseAbsence = () => {
@@ -56,8 +47,7 @@ export const SubjectDetails = () => {
   };
 
   const handlePressItem = (item: CalendarItem) => {
-    setSelectedItem(item);
-    calendarSheetRef.current?.present();
+    router.push({ pathname: '/calendar-item', params: { itemId: item.id } });
   };
 
   const sortedItems = getItemsBySubject(subject).sort((a, b) => {
@@ -259,18 +249,6 @@ export const SubjectDetails = () => {
             </View>
           ))}
         </View>
-
-        <Sheet
-          onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-          ref={calendarSheetRef}
-          enableDynamicSizing>
-          <CalendarItemSheet
-            subjects={subjects}
-            onClose={handleClose}
-            initialItem={selectedItem}
-            initialSubject={subject}
-          />
-        </Sheet>
 
         <Sheet
           onAnimate={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
