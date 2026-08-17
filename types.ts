@@ -21,7 +21,15 @@ export interface Event {
   image_url: string;
   campus: Campus;
   created_by: EventCreator;
+  /** Link externo pra compra de ingressos (Cheers, Sympla, etc). Opcional. */
+  ticket_url?: string | null;
+  /** Moderação: eventos entram como `pending` e só aparecem no app depois de `approved`. */
+  status?: EventStatus;
+  /** De onde veio o evento: cadastrado por aluno no app ou importado da Cheers. */
+  source?: 'user' | 'cheers';
 }
+
+export type EventStatus = 'pending' | 'approved' | 'rejected';
 
 export interface User {
   id: string;

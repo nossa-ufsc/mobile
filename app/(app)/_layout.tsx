@@ -29,6 +29,23 @@ export default function AppLayout() {
           title: t('subjects.editSubjects'),
         }}
       />
+      <Stack.Screen
+        name="event/[id]"
+        options={{
+          presentation: 'modal',
+          animation: 'fade_from_bottom',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="new-event"
+        options={{
+          presentation: 'modal',
+          animation: 'fade_from_bottom',
+          gestureEnabled: false,
+          title: t('events.newEvent'),
+        }}
+      />
     </Stack>
   );
 }

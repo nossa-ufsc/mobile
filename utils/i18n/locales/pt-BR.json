@@ -151,7 +151,6 @@
   "events": {
     "back": "Voltar",
     "previewTitle": "Prévia do Evento",
-    "publish": "Publicar",
     "newEvent": "Novo Evento",
     "preview": "Visualizar",
     "namePlaceholder": "Nome do evento",
@@ -164,11 +163,20 @@
     "endDateAfterStart": "A data de término deve ser posterior à data de início",
     "devPublishBlocked": "Não é possível publicar eventos no ambiente de desenvolvimento",
     "createEventFailed": "Não foi possível criar o evento. Tente novamente.",
-    "previewDisclaimer": "Confira se as informações estão corretas antes de publicar. Seu nome será exibido como criador do evento.",
-    "publishDisclaimer": "Ao publicar este evento, você concorda em ser responsável pelo seu conteúdo.\n\nSeu nome ({{name}}) e matrícula ({{enrollment}}) serão armazenados.",
+    "previewDisclaimer": "Confira se as informações estão corretas antes de enviar. Seu nome será exibido como criador do evento.",
+    "publishDisclaimer": "Seu evento será revisado pela equipe antes de aparecer no app. Ao enviar, você concorda em ser responsável pelo conteúdo.\n\nSeu nome ({{name}}) e matrícula ({{enrollment}}) serão armazenados.",
     "emptyTitle": "Nenhum evento encontrado",
     "emptySubtitle": "Não existem eventos agendados para o seu campus.",
-    "sentBy": "Enviado por {{name}}"
+    "sentBy": "Enviado por {{name}}",
+    "ticketLinkPlaceholder": "Link para ingressos (opcional)",
+    "ticketLinkHint": "Cole o link da página de venda (Cheers, Sympla, etc.)",
+    "invalidUrl": "Informe um link válido, começando com http:// ou https://",
+    "openLinkFailed": "Não foi possível abrir o link.",
+    "notFound": "Evento não encontrado",
+    "tickets": "Ingressos",
+    "submit": "Enviar",
+    "submittedTitle": "Evento enviado!",
+    "submittedMessage": "Recebemos sua sugestão. Ela aparece no app assim que for aprovada — normalmente em alguns dias."
   },
   "subjects": {
     "editSubject": "Editar disciplina",

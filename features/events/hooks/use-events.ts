@@ -20,6 +20,7 @@ export const useEvents = () => {
         .from('events')
         .select('*')
         .eq('campus', campus)
+        .eq('status', 'approved')
         .gte('end_date', now)
         .order('start_date', { ascending: true });
 

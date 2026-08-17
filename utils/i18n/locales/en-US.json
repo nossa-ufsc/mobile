@@ -143,7 +143,6 @@
   "events": {
     "back": "Back",
     "previewTitle": "Event Preview",
-    "publish": "Publish",
     "newEvent": "New Event",
     "preview": "Preview",
     "namePlaceholder": "Event name",
@@ -156,11 +155,20 @@
     "endDateAfterStart": "The end date must be after the start date",
     "devPublishBlocked": "Events can't be published from the development environment",
     "createEventFailed": "Couldn't create the event. Please try again.",
-    "previewDisclaimer": "Check that the information is correct before publishing. Your name will be shown as the event's creator.",
-    "publishDisclaimer": "By publishing this event, you agree to be responsible for its content.\n\nYour name ({{name}}) and student ID ({{enrollment}}) will be stored.",
+    "previewDisclaimer": "Check that everything is correct before submitting. Your name will be shown as the event creator.",
+    "publishDisclaimer": "Your event will be reviewed by the team before appearing in the app. By submitting, you agree to be responsible for its content.\n\nYour name ({{name}}) and student ID ({{enrollment}}) will be stored.",
     "emptyTitle": "No events found",
     "emptySubtitle": "There are no events scheduled for your campus.",
-    "sentBy": "Posted by {{name}}"
+    "sentBy": "Posted by {{name}}",
+    "ticketLinkPlaceholder": "Ticket link (optional)",
+    "ticketLinkHint": "Paste the ticket sales page link (Cheers, Sympla, etc.)",
+    "invalidUrl": "Enter a valid link starting with http:// or https://",
+    "openLinkFailed": "Could not open the link.",
+    "notFound": "Event not found",
+    "tickets": "Tickets",
+    "submit": "Submit",
+    "submittedTitle": "Event submitted!",
+    "submittedMessage": "We got your suggestion. It will show up in the app once approved — usually within a few days."
   },
   "subjects": {
     "editSubject": "Edit subject",

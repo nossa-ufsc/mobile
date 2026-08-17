@@ -15,6 +15,7 @@ export const MOCK_EVENTS: Event[] = [
       name: 'João Silva',
       enrollmentNumber: '20240001',
     },
+    ticket_url: 'https://cheers.com.br/evento/33a-betonada-da-civil-32627',
   },
   {
     id: '2',
@@ -30,6 +31,7 @@ export const MOCK_EVENTS: Event[] = [
       name: 'Maria Santos',
       enrollmentNumber: '20240002',
     },
+    ticket_url: null,
   },
   {
     id: '3',
