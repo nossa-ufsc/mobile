@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from '@/types';
+import { Menu, MenuCategory, MenuDish, MenuItem, MenuMeal } from '@/types';
 
 const parseBrazilianDate = (date: string | null): Date | null => {
   if (!date) return null;
@@ -62,3 +62,47 @@ export const formatMenuItem = (item: string): string => {
 
   return formatted;
 };
+
+export const MENU_CATEGORY_ORDER: MenuCategory[] = [
+  'carne',
+  'vegetariano',
+  'guarnicao',
+  'base',
+  'salada',
+  'molho',
+  'sobremesa',
+  'outro',
+];
+
+const ACRONYMS = new Set(['pts', 'ptn', 'ru']);
+
+export const formatDishName = (name: string): string => {
+  const trimmed = name.trim().replace(/\s+/g, ' ');
+  if (!trimmed) return '';
+  const lower = trimmed.toLowerCase();
+  const withAcronyms = lower
+    .split(' ')
+    .map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w))
+    .join(' ');
+  return withAcronyms.charAt(0).toUpperCase() + withAcronyms.slice(1);
+};
+
+export const dayHasMealSplit = (dishes: MenuDish[]): boolean =>
+  dishes.some((d) => d.refeicao !== undefined);
+
+export const defaultMeal = (now: Date = new Date()): MenuMeal =>
+  now.getHours() < 14 || (now.getHours() === 14 && now.getMinutes() < 30) ? 'almoco' : 'jantar';
+
+export const filterDishesByMeal = (dishes: MenuDish[], meal: MenuMeal | null): MenuDish[] =>
+  meal ? dishes.filter((d) => !d.refeicao || d.refeicao === meal) : dishes;
+
+export interface MenuSection {
+  category: MenuCategory;
+  dishes: MenuDish[];
+}
+
+export const groupDishesByCategory = (dishes: MenuDish[]): MenuSection[] =>
+  MENU_CATEGORY_ORDER.map((category) => ({
+    category,
+    dishes: dishes.filter((d) => d.categoria === category),
+  })).filter((s) => s.dishes.length > 0);

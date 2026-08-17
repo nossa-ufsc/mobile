@@ -209,7 +209,34 @@
     "noMenuTitle": "Nenhum cardápio",
     "loadError": "Não foi possível carregar o cardápio",
     "noMenuForDay": "Nenhum cardápio disponível para este dia",
-    "outdatedWarning": "Este cardápio pode estar desatualizado"
+    "outdatedWarning": "Este cardápio pode estar desatualizado",
+    "categories": {
+      "carne": "Prato principal",
+      "vegetariano": "Opção vegetariana",
+      "guarnicao": "Guarnição",
+      "base": "Complementos",
+      "salada": "Saladas",
+      "molho": "Molhos",
+      "sobremesa": "Sobremesa",
+      "outro": "Outros"
+    },
+    "meals": {
+      "almoco": "Almoço",
+      "jantar": "Jantar"
+    },
+    "allergens": {
+      "gluten": "Contém glúten",
+      "glutenFree": "Sem glúten",
+      "dairy": "Contém lácteos",
+      "dairyFree": "Sem lácteos",
+      "animalOrigin": "Origem animal",
+      "noAnimalOrigin": "Sem origem animal"
+    },
+    "ingredients": "Ingredientes",
+    "ingredientsHint": "Toque para ver os ingredientes",
+    "openSource": "Ver cardápio original",
+    "updatedAt": "Atualizado em {{date}}",
+    "noMenuForMeal": "Nada específico para esta refeição"
   },
   "onboarding": {
     "initial": {

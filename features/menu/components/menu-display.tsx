@@ -5,6 +5,8 @@ import { getMenuForDay, hasImageMenu, isMenuOutdated } from '../utils/menu';
 import { Container } from '@/ui/container';
 import { useMenuStore } from '../hooks/use-menu-store';
 import { MenuItemCard } from './menu-item-card';
+import { MenuDayView } from './menu-day-view';
+import { MenuSourceFooter } from './menu-source-footer';
 import { useTranslation } from 'react-i18next';
 
 interface MenuDisplayProps {
@@ -47,29 +49,36 @@ export const MenuDisplay = ({ menu, isLoading, error }: MenuDisplayProps) => {
           className="flex-1"
           resizeMode="contain"
         />
+        <MenuSourceFooter sourceUrl={menu.fonteUrl} updatedAt={menu.atualizadoEm} />
       </View>
     );
   }
 
   const dayMenu = getMenuForDay(menu, selectedDay);
+  const dishes = dayMenu?.pratos?.length ? dayMenu.pratos : null;
 
-  if (!dayMenu?.itens.length) {
+  if (!dishes && !dayMenu?.itens?.length) {
     return <EmptyState message={t('menu.noMenuForDay')} />;
   }
 
   return (
-    <Container scrollable>
+    <Container scrollable contentClassName="pb-8">
       {isMenuOutdated(menu) && (
         <View className="mb-2 rounded-xl bg-yellow-50 p-4 dark:bg-yellow-950">
           <Text className="text-yellow-800 dark:text-yellow-200">{t('menu.outdatedWarning')}</Text>
         </View>
       )}
 
-      <View className="gap-2">
-        {dayMenu.itens.map((item, index) => (
-          <MenuItemCard key={index} item={item} />
-        ))}
-      </View>
+      {dishes ? (
+        <MenuDayView key={selectedDay} menu={menu} dishes={dishes} />
+      ) : (
+        <View className="gap-2">
+          {dayMenu!.itens.map((item, index) => (
+            <MenuItemCard key={index} item={item} />
+          ))}
+          <MenuSourceFooter sourceUrl={menu.fonteUrl} updatedAt={menu.atualizadoEm} />
+        </View>
+      )}
     </Container>
   );
 };

@@ -201,7 +201,34 @@
     "noMenuTitle": "No menu",
     "loadError": "Couldn't load the menu",
     "noMenuForDay": "No menu available for this day",
-    "outdatedWarning": "This menu may be outdated"
+    "outdatedWarning": "This menu may be outdated",
+    "categories": {
+      "carne": "Main dish",
+      "vegetariano": "Vegetarian option",
+      "guarnicao": "Side dish",
+      "base": "Staples",
+      "salada": "Salads",
+      "molho": "Dressings",
+      "sobremesa": "Dessert",
+      "outro": "Other"
+    },
+    "meals": {
+      "almoco": "Lunch",
+      "jantar": "Dinner"
+    },
+    "allergens": {
+      "gluten": "Contains gluten",
+      "glutenFree": "Gluten-free",
+      "dairy": "Contains dairy",
+      "dairyFree": "Dairy-free",
+      "animalOrigin": "Animal origin",
+      "noAnimalOrigin": "No animal origin"
+    },
+    "ingredients": "Ingredients",
+    "ingredientsHint": "Tap to see the ingredients",
+    "openSource": "View original menu",
+    "updatedAt": "Updated {{date}}",
+    "noMenuForMeal": "Nothing specific for this meal"
   },
   "onboarding": {
     "initial": {

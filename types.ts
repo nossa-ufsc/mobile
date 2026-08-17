@@ -110,14 +110,38 @@ export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {
   endDate: Date;
 }
 
+export type MenuCategory =
+  'base' | 'carne' | 'vegetariano' | 'guarnicao' | 'salada' | 'molho' | 'sobremesa' | 'outro';
+
+export type MenuMeal = 'almoco' | 'jantar';
+
+export interface MenuAllergens {
+  gluten?: boolean;
+  lacteos?: boolean;
+  origemAnimal?: boolean;
+}
+
+export interface MenuDish {
+  nome: string;
+  categoria: MenuCategory;
+  refeicao?: MenuMeal;
+  alergenos?: MenuAllergens;
+  ingredientes?: string;
+}
+
 export interface MenuItem {
   dia: string;
   data: string;
   itens: string[];
+  pratos?: MenuDish[];
 }
 
 export interface Menu {
   cardapio: MenuItem[] | { url_imagem: string };
   diaInicial: string | null;
   diaFinal: string | null;
+  versao?: 2;
+  refeicoes?: MenuMeal[];
+  fonteUrl?: string;
+  atualizadoEm?: string;
 }

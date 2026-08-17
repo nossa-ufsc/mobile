@@ -42,4 +42,11 @@ export const NEWS_ITEMS: NewsItem[] = [
       url: 'https://github.com/nossa-ufsc/mobile',
     },
   },
+  {
+    id: 'menu-v2',
+    icon: 'silverware-fork-knife',
+    title: 'Cardápio do RU de cara nova',
+    description:
+      'O cardápio agora é sincronizado automaticamente com o site do seu RU e vem organizado por categoria: prato principal, opção vegetariana, guarnição, saladas e sobremesa. Onde o RU informa, você também vê almoço e jantar separados, alergênicos (glúten, lácteos) e os ingredientes de cada prato.',
+  },
 ];

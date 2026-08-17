@@ -201,7 +201,34 @@
     "noMenuTitle": "Sin menú",
     "loadError": "No se pudo cargar el menú",
     "noMenuForDay": "No hay menú disponible para este día",
-    "outdatedWarning": "Este menú puede estar desactualizado"
+    "outdatedWarning": "Este menú puede estar desactualizado",
+    "categories": {
+      "carne": "Plato principal",
+      "vegetariano": "Opción vegetariana",
+      "guarnicao": "Guarnición",
+      "base": "Complementos",
+      "salada": "Ensaladas",
+      "molho": "Aderezos",
+      "sobremesa": "Postre",
+      "outro": "Otros"
+    },
+    "meals": {
+      "almoco": "Almuerzo",
+      "jantar": "Cena"
+    },
+    "allergens": {
+      "gluten": "Contiene gluten",
+      "glutenFree": "Sin gluten",
+      "dairy": "Contiene lácteos",
+      "dairyFree": "Sin lácteos",
+      "animalOrigin": "Origen animal",
+      "noAnimalOrigin": "Sin origen animal"
+    },
+    "ingredients": "Ingredientes",
+    "ingredientsHint": "Toca para ver los ingredientes",
+    "openSource": "Ver menú original",
+    "updatedAt": "Actualizado el {{date}}",
+    "noMenuForMeal": "Nada específico para esta comida"
   },
   "onboarding": {
     "initial": {

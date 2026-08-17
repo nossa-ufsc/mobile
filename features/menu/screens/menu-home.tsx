@@ -5,19 +5,21 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { useMenuStore } from '../hooks/use-menu-store';
 import { useMenu } from '../hooks/use-menu';
+import { defaultMeal } from '../utils/menu';
 import { MenuDisplay } from '../components/menu-display';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import * as Haptics from 'expo-haptics';
 
 export const MenuHome = () => {
-  const { selectedDay, setSelectedDay } = useMenuStore();
+  const { selectedDay, setSelectedDay, setSelectedMeal } = useMenuStore();
   const { data: menu, isLoading, error, refetch } = useMenu();
 
   useFocusEffect(
     useCallback(() => {
+      setSelectedMeal(defaultMeal());
       refetch();
-    }, [refetch])
+    }, [refetch, setSelectedMeal])
   );
 
   const swipeGesture = Gesture.Pan()
