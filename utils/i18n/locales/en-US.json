@@ -63,7 +63,6 @@
     },
     "semesterDurationTitle": "Semester Duration",
     "semesterDurationMessage": "Choose the semester duration",
-    "semesterOfficialValue": "{{semester}} · {{weeks}} weeks (official calendar)",
     "weeks_one": "{{count}} week",
     "weeks_other": "{{count}} weeks",
     "campusTitle": "Campus",
