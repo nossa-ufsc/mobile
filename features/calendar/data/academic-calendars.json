@@ -1,0 +1,1082 @@
+[
+  {
+    "semester": "2025.1",
+    "campus": "ararangua",
+    "startDate": "2025-03-10",
+    "endDate": "2025-07-16",
+    "weeks": 19,
+    "recoveryStart": "2025-07-10",
+    "recoveryEnd": "2025-07-16",
+    "recessStart": "2025-07-17",
+    "classDaysByWeekday": [18, 19, 19, 15, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2025-04-03",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2025-04-18",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2025-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2025-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2025-06-19",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-04-19",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2025-05-02",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-05-03",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-21",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.1",
+    "campus": "blumenau",
+    "startDate": "2025-03-10",
+    "endDate": "2025-07-16",
+    "weeks": 19,
+    "recoveryStart": "2025-07-10",
+    "recoveryEnd": "2025-07-16",
+    "recessStart": "2025-07-17",
+    "classDaysByWeekday": [18, 19, 19, 16, 15, 15],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2025-04-18",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2025-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2025-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2025-06-19",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-04-19",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2025-05-02",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-05-03",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-21",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.1",
+    "campus": "curitibanos",
+    "startDate": "2025-03-10",
+    "endDate": "2025-07-16",
+    "weeks": 19,
+    "recoveryStart": "2025-07-10",
+    "recoveryEnd": "2025-07-16",
+    "recessStart": "2025-07-17",
+    "classDaysByWeekday": [18, 19, 18, 16, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2025-04-18",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2025-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2025-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2025-06-11",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2025-06-19",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-04-19",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2025-05-02",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-05-03",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-21",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.1",
+    "campus": "florianopolis",
+    "startDate": "2025-03-10",
+    "endDate": "2025-07-16",
+    "weeks": 19,
+    "recoveryStart": "2025-07-10",
+    "recoveryEnd": "2025-07-16",
+    "recessStart": "2025-07-17",
+    "classDaysByWeekday": [18, 19, 19, 16, 15, 15],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2025-04-18",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2025-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2025-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2025-06-19",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-04-19",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2025-05-02",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-05-03",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-21",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.1",
+    "campus": "joinville",
+    "startDate": "2025-03-10",
+    "endDate": "2025-07-16",
+    "weeks": 19,
+    "recoveryStart": "2025-07-10",
+    "recoveryEnd": "2025-07-16",
+    "recessStart": "2025-07-17",
+    "classDaysByWeekday": [18, 19, 19, 16, 15, 15],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2025-04-18",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2025-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2025-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2025-06-19",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-04-19",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2025-05-02",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-05-03",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-06-21",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.2",
+    "campus": "ararangua",
+    "startDate": "2025-08-11",
+    "endDate": "2025-12-13",
+    "weeks": 18,
+    "recoveryStart": "2025-12-08",
+    "recoveryEnd": "2025-12-12",
+    "recessStart": "2025-12-14",
+    "classDaysByWeekday": [17, 18, 18, 17, 17, 16],
+    "totalClassDays": 103,
+    "holidays": [
+      {
+        "date": "2025-10-27",
+        "label": "Ponto Facultativo – comemoração do Dia do Servidor"
+      },
+      {
+        "date": "2025-11-15",
+        "label": "Proclamação da República"
+      },
+      {
+        "date": "2025-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-11-21",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-11-22",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.2",
+    "campus": "blumenau",
+    "startDate": "2025-08-18",
+    "endDate": "2025-12-20",
+    "weeks": 18,
+    "recoveryStart": "2025-12-08",
+    "recoveryEnd": "2025-12-12",
+    "recessStart": "2025-12-21",
+    "classDaysByWeekday": [17, 17, 18, 17, 17, 16],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2025-09-02",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2025-10-27",
+        "label": "Ponto Facultativo – comemoração do Dia do Servidor"
+      },
+      {
+        "date": "2025-11-15",
+        "label": "Proclamação da República"
+      },
+      {
+        "date": "2025-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-11-21",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-11-22",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.2",
+    "campus": "curitibanos",
+    "startDate": "2025-08-11",
+    "endDate": "2025-12-13",
+    "weeks": 18,
+    "recoveryStart": "2025-12-08",
+    "recoveryEnd": "2025-12-12",
+    "recessStart": "2025-12-14",
+    "classDaysByWeekday": [16, 18, 18, 17, 17, 16],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2025-10-27",
+        "label": "Ponto Facultativo – comemoração do Dia do Servidor"
+      },
+      {
+        "date": "2025-11-15",
+        "label": "Proclamação da República"
+      },
+      {
+        "date": "2025-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      },
+      {
+        "date": "2025-12-08",
+        "label": "Dia da Padroeira da Cidade"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-11-21",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-11-22",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.2",
+    "campus": "florianopolis",
+    "startDate": "2025-08-11",
+    "endDate": "2025-12-13",
+    "weeks": 18,
+    "recoveryStart": "2025-12-08",
+    "recoveryEnd": "2025-12-12",
+    "recessStart": "2025-12-14",
+    "classDaysByWeekday": [17, 18, 18, 17, 17, 16],
+    "totalClassDays": 103,
+    "holidays": [
+      {
+        "date": "2025-10-27",
+        "label": "Ponto Facultativo – comemoração do Dia do Servidor"
+      },
+      {
+        "date": "2025-11-15",
+        "label": "Proclamação da República"
+      },
+      {
+        "date": "2025-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-11-21",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-11-22",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2025.2",
+    "campus": "joinville",
+    "startDate": "2025-08-11",
+    "endDate": "2025-12-13",
+    "weeks": 18,
+    "recoveryStart": "2025-12-08",
+    "recoveryEnd": "2025-12-12",
+    "recessStart": "2025-12-14",
+    "classDaysByWeekday": [17, 18, 18, 17, 17, 16],
+    "totalClassDays": 103,
+    "holidays": [
+      {
+        "date": "2025-10-27",
+        "label": "Ponto Facultativo – comemoração do Dia do Servidor"
+      },
+      {
+        "date": "2025-11-15",
+        "label": "Proclamação da República"
+      },
+      {
+        "date": "2025-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2025-11-21",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2025-11-22",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 196/2024/CUn",
+      "url": "https://dae.ufsc.br/files/2025/07/RN-196-CUn-2024_Calend%C3%A1rio-Acad%C3%AAmico-2025_altera%C3%A7%C3%B5es-homologadas-R-3-CUn-2025-e-R-206-CUn-2025.pdf",
+      "sha256": "1a8c83282f11f958168e6ef89f4347d0cf32756b7e4de2cc1b278d9ef4427fc3",
+      "year": 2025
+    }
+  },
+  {
+    "semester": "2026.1",
+    "campus": "ararangua",
+    "startDate": "2026-03-09",
+    "endDate": "2026-07-15",
+    "weeks": 19,
+    "recoveryStart": "2026-07-09",
+    "recoveryEnd": "2026-07-15",
+    "recessStart": "2026-07-16",
+    "classDaysByWeekday": [17, 18, 19, 17, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-04-03",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2026-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2026-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2026-05-04",
+        "label": "Dia da Padroeira da Cidade"
+      },
+      {
+        "date": "2026-06-04",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-04-04",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-04-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-05-02",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-06-05",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-06-06",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.1",
+    "campus": "blumenau",
+    "startDate": "2026-03-09",
+    "endDate": "2026-07-15",
+    "weeks": 19,
+    "recoveryStart": "2026-07-09",
+    "recoveryEnd": "2026-07-15",
+    "recessStart": "2026-07-16",
+    "classDaysByWeekday": [18, 18, 19, 17, 15, 15],
+    "totalClassDays": 102,
+    "holidays": [
+      {
+        "date": "2026-04-03",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2026-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2026-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2026-06-04",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-04-04",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-04-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-05-02",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-06-05",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-06-06",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.1",
+    "campus": "curitibanos",
+    "startDate": "2026-03-09",
+    "endDate": "2026-07-15",
+    "weeks": 19,
+    "recoveryStart": "2026-07-09",
+    "recoveryEnd": "2026-07-15",
+    "recessStart": "2026-07-16",
+    "classDaysByWeekday": [18, 18, 19, 16, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-04-03",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2026-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2026-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2026-06-04",
+        "label": "Corpus Christi"
+      },
+      {
+        "date": "2026-06-11",
+        "label": "Aniversário da Cidade"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-04-04",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-04-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-05-02",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-06-05",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-06-06",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.1",
+    "campus": "florianopolis",
+    "startDate": "2026-03-09",
+    "endDate": "2026-07-15",
+    "weeks": 19,
+    "recoveryStart": "2026-07-09",
+    "recoveryEnd": "2026-07-15",
+    "recessStart": "2026-07-16",
+    "classDaysByWeekday": [17, 18, 19, 17, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-03-23",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2026-04-03",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2026-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2026-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2026-06-04",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-04-04",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-04-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-05-02",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-06-05",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-06-06",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.1",
+    "campus": "joinville",
+    "startDate": "2026-03-09",
+    "endDate": "2026-07-15",
+    "weeks": 19,
+    "recoveryStart": "2026-07-09",
+    "recoveryEnd": "2026-07-15",
+    "recessStart": "2026-07-16",
+    "classDaysByWeekday": [17, 18, 19, 17, 15, 15],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-03-09",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2026-04-03",
+        "label": "Sexta-Feira Santa"
+      },
+      {
+        "date": "2026-04-21",
+        "label": "Tiradentes"
+      },
+      {
+        "date": "2026-05-01",
+        "label": "Dia do Trabalho"
+      },
+      {
+        "date": "2026-06-04",
+        "label": "Corpus Christi"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-04-04",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-04-20",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-05-02",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-06-05",
+        "label": "Dias não letivos"
+      },
+      {
+        "date": "2026-06-06",
+        "label": "Dias não letivos"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.2",
+    "campus": "ararangua",
+    "startDate": "2026-08-10",
+    "endDate": "2026-12-12",
+    "weeks": 18,
+    "recoveryStart": "2026-12-07",
+    "recoveryEnd": "2026-12-12",
+    "recessStart": "2026-12-13",
+    "classDaysByWeekday": [15, 18, 17, 18, 17, 16],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-09-07",
+        "label": "Independência do Brasil"
+      },
+      {
+        "date": "2026-10-12",
+        "label": "Nossa Senhora Aparecida"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Dia do Servidor Público"
+      },
+      {
+        "date": "2026-11-02",
+        "label": "Finados"
+      },
+      {
+        "date": "2026-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-11-21",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-12-05",
+        "label": "Vestibular UFSC"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.2",
+    "campus": "blumenau",
+    "startDate": "2026-08-10",
+    "endDate": "2026-12-12",
+    "weeks": 18,
+    "recoveryStart": "2026-12-07",
+    "recoveryEnd": "2026-12-12",
+    "recessStart": "2026-12-13",
+    "classDaysByWeekday": [15, 18, 16, 18, 17, 16],
+    "totalClassDays": 100,
+    "holidays": [
+      {
+        "date": "2026-09-02",
+        "label": "Aniversário da Cidade"
+      },
+      {
+        "date": "2026-09-07",
+        "label": "Independência do Brasil"
+      },
+      {
+        "date": "2026-10-12",
+        "label": "Nossa Senhora Aparecida"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Dia do Servidor Público"
+      },
+      {
+        "date": "2026-11-02",
+        "label": "Finados"
+      },
+      {
+        "date": "2026-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-11-21",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-12-05",
+        "label": "Vestibular UFSC"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.2",
+    "campus": "curitibanos",
+    "startDate": "2026-08-10",
+    "endDate": "2026-12-12",
+    "weeks": 18,
+    "recoveryStart": "2026-12-07",
+    "recoveryEnd": "2026-12-12",
+    "recessStart": "2026-12-13",
+    "classDaysByWeekday": [15, 17, 17, 18, 17, 16],
+    "totalClassDays": 100,
+    "holidays": [
+      {
+        "date": "2026-09-07",
+        "label": "Independência do Brasil"
+      },
+      {
+        "date": "2026-10-12",
+        "label": "Nossa Senhora Aparecida"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Dia do Servidor Público"
+      },
+      {
+        "date": "2026-11-02",
+        "label": "Finados"
+      },
+      {
+        "date": "2026-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      },
+      {
+        "date": "2026-12-08",
+        "label": "Dia da Padroeira da Cidade"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-11-21",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-12-05",
+        "label": "Vestibular UFSC"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.2",
+    "campus": "florianopolis",
+    "startDate": "2026-08-10",
+    "endDate": "2026-12-12",
+    "weeks": 18,
+    "recoveryStart": "2026-12-07",
+    "recoveryEnd": "2026-12-12",
+    "recessStart": "2026-12-13",
+    "classDaysByWeekday": [15, 18, 17, 18, 17, 16],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-09-07",
+        "label": "Independência do Brasil"
+      },
+      {
+        "date": "2026-10-12",
+        "label": "Nossa Senhora Aparecida"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Dia do Servidor Público"
+      },
+      {
+        "date": "2026-11-02",
+        "label": "Finados"
+      },
+      {
+        "date": "2026-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-11-21",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-12-05",
+        "label": "Vestibular UFSC"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  },
+  {
+    "semester": "2026.2",
+    "campus": "joinville",
+    "startDate": "2026-08-10",
+    "endDate": "2026-12-12",
+    "weeks": 18,
+    "recoveryStart": "2026-12-07",
+    "recoveryEnd": "2026-12-12",
+    "recessStart": "2026-12-13",
+    "classDaysByWeekday": [15, 18, 17, 18, 17, 16],
+    "totalClassDays": 101,
+    "holidays": [
+      {
+        "date": "2026-09-07",
+        "label": "Independência do Brasil"
+      },
+      {
+        "date": "2026-10-12",
+        "label": "Nossa Senhora Aparecida"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Dia do Servidor Público"
+      },
+      {
+        "date": "2026-11-02",
+        "label": "Finados"
+      },
+      {
+        "date": "2026-11-20",
+        "label": "Dia Nacional de Zumbi e da Consciência Negra"
+      }
+    ],
+    "nonClassDays": [
+      {
+        "date": "2026-11-21",
+        "label": "Dia não letivo"
+      },
+      {
+        "date": "2026-12-05",
+        "label": "Vestibular UFSC"
+      }
+    ],
+    "source": {
+      "resolution": "Resolução nº 214/2025/CUn",
+      "url": "https://dae.ufsc.br/files/2025/11/R214-CUn-2025_Calend%C3%A1rio-Acad%C3%AAmico-de-Gradua%C3%A7%C3%A3o_2026.pdf",
+      "sha256": "9d08239a1ff857fce6b97ac6d968617ae4f13f9f2ca6ddf49640a4ee97dc62ef",
+      "year": 2026
+    }
+  }
+]

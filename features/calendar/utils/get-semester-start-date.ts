@@ -1,8 +1,10 @@
 /**
- * Start date of the semester. Prefer the CAGR `semestre` (format YYYYN, e.g.
- * 20261 = 2026, semester 1), which is authoritative; fall back to guessing from
- * the current date when it's unknown (e.g. guest/dev). Semester 1 starts early
- * March, semester 2 early August.
+ * FALLBACK start date of the semester, used only when there is no official
+ * academic calendar for the user's semester × campus (or the user chose a manual
+ * duration) — see features/calendar/utils/academic-calendar.ts. Prefer the CAGR
+ * `semestre` (format YYYYN, e.g. 20261 = 2026, semester 1) to pick the year/half;
+ * fall back to guessing from the current date when it's unknown (guest/dev).
+ * Semester 1 is assumed to start early March, semester 2 early August.
  */
 export const getSemesterStartDate = (semester?: number | null): Date => {
   let year: number;

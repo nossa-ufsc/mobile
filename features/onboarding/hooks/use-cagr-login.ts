@@ -6,8 +6,9 @@ import * as SecureStore from 'expo-secure-store';
 import { CAGRSystemResponse, Subject, User } from '@/types';
 import { useEnvironmentStore } from '../../../utils/use-environment-store';
 import { getEndTime, formatNumericTime, cagrDayIndexToJsIndex } from '../../../utils/time-mapping';
-import { generateSemesterCalendar } from '../../../features/calendar/utils/generate-semester-calendar';
-import { getSemesterStartDate } from '../../../features/calendar/utils/get-semester-start-date';
+import { generateSemesterCalendarFromPlan } from '../../../features/calendar/utils/generate-semester-calendar';
+import { getSemesterPlan } from '../../../features/calendar/hooks/use-semester-plan';
+import { withScheduleLock } from '../../../utils/use-rebuild-schedule';
 import { useCalendar } from '../../../features/calendar/hooks/use-calendar';
 import { useNotifications } from '@/utils/use-notifications';
 import { supabase } from '@/utils/supabase';
@@ -60,7 +61,6 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     clearEnvironment,
     isAuthenticated,
     setIsAuthenticated,
-    semesterDuration,
     setSemester,
   } = useEnvironmentStore();
   const { clearCalendar, addClassItem, clearCalendarWithoutNotification } = useCalendar();
@@ -233,12 +233,7 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     const userSubjects = await mockFetchSubjects();
     setSubjects(userSubjects);
 
-    const semesterStartDate = getSemesterStartDate();
-    const calendarItems = generateSemesterCalendar(
-      userSubjects,
-      semesterDuration,
-      semesterStartDate
-    );
+    const calendarItems = generateSemesterCalendarFromPlan(userSubjects, getSemesterPlan());
     calendarItems.forEach((item) => addClassItem(item));
     // Uncomment this to test notifications
     // generateClassesNotifications(calendarItems);
@@ -363,18 +358,19 @@ export const useCAGRLogin = (): UseCAGRLoginResult => {
     const userSubjects = await fetchSubjects(token);
     setSubjects(userSubjects);
 
-    clearCalendarWithoutNotification();
+    // Mesmo lock de useRebuildSchedule: uma sincronização do calendário acadêmico
+    // que chegue agora espera esta recarga terminar (sem aulas duplicadas).
+    await withScheduleLock(async () => {
+      clearCalendarWithoutNotification();
 
-    await cancelAllNotifications();
+      await cancelAllNotifications();
 
-    const semesterStartDate = getSemesterStartDate(useEnvironmentStore.getState().semester);
-    const calendarItems = generateSemesterCalendar(
-      userSubjects,
-      semesterDuration,
-      semesterStartDate
-    );
-    calendarItems.forEach((item) => addClassItem(item));
-    generateClassesNotifications(calendarItems);
+      // O plano lê o `semester` recém-gravado por fetchSubjects e o calendário
+      // oficial (store ou fallback empacotado) para o campus.
+      const calendarItems = generateSemesterCalendarFromPlan(userSubjects, getSemesterPlan());
+      calendarItems.forEach((item) => addClassItem(item));
+      await generateClassesNotifications(calendarItems);
+    });
   };
 
   const reloadSubjects = async () => {

@@ -23,6 +23,8 @@ import { useNotifications } from '@/utils/use-notifications';
 import { Campus } from '@/types';
 import { CAMPUS_LABELS } from '../utils/const';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSemesterPlan } from '@/features/calendar/hooks/use-semester-plan';
+import { useRebuildSchedule } from '@/utils/use-rebuild-schedule';
 
 export const SettingsModal = () => {
   const { t } = useTranslation();
@@ -33,6 +35,7 @@ export const SettingsModal = () => {
   const {
     semesterDuration,
     setSemesterDuration,
+    subjects,
     notificationDelay,
     setNotificationDelay,
     notificationsEnabled,
@@ -44,9 +47,24 @@ export const SettingsModal = () => {
     isGuest,
   } = useEnvironmentStore();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
+  const { rebuild } = useRebuildSchedule();
+  const semesterPlan = useSemesterPlan();
   const [isReloading, setIsReloading] = useState(false);
 
+  // Com calendário acadêmico oficial para o semestre × campus, a duração vem dele e
+  // não é editável — a linha só informa. Sem calendário (semestre ainda não
+  // publicado, campus não escolhido), vale a duração manual de sempre.
+  const officialCalendar = semesterPlan.calendar;
+  const isOfficial = semesterPlan.source === 'official' && !!officialCalendar;
+  const semesterValueLabel = isOfficial
+    ? t('settings.semesterOfficialValue', {
+        semester: officialCalendar!.semester,
+        weeks: officialCalendar!.weeks,
+      })
+    : t('settings.weeks', { count: semesterDuration });
+
   const handleSemesterDuration = () => {
+    if (isOfficial) return;
     const weekOptions = [15, 16, 17, 18];
     const options = [
       ...weekOptions.map((w) => t('settings.weeks', { count: w })),
@@ -64,9 +82,17 @@ export const SettingsModal = () => {
           paddingBottom: bottom + 8,
         },
       },
-      (selectedIndex) => {
+      async (selectedIndex) => {
         if (selectedIndex === undefined || selectedIndex === cancelButtonIndex) return;
         setSemesterDuration(weekOptions[selectedIndex]);
+        // A duração mudou: regenera aulas e notificações.
+        if (subjects?.length) {
+          try {
+            await rebuild(subjects);
+          } catch (error) {
+            console.error('Error rebuilding schedule after semester change:', error);
+          }
+        }
       }
     );
   };
@@ -254,6 +280,7 @@ export const SettingsModal = () => {
         <View className="mb-6 rounded-lg bg-card">
           <TouchableOpacity
             onPress={handleSemesterDuration}
+            disabled={isOfficial}
             className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
             <View className="flex-row items-center gap-3">
               <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400 shadow-sm">
@@ -262,10 +289,12 @@ export const SettingsModal = () => {
               <Text variant="body">{t('settings.semester')}</Text>
             </View>
             <View className="flex-row items-center">
-              <Text variant="subhead" color="primary" className="mr-2">
-                {t('settings.weeks', { count: semesterDuration })}
+              <Text variant="subhead" color="primary" className={isOfficial ? '' : 'mr-2'}>
+                {semesterValueLabel}
               </Text>
-              <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+              {!isOfficial && (
+                <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+              )}
             </View>
           </TouchableOpacity>
 

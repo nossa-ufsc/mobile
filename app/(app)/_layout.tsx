@@ -2,10 +2,12 @@ import { Redirect, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ThemeToggle } from '@/ui/theme-toggle';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { useSyncAcademicCalendar } from '@/features/calendar/hooks/use-sync-academic-calendar';
 
 export default function AppLayout() {
   const { isAuthenticated } = useEnvironmentStore();
   const { t } = useTranslation();
+  useSyncAcademicCalendar();
 
   if (!isAuthenticated) {
     return <Redirect href="/onboarding" />;

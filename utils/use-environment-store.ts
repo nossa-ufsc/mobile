@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { Subject, User, Campus } from '@/types';
+import { Subject, User, Campus, AcademicCalendar } from '@/types';
 import { ExtensionStorage } from '@bacons/apple-targets';
 import { convertSubjectsToWidgetFormat } from './subjects-to-widget-adapter';
 import { i18n, detectDeviceLanguage, SupportedLanguage } from './i18n';
@@ -17,10 +17,16 @@ interface EnvironmentState {
   user: User | null;
   subjects: Subject[] | null;
   isAuthenticated: boolean;
+  // Duração manual em semanas — só usada quando não há calendário acadêmico oficial
+  // para o semestre × campus (ver features/calendar/utils/academic-calendar.ts).
   semesterDuration: number;
   // CAGR semester identifier (YYYYN, e.g. 20261) from the imported grade; used to
   // anchor the calendar to the correct semester start. Null for guest/dev.
   semester: number | null;
+  // Calendário acadêmico oficial (DAE) do semestre × campus do usuário, sincronizado
+  // do Supabase (features/calendar/utils/academic-calendar.ts). Null até a primeira
+  // sincronização; o fallback empacotado cobre o meio-tempo.
+  academicCalendar: AcademicCalendar | null;
   notificationDelay: number;
   notificationsEnabled: boolean;
   campus: Campus | null;
@@ -29,6 +35,7 @@ interface EnvironmentState {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   setSemesterDuration: (duration: number) => void;
   setSemester: (semester: number | null) => void;
+  setAcademicCalendar: (calendar: AcademicCalendar | null) => void;
   setNotificationDelay: (delay: number) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
   setCampus: (campus: Campus) => void;
@@ -65,6 +72,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       isAuthenticated: false,
       semesterDuration: 18,
       semester: null,
+      academicCalendar: null,
       notificationDelay: 15,
       notificationsEnabled: true,
       campus: null,
@@ -95,6 +103,10 @@ export const useEnvironmentStore = create<EnvironmentState>()(
         set({ semester });
       },
 
+      setAcademicCalendar: (academicCalendar) => {
+        set({ academicCalendar });
+      },
+
       setNotificationDelay: (delay) => {
         set({ notificationDelay: delay });
       },
@@ -114,6 +126,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           isAuthenticated: false,
           semesterDuration: 18,
           semester: null,
+          academicCalendar: null,
           notificationDelay: 15,
           notificationsEnabled: true,
           campus: Campus.FLORIANOPOLIS,

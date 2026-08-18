@@ -1,14 +1,16 @@
 import { AbsenceEntry } from '@/types';
 import { generateRandomId } from '@/utils/generate-random-id';
 import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { useSemesterPlan } from '@/features/calendar/hooks/use-semester-plan';
+import { countSemesterClasses } from '@/features/calendar/utils/academic-calendar';
 
 export const useSubjectAbsence = (subjectId: string) => {
   const subjects = useEnvironmentStore((state) => state.subjects);
   const setSubjects = useEnvironmentStore((state) => state.setSubjects);
-  const semesterDuration = useEnvironmentStore((state) => state.semesterDuration);
+  const plan = useSemesterPlan();
   const subject = subjects?.find((s) => s.id === subjectId);
 
-  const totalClasses = subject ? subject.weeklyClassCount * semesterDuration : 0;
+  const totalClasses = subject ? countSemesterClasses(subject, plan) : 0;
   const maxAbsences = Math.floor(totalClasses * 0.25);
   const absences = subject?.absences ?? [];
   const totalAbsences = absences.reduce((sum, entry) => sum + entry.count, 0);

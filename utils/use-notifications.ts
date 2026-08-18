@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useEnvironmentStore } from './use-environment-store';
 import { getDateLocale } from './i18n/get-date-locale';
 import { CalendarClassItem, SavedEvent } from '@/types';
-import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
-import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
+import { generateSemesterCalendarFromPlan } from '@/features/calendar/utils/generate-semester-calendar';
+import { getSemesterPlan } from '@/features/calendar/hooks/use-semester-plan';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -22,8 +22,7 @@ export const useNotifications = () => {
   const [notification, setNotification] = useState<Notifications.Notification>();
   const notificationListener = useRef<Notifications.EventSubscription>(null);
   const responseListener = useRef<Notifications.EventSubscription>(null);
-  const { notificationDelay, notificationsEnabled, subjects, semesterDuration, semester } =
-    useEnvironmentStore();
+  const { notificationDelay, notificationsEnabled, subjects } = useEnvironmentStore();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -187,8 +186,7 @@ export const useNotifications = () => {
     if (!classes) {
       if (!subjects) return;
 
-      const semesterStartDate = getSemesterStartDate(semester);
-      calendarItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
+      calendarItems = generateSemesterCalendarFromPlan(subjects, getSemesterPlan());
     }
 
     if (!calendarItems) return;

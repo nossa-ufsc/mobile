@@ -112,6 +112,48 @@ export interface CAGRSystemResponse {
   }[];
 }
 
+/** Um feriado ou dia não letivo do calendário acadêmico (data local YYYY-MM-DD). */
+export interface AcademicCalendarDay {
+  date: string;
+  label: string;
+}
+
+/**
+ * Calendário Acadêmico de Graduação da UFSC para um semestre × campus, derivado do
+ * PDF oficial do DAE (Resolução do CUn) pelo pipeline nossa-ufsc/calendario-ufsc e
+ * servido pela tabela `academic_calendars` do Supabase (com fallback empacotado em
+ * features/calendar/data/academic-calendars.json).
+ */
+export interface AcademicCalendar {
+  /** Ex.: "2026.2" */
+  semester: string;
+  campus: Campus;
+  /** YYYY-MM-DD — primeiro dia letivo. */
+  startDate: string;
+  /** YYYY-MM-DD — último dia letivo (inclui a semana de recuperação). */
+  endDate: string;
+  /** Semanas de calendário cobertas (segunda da semana de início até endDate). */
+  weeks: number;
+  recoveryStart: string | null;
+  recoveryEnd: string | null;
+  recessStart: string;
+  /** Dias letivos por dia da semana, seg..sáb (6 posições), no semestre inteiro. */
+  classDaysByWeekday: number[];
+  totalClassDays: number;
+  /** Feriados que valem para este campus. */
+  holidays: AcademicCalendarDay[];
+  /** Dias não letivos declarados (inclui o sábado do vestibular quando não conta). */
+  nonClassDays: AcademicCalendarDay[];
+  source: {
+    resolution: string;
+    url: string;
+    sha256: string;
+    year: number;
+    /** Ausente na cópia empacotada no app. */
+    fetchedAt?: string;
+  };
+}
+
 export interface CalendarItem {
   id: string;
   title: string;

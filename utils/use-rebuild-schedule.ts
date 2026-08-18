@@ -4,10 +4,19 @@ import {
   removeCalendarItemsWithoutNotification,
   useCalendar,
 } from '@/features/calendar/hooks/use-calendar';
-import { useEnvironmentStore } from './use-environment-store';
 import { useNotifications } from './use-notifications';
-import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
-import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
+import { generateSemesterCalendarFromPlan } from '@/features/calendar/utils/generate-semester-calendar';
+import { getSemesterPlan } from '@/features/calendar/hooks/use-semester-plan';
+
+// Regenerações e recargas da grade mexem no mesmo estado (itens de aula + todas as
+// notificações). Serializa para que uma sincronização do calendário acadêmico que
+// chegue no meio de um "Recarregar grade" (ou vice-versa) não deixe aulas duplicadas.
+let scheduleLock: Promise<unknown> = Promise.resolve();
+export const withScheduleLock = <T>(fn: () => Promise<T>): Promise<T> => {
+  const run = scheduleLock.then(fn, fn);
+  scheduleLock = run.catch(() => undefined);
+  return run;
+};
 
 /**
  * Regenerates the class schedule (calendar class-items + their notifications)
@@ -16,12 +25,12 @@ import { generateSemesterCalendar } from '@/features/calendar/utils/generate-sem
  * edits, ignored toggles) so calendar, notifications and widgets stay in sync.
  */
 export const useRebuildSchedule = () => {
-  const semesterDuration = useEnvironmentStore((state) => state.semesterDuration);
-  const semester = useEnvironmentStore((state) => state.semester);
   const { setClassItems, updateItem, rescheduleSavedEventNotifications } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
-  const rebuild = async (subjects: Subject[]) => {
+  const rebuild = (subjects: Subject[]) => withScheduleLock(() => rebuildUnlocked(subjects));
+
+  const rebuildUnlocked = async (subjects: Subject[]) => {
     const subjectIds = new Set(subjects.map((subject) => subject.id));
     const orphanedItemIds = getCalendarItems()
       .filter((item) => !subjectIds.has(item.subject.id))
@@ -30,8 +39,9 @@ export const useRebuildSchedule = () => {
       removeCalendarItemsWithoutNotification(orphanedItemIds);
     }
 
-    const semesterStartDate = getSemesterStartDate(semester);
-    const classItems = generateSemesterCalendar(subjects, semesterDuration, semesterStartDate);
+    // Lê o plano na hora (não do closure): quem chama pode ter acabado de trocar
+    // o calendário acadêmico/duração no store.
+    const classItems = generateSemesterCalendarFromPlan(subjects, getSemesterPlan());
     setClassItems(classItems);
 
     try {
