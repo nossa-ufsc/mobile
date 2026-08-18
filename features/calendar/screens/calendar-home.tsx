@@ -22,13 +22,14 @@ export const CalendarHome = () => {
   const { subjects } = useEnvironmentStore();
   const { selectedDay, setSelectedDay } = useCalendarState();
   const { isExpanded, setIsExpanded } = useCalendarState();
-  const { getItemsByDate, getClassItemsByDate } = useCalendar();
+  const { getItemsByDate, getClassItemsByDate, getSavedEventsByDate } = useCalendar();
   const [selectedClassItem, setSelectedClassItem] = useState<CalendarClassItem | undefined>(
     undefined
   );
 
   const items = getItemsByDate(selectedDay);
   const classItems = getClassItemsByDate(selectedDay);
+  const savedEvents = getSavedEventsByDate(selectedDay);
 
   const handleAddPress = () => {
     router.push({ pathname: '/calendar-item', params: { date: selectedDay.toISOString() } });
@@ -84,7 +85,8 @@ export const CalendarHome = () => {
       })
   );
 
-  if (!subjects?.length) {
+  // Sem disciplinas o calendário fica vazio — a não ser que já haja eventos salvos.
+  if (!subjects?.length && !savedEvents.length) {
     return (
       <Container>
         <NoSubjectsCta />
@@ -107,6 +109,8 @@ export const CalendarHome = () => {
           onPressItem={handlePressItem}
           items={items}
           classItems={classItems}
+          savedEvents={savedEvents}
+          day={selectedDay}
         />
       </GestureDetector>
 

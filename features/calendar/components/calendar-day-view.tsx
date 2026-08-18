@@ -2,19 +2,27 @@ import { ScrollView, View, TouchableOpacity } from 'react-native';
 import { Text } from '@/ui/text';
 import { cn } from '@/utils/cn';
 import { useMemo, useRef, useEffect, useState } from 'react';
-import { CalendarClassItem, CalendarItem } from '@/types';
+import { CalendarClassItem, CalendarItem, SavedEvent } from '@/types';
 import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/i18n/get-date-locale';
+import { EVENT_CATEGORY_META, getEventCategory } from '@/features/events/utils/event-category-meta';
+import { expandSavedEvent, type EventOccurrence } from '../utils/expand-saved-event';
 
 interface CalendarDayViewProps {
   className?: string;
   items?: CalendarItem[];
   classItems?: CalendarClassItem[];
+  /** Eventos salvos já filtrados pelo dia (ver `getSavedEventsByDate`). */
+  savedEvents?: SavedEvent[];
+  /** Dia mostrado; define como cada evento salvo é expandido (faixa x bloco). */
+  day?: Date;
   onPressItem: (item: CalendarItem) => void;
   onPressClass: (item: CalendarClassItem) => void;
 }
 
-export const getItemColor = (type: CalendarItem['type']) => {
+export const getItemColor = (type: CalendarItem['type'] | 'event') => {
   switch (type) {
     case 'exam':
       return 'bg-red-100 dark:bg-red-900';
@@ -22,12 +30,14 @@ export const getItemColor = (type: CalendarItem['type']) => {
       return 'bg-pink-100 dark:bg-pink-900';
     case 'task':
       return 'bg-green-100 dark:bg-green-900';
+    case 'event':
+      return 'bg-amber-100 dark:bg-amber-900';
     default:
       return 'bg-gray-100 dark:bg-gray-900';
   }
 };
 
-export const getNestedItemColor = (type: CalendarItem['type'] | 'class') => {
+export const getNestedItemColor = (type: CalendarItem['type'] | 'class' | 'event') => {
   switch (type) {
     case 'exam':
       return 'bg-red-200 dark:bg-red-800';
@@ -37,6 +47,8 @@ export const getNestedItemColor = (type: CalendarItem['type'] | 'class') => {
       return 'bg-green-200 dark:bg-green-800';
     case 'class':
       return 'bg-primary/20 dark:bg-primary/30';
+    case 'event':
+      return 'bg-amber-200 dark:bg-amber-800';
     default:
       return 'bg-gray-200 dark:bg-gray-700';
   }
@@ -46,6 +58,9 @@ const HOUR_HEIGHT = 72;
 const TIME_LABEL_WIDTH = 64;
 const SIDE_PADDING = 8;
 const CLASS_DURATION = 50;
+
+const EVENT_MIN_HEIGHT = 40;
+const EVENT_ACCENT_WIDTH = 4;
 
 const OTHER_ITEM_FIXED_HEIGHT = 40;
 const NESTED_ITEM_FIXED_HEIGHT = 30;
@@ -73,6 +88,125 @@ interface LayoutedOther extends PositionedItem {
   top: number;
   height: number;
 }
+
+type SavedEventOccurrence<K extends EventOccurrence['kind']> = {
+  saved: SavedEvent;
+  occurrence: Extract<EventOccurrence, { kind: K }>;
+};
+
+interface LayoutedEvent extends SavedEventOccurrence<'timed'> {
+  top: number;
+  height: number;
+}
+
+const openEvent = (eventId: string) =>
+  router.push({ pathname: '/event/[id]', params: { id: eventId } });
+
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString(getDateLocale(), { hour: '2-digit', minute: '2-digit' });
+
+/** Faixa compacta acima da grade com os eventos de dia inteiro / vários dias. */
+const AllDayLane = ({
+  occurrences,
+  onLayoutHeight,
+}: {
+  occurrences: SavedEventOccurrence<'allDay'>[];
+  onLayoutHeight: (height: number) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <View
+      className="border-b border-gray-200 py-2 dark:border-gray-800"
+      onLayout={(e) => onLayoutHeight(e.nativeEvent.layout.height)}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-2 px-3">
+        {occurrences.map(({ saved, occurrence }) => {
+          const meta = EVENT_CATEGORY_META[getEventCategory(saved.snapshot)];
+          const rangeLabel =
+            occurrence.dayCount > 1
+              ? t('calendar.dayOf', { n: occurrence.dayIndex, total: occurrence.dayCount })
+              : t('calendar.allDay');
+
+          return (
+            <TouchableOpacity
+              key={saved.eventId}
+              hitSlop={4}
+              accessibilityRole="button"
+              onPress={() => openEvent(saved.eventId)}
+              className={cn(
+                'max-w-[280px] flex-row items-center gap-2 rounded-lg py-1.5 pl-2 pr-3',
+                meta.tintClassName
+              )}>
+              <View
+                style={{ backgroundColor: meta.color, width: EVENT_ACCENT_WIDTH }}
+                className="h-5 rounded-full"
+              />
+              <Text variant="subhead" className="flex-shrink font-medium" numberOfLines={1}>
+                {saved.snapshot.name}
+              </Text>
+              <Text
+                variant="caption2"
+                className={cn(
+                  occurrence.ongoing
+                    ? 'font-semibold text-amber-700 dark:text-amber-300'
+                    : 'text-gray-500 dark:text-gray-400'
+                )}
+                numberOfLines={1}>
+                {occurrence.ongoing ? t('events.ongoing') : rangeLabel}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+};
+
+/** Bloco com duração real na grade, no mesmo lugar que uma aula ocuparia. */
+const EventBlock = ({ item }: { item: LayoutedEvent }) => {
+  const { t } = useTranslation();
+  const { saved, occurrence } = item;
+  const meta = EVENT_CATEGORY_META[getEventCategory(saved.snapshot)];
+  const range = `${formatTime(new Date(saved.snapshot.start_date))} – ${formatTime(
+    new Date(saved.snapshot.end_date)
+  )}`;
+  const timeLabel = [
+    occurrence.continuesFromPrev ? t('calendar.continuesFromPrev') : null,
+    range,
+    occurrence.continuesToNext ? `→ ${t('calendar.continues')}` : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <TouchableOpacity
+      hitSlop={4}
+      accessibilityRole="button"
+      onPress={() => openEvent(saved.eventId)}
+      className={cn(
+        'absolute left-0 right-0 flex-row overflow-hidden rounded-lg',
+        'border border-gray-300 dark:border-gray-700',
+        meta.tintClassName
+      )}
+      style={{ top: item.top, height: item.height }}>
+      <View style={{ backgroundColor: meta.color, width: EVENT_ACCENT_WIDTH }} />
+      <View className="flex-1 justify-start px-3 py-1.5">
+        <Text variant="subhead" className="font-semibold" numberOfLines={1}>
+          {saved.snapshot.name}
+        </Text>
+        <Text
+          variant="caption2"
+          className={cn(occurrence.ongoing && 'font-semibold text-amber-700 dark:text-amber-300')}
+          numberOfLines={1}>
+          {occurrence.ongoing ? `${t('events.ongoing')} · ${timeLabel}` : timeLabel}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const ClassItem = ({
   item,
@@ -148,15 +282,35 @@ export const CalendarDayView = ({
   className,
   items = [],
   classItems = [],
+  savedEvents = [],
+  day,
   onPressItem,
   onPressClass,
 }: CalendarDayViewProps) => {
   const scrollRef = useRef<ScrollView>(null);
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [laneHeight, setLaneHeight] = useState(0);
 
   useFocusEffect(() => {
     setCurrentHour(new Date().getHours());
   });
+
+  const occurrences = useMemo(() => {
+    const now = Date.now();
+    const referenceDay = day ?? new Date();
+    const allDay: SavedEventOccurrence<'allDay'>[] = [];
+    const timed: SavedEventOccurrence<'timed'>[] = [];
+
+    savedEvents.forEach((saved) => {
+      const occurrence = expandSavedEvent(saved, referenceDay, now);
+      if (!occurrence) return;
+      if (occurrence.kind === 'allDay') allDay.push({ saved, occurrence });
+      else timed.push({ saved, occurrence });
+    });
+
+    timed.sort((a, b) => a.occurrence.start.getTime() - b.occurrence.start.getTime());
+    return { allDay, timed };
+  }, [savedEvents, day]);
 
   const layout = useMemo(() => {
     // Class items already arrive as merged runs (one per consecutive block) from
@@ -217,6 +371,18 @@ export const CalendarDayView = ({
       layoutedClasses.push({ ...classItem, top, height, nestedItems });
     });
 
+    // Eventos com hora ancoram no horário real, igual às aulas (duração de verdade).
+    // Não recebem chips aninhados: tarefas/provas que caem dentro deles são
+    // simplesmente empurradas pra baixo pelo laço de colisão abaixo.
+    const layoutedEvents: LayoutedEvent[] = occurrences.timed.map((entry) => {
+      const { start, end, continuesFromPrev } = entry.occurrence;
+      const top = continuesFromPrev
+        ? 0
+        : start.getHours() * HOUR_HEIGHT + (start.getMinutes() / 60) * HOUR_HEIGHT;
+      const durH = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      return { ...entry, top, height: Math.max(durH * HOUR_HEIGHT, EVENT_MIN_HEIGHT) };
+    });
+
     const layoutedOthers: LayoutedOther[] = [];
     const occupiedUntil: { bottom: number }[] = [];
 
@@ -254,6 +420,13 @@ export const CalendarDayView = ({
             break;
           }
         }
+        for (const eventBlock of layoutedEvents) {
+          if (adjustedTop < eventBlock.top + eventBlock.height && currentBottom > eventBlock.top) {
+            adjustedTop = eventBlock.top + eventBlock.height + VERTICAL_GAP;
+            collision = true;
+            break;
+          }
+        }
       }
 
       layoutedOthers.push({
@@ -263,17 +436,17 @@ export const CalendarDayView = ({
       });
     });
 
-    return { layoutedClasses, layoutedOthers };
-  }, [items, classItems]);
+    return { layoutedClasses, layoutedOthers, layoutedEvents };
+  }, [items, classItems, occurrences]);
 
   const hours = useMemo(() => {
     return Array.from({ length: 24 }, (_, i) => ({ hour: i, isNow: i === currentHour }));
   }, [currentHour]);
 
   useEffect(() => {
-    const targetScroll = Math.max(0, currentHour * HOUR_HEIGHT - HOUR_HEIGHT);
+    const targetScroll = Math.max(0, currentHour * HOUR_HEIGHT - HOUR_HEIGHT + laneHeight);
     setTimeout(() => scrollRef.current?.scrollTo({ y: targetScroll, animated: true }), 100);
-  }, [currentHour]);
+  }, [currentHour, laneHeight]);
 
   return (
     <ScrollView
@@ -281,64 +454,74 @@ export const CalendarDayView = ({
       className={cn('flex-1', className)}
       contentInsetAdjustmentBehavior="automatic"
       showsVerticalScrollIndicator={false}
-      contentContainerClassName="relative pb-24">
-      {hours.map(({ hour, isNow }) => (
-        <View
-          key={`hour-${hour}`}
-          className={cn(
-            'h-[72px] flex-row border-b border-gray-200 dark:border-gray-800',
-            isNow && 'bg-primary/5 dark:bg-primary/10'
-          )}>
-          <View className="w-16 items-end justify-start py-3 pr-2">
-            <Text
-              className={cn(
-                'text-xs',
-                isNow ? 'font-medium text-primary' : 'text-gray-500 dark:text-gray-400'
-              )}>
-              {hour.toString().padStart(2, '0')}:00
-            </Text>
-          </View>
-          <View className="flex-1 border-l border-gray-200 dark:border-gray-800" />
-        </View>
-      ))}
+      contentContainerClassName="pb-24">
+      {occurrences.allDay.length > 0 && (
+        <AllDayLane occurrences={occurrences.allDay} onLayoutHeight={setLaneHeight} />
+      )}
 
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: TIME_LABEL_WIDTH,
-          right: SIDE_PADDING,
-          bottom: 0,
-        }}>
-        {layout.layoutedClasses.map((classItem) => (
-          <ClassItem
-            key={classItem.id}
-            item={classItem}
-            onPressClass={onPressClass}
-            onPressItem={onPressItem}
-          />
-        ))}
-
-        {layout.layoutedOthers.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => onPressItem(item)}
+      <View className="relative">
+        {hours.map(({ hour, isNow }) => (
+          <View
+            key={`hour-${hour}`}
             className={cn(
-              'absolute left-0 right-0 rounded-lg px-3 py-1',
-              'border border-gray-300 dark:border-gray-700',
-              getNestedItemColor(item.type)
-            )}
-            style={{ top: item.top }}>
-            <View className="flex-col">
-              <Text variant="caption2" numberOfLines={1}>
-                {item.subject.name}
-              </Text>
-              <Text variant="subhead" className="flex-1" numberOfLines={1}>
-                {item.title}
+              'h-[72px] flex-row border-b border-gray-200 dark:border-gray-800',
+              isNow && 'bg-primary/5 dark:bg-primary/10'
+            )}>
+            <View className="w-16 items-end justify-start py-3 pr-2">
+              <Text
+                className={cn(
+                  'text-xs',
+                  isNow ? 'font-medium text-primary' : 'text-gray-500 dark:text-gray-400'
+                )}>
+                {hour.toString().padStart(2, '0')}:00
               </Text>
             </View>
-          </TouchableOpacity>
+            <View className="flex-1 border-l border-gray-200 dark:border-gray-800" />
+          </View>
         ))}
+
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: TIME_LABEL_WIDTH,
+            right: SIDE_PADDING,
+            bottom: 0,
+          }}>
+          {layout.layoutedClasses.map((classItem) => (
+            <ClassItem
+              key={classItem.id}
+              item={classItem}
+              onPressClass={onPressClass}
+              onPressItem={onPressItem}
+            />
+          ))}
+
+          {layout.layoutedEvents.map((event) => (
+            <EventBlock key={event.saved.eventId} item={event} />
+          ))}
+
+          {layout.layoutedOthers.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => onPressItem(item)}
+              className={cn(
+                'absolute left-0 right-0 rounded-lg px-3 py-1',
+                'border border-gray-300 dark:border-gray-700',
+                getNestedItemColor(item.type)
+              )}
+              style={{ top: item.top }}>
+              <View className="flex-col">
+                <Text variant="caption2" numberOfLines={1}>
+                  {item.subject.name}
+                </Text>
+                <Text variant="subhead" className="flex-1" numberOfLines={1}>
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );

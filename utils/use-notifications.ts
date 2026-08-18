@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useEnvironmentStore } from './use-environment-store';
 import { getDateLocale } from './i18n/get-date-locale';
-import { CalendarClassItem } from '@/types';
+import { CalendarClassItem, SavedEvent } from '@/types';
 import { generateSemesterCalendar } from '@/features/calendar/utils/generate-semester-calendar';
 import { getSemesterStartDate } from '@/features/calendar/utils/get-semester-start-date';
 
@@ -126,6 +126,46 @@ export const useNotifications = () => {
     });
   };
 
+  /**
+   * Lembrete de um evento salvo no calendário do app. Título = nome do evento;
+   * corpo = "Começa às 20:00 · Local" (ou "Hoje · Local" em evento de dia inteiro).
+   */
+  const scheduleSavedEventNotification = async (snapshot: SavedEvent['snapshot'], date: Date) => {
+    if (!notificationsEnabled) return;
+
+    const notificationDate = new Date(date);
+    if (notificationDate.getTime() <= Date.now()) return;
+
+    const location = snapshot.location?.trim();
+    const body = snapshot.is_all_day
+      ? location
+        ? t('notifications.eventReminderAllDay', { location })
+        : t('notifications.eventReminderAllDayNoPlace')
+      : (() => {
+          const time = new Date(snapshot.start_date).toLocaleTimeString(getDateLocale(), {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          return location
+            ? t('notifications.eventReminderBody', { time, location })
+            : t('notifications.eventReminderBodyNoPlace', { time });
+        })();
+
+    console.info('Saved Event Notification scheduled', {
+      title: snapshot.name,
+      body,
+      date: notificationDate,
+    });
+
+    return await Notifications.scheduleNotificationAsync({
+      content: { title: snapshot.name, body },
+      trigger: {
+        date: notificationDate,
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+      },
+    });
+  };
+
   const cancelNotification = async (notificationId: string) => {
     console.info('Calendar Item Notification cancelled', {
       notificationId,
@@ -169,6 +209,7 @@ export const useNotifications = () => {
     notification,
     scheduleClassNotification,
     scheduleCalendarItemNotification,
+    scheduleSavedEventNotification,
     cancelNotification,
     cancelAllNotifications,
     generateClassesNotifications,

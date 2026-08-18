@@ -39,10 +39,15 @@ export interface Event {
   /** Dia inteiro: `end_date` é o fim (inclusivo) do último dia. */
   is_all_day?: boolean;
   updated_at?: string | null;
+  /** Perfil do organizador no Instagram (URL completa). Festas da Cheers têm. */
+  instagram_url?: string | null;
+  /** Faixa etária normalizada pelo pipeline (Cheers). */
+  age_rating?: EventAgeRating | null;
 }
 
 export type EventStatus = 'pending' | 'approved' | 'rejected';
 export type EventSource = 'user' | 'cheers' | 'ufsc';
+export type EventAgeRating = 'free' | '16' | '16_accompanied' | '18' | '18_accompanied';
 export type EventCategory =
   'festa' | 'palestra' | 'curso' | 'cultura' | 'academico' | 'esporte' | 'saude' | 'outro';
 
@@ -123,6 +128,32 @@ export interface CalendarClassItem extends Omit<CalendarItem, 'type'> {
   consecutiveClasses: number;
   // Actual end of the merged class block (accounts for arbitrary/off-grid times).
   endDate: Date;
+}
+
+/**
+ * Evento da aba Eventos salvo no calendário do app. Guarda um `snapshot` dos campos
+ * usados na UI pra o item continuar aparecendo mesmo se o evento sair da lista (a
+ * query só traz eventos futuros do campus atual) — nunca é apagado automaticamente.
+ */
+export interface SavedEvent {
+  /** Id do evento; é a chave (evita duplicata). */
+  eventId: string;
+  savedAt: string;
+  snapshot: Pick<
+    Event,
+    | 'name'
+    | 'start_date'
+    | 'end_date'
+    | 'is_all_day'
+    | 'location'
+    | 'category'
+    | 'image_url'
+    | 'source'
+    | 'campus'
+  >;
+  notificationEnabled?: boolean;
+  notificationDate?: string;
+  notificationId?: string;
 }
 
 export type MenuCategory =

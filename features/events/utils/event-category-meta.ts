@@ -36,7 +36,7 @@ const KNOWN_CATEGORIES = new Set<string>(EVENT_CATEGORY_ORDER);
  * Linhas antigas (aluno/Cheers) não têm categoria: são festas. A coluna no banco é texto
  * livre, então valor desconhecido vira "outro" em vez de vazar como chave de i18n.
  */
-export const getEventCategory = (event: Event): EventCategory => {
+export const getEventCategory = (event: Pick<Event, 'category' | 'source'>): EventCategory => {
   if (event.category && KNOWN_CATEGORIES.has(event.category)) return event.category;
   return event.source === 'ufsc' ? 'outro' : 'festa';
 };

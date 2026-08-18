@@ -5,6 +5,7 @@ import * as Haptics from 'expo-haptics';
 import { Container } from '@/ui/container';
 import { Fab } from '@/ui/fab';
 import { useEvents } from '../hooks/use-events';
+import { useSyncSavedEvents } from '../hooks/use-sync-saved-events';
 import { EventCard } from '../components/event-card';
 import { EventCategoryFilter } from '../components/event-category-filter';
 import { EventsLoadingState } from '../components/events-loading-state';
@@ -20,6 +21,8 @@ export const EventsHome = () => {
   const { data: events, isLoading, refetch } = useEvents();
   // Filtro não persiste de propósito: começa em "Todos" a cada visita à aba.
   const [category, setCategory] = useState<Filter>('all');
+
+  useSyncSavedEvents(events);
 
   const now = Date.now();
   const { visible, categories } = useMemo(() => {

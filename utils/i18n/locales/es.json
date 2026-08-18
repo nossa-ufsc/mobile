@@ -202,6 +202,22 @@
       "esporte": "Deporte",
       "saude": "Salud",
       "outro": "Otros"
+    },
+    "addToCalendar": "Agregar al calendario",
+    "removeFromCalendar": "Quitar del calendario",
+    "addedToCalendar": "Agregado al calendario",
+    "removedFromCalendar": "Quitado del calendario",
+    "organizerInstagram": "Instagram del organizador",
+    "soldOut": "Agotado",
+    "lot": "Lote",
+    "lotUntil": "Ventas hasta {{date}}",
+    "pricesFromCheers": "Lotes y precios en vivo de Cheers — pueden cambiar en cualquier momento.",
+    "ageRating": {
+      "free": "Para todas las edades",
+      "16": "16+",
+      "16_accompanied": "16+ o acompañado",
+      "18": "18+",
+      "18_accompanied": "18+ o acompañado"
     }
   },
   "subjects": {
@@ -311,7 +327,11 @@
     "classTitle": "Clase en {{minutes}} minutos",
     "classBodyWithPlace": "{{className}} en {{place}} a las {{time}}",
     "classBodyNoPlace": "{{className}} a las {{time}}",
-    "reminderTitle": "Recordatorio: {{title}}"
+    "reminderTitle": "Recordatorio: {{title}}",
+    "eventReminderBody": "Empieza a las {{time}} · {{location}}",
+    "eventReminderBodyNoPlace": "Empieza a las {{time}}",
+    "eventReminderAllDay": "Hoy · {{location}}",
+    "eventReminderAllDayNoPlace": "¡Es hoy!"
   },
   "widget": {
     "noClasses": "No hay clases hoy.",
@@ -322,5 +342,11 @@
     "title": "¡Ups!",
     "message": "Esta pantalla no existe.",
     "goHome": "Ir a la pantalla de inicio"
+  },
+  "calendar": {
+    "allDay": "Todo el día",
+    "dayOf": "Día {{n}} de {{total}}",
+    "continues": "continúa",
+    "continuesFromPrev": "(cont.)"
   }
 }

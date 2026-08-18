@@ -18,7 +18,7 @@ import { generateSemesterCalendar } from '@/features/calendar/utils/generate-sem
 export const useRebuildSchedule = () => {
   const semesterDuration = useEnvironmentStore((state) => state.semesterDuration);
   const semester = useEnvironmentStore((state) => state.semester);
-  const { setClassItems, updateItem } = useCalendar();
+  const { setClassItems, updateItem, rescheduleSavedEventNotifications } = useCalendar();
   const { cancelAllNotifications, generateClassesNotifications } = useNotifications();
 
   const rebuild = async (subjects: Subject[]) => {
@@ -56,6 +56,8 @@ export const useRebuildSchedule = () => {
         console.error('Error rebuilding calendar item notification:', error);
       }
     }
+
+    await rescheduleSavedEventNotifications();
   };
 
   return { rebuild };

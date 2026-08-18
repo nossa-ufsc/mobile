@@ -6,4 +6,5 @@
 
 [ ] - ccs ru menu
 [ ] - color code for exams and etc
-[ ] - events add to calendar as well
+[x] - events add to calendar as well
+[ ] - remove the whole logic for amount of weeks and make it be readable from somewhere automatically

@@ -210,6 +210,22 @@
       "esporte": "Esporte",
       "saude": "Saúde",
       "outro": "Outros"
+    },
+    "addToCalendar": "Adicionar ao calendário",
+    "removeFromCalendar": "Remover do calendário",
+    "addedToCalendar": "Adicionado ao calendário",
+    "removedFromCalendar": "Removido do calendário",
+    "organizerInstagram": "Instagram do organizador",
+    "soldOut": "Esgotado",
+    "lot": "Lote",
+    "lotUntil": "Vendas até {{date}}",
+    "pricesFromCheers": "Lotes e preços ao vivo da Cheers — podem mudar a qualquer momento.",
+    "ageRating": {
+      "free": "Livre",
+      "16": "16+",
+      "16_accompanied": "16+ ou acompanhado",
+      "18": "18+",
+      "18_accompanied": "18+ ou acompanhado"
     }
   },
   "subjects": {
@@ -319,7 +335,11 @@
     "classTitle": "Aula em {{minutes}} minutos",
     "classBodyWithPlace": "{{className}} em {{place}} às {{time}}",
     "classBodyNoPlace": "{{className}} às {{time}}",
-    "reminderTitle": "Lembrete: {{title}}"
+    "reminderTitle": "Lembrete: {{title}}",
+    "eventReminderBody": "Começa às {{time}} · {{location}}",
+    "eventReminderBodyNoPlace": "Começa às {{time}}",
+    "eventReminderAllDay": "Hoje · {{location}}",
+    "eventReminderAllDayNoPlace": "É hoje!"
   },
   "widget": {
     "noClasses": "Nenhuma aula hoje.",
@@ -330,5 +350,11 @@
     "title": "Opa!",
     "message": "Esta tela não existe.",
     "goHome": "Ir para a tela inicial!"
+  },
+  "calendar": {
+    "allDay": "Dia inteiro",
+    "dayOf": "Dia {{n}} de {{total}}",
+    "continues": "continua",
+    "continuesFromPrev": "(cont.)"
   }
 }

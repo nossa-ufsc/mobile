@@ -1,9 +1,16 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
-import { CalendarClassItem, CalendarItem, Subject } from '@/types';
+import { CalendarClassItem, CalendarItem, Event, SavedEvent, Subject } from '@/types';
 import { useCalendarNotifications } from './use-calendar-notifications';
 import { generateRandomId } from '@/utils/generate-random-id';
+import { expandSavedEvent } from '../utils/expand-saved-event';
+import {
+  getDefaultReminderDate,
+  snapshotChanged,
+  timesChanged,
+  toSnapshot,
+} from '../utils/saved-event';
 
 const persistedCalendarStorage = new MMKV({
   id: 'calendar-storage',
@@ -12,6 +19,7 @@ const persistedCalendarStorage = new MMKV({
 interface CalendarState {
   items: CalendarItem[];
   classItems: CalendarClassItem[];
+  savedEvents: SavedEvent[];
   addItemWithoutNotification: (item: CalendarItem) => void;
   addClassItem: (item: CalendarClassItem) => void;
   setClassItems: (items: CalendarClassItem[]) => void;
@@ -23,6 +31,11 @@ interface CalendarState {
   removeItemsWithoutNotification: (ids: string[]) => void;
   updateItemWithoutNotification: (id: string, item: Partial<CalendarItem>) => void;
   clearCalendarWithoutNotification: () => void;
+  saveEventWithoutNotification: (saved: SavedEvent) => void;
+  removeSavedEventWithoutNotification: (eventId: string) => void;
+  updateSavedEventWithoutNotification: (eventId: string, saved: Partial<SavedEvent>) => void;
+  getSavedEvent: (eventId: string) => SavedEvent | undefined;
+  getSavedEventsByDate: (day: Date) => SavedEvent[];
 }
 
 const systemStorageZustandAdapter = {
@@ -51,6 +64,7 @@ const useCalendarStore = create<CalendarState>()(
     (set, get) => ({
       items: [],
       classItems: [],
+      savedEvents: [],
 
       addItemWithoutNotification: (newItem) => {
         set((state) => ({
@@ -109,9 +123,47 @@ const useCalendarStore = create<CalendarState>()(
       clearCalendarWithoutNotification: () => {
         set({ items: [], classItems: [] });
       },
+
+      saveEventWithoutNotification: (saved) => {
+        set((state) => ({
+          savedEvents: [...state.savedEvents.filter((e) => e.eventId !== saved.eventId), saved],
+        }));
+      },
+
+      removeSavedEventWithoutNotification: (eventId) => {
+        set((state) => ({
+          savedEvents: state.savedEvents.filter((saved) => saved.eventId !== eventId),
+        }));
+      },
+
+      updateSavedEventWithoutNotification: (eventId, updated) => {
+        set((state) => ({
+          savedEvents: state.savedEvents.map((saved) =>
+            saved.eventId === eventId ? { ...saved, ...updated } : saved
+          ),
+        }));
+      },
+
+      getSavedEvent: (eventId) => get().savedEvents.find((saved) => saved.eventId === eventId),
+
+      // Consulta por faixa (não por igualdade de dia): eventos podem durar vários dias
+      // ou atravessar a meia-noite.
+      getSavedEventsByDate: (day) => {
+        const now = Date.now();
+        return get().savedEvents.filter((saved) => expandSavedEvent(saved, day, now) !== null);
+      },
     }),
     {
       name: 'calendar-storage-v2',
+      version: 1,
+      // v0 não tinha `savedEvents`; o resto do estado é preservado como está.
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<CalendarState>;
+        if (version < 1) {
+          return { ...state, savedEvents: state?.savedEvents ?? [] } as CalendarState;
+        }
+        return state as CalendarState;
+      },
       storage: createJSONStorage(() => systemStorageZustandAdapter),
     }
   )
@@ -122,10 +174,22 @@ export const getCalendarItems = (): CalendarItem[] => useCalendarStore.getState(
 export const removeCalendarItemsWithoutNotification = (ids: string[]) =>
   useCalendarStore.getState().removeItemsWithoutNotification(ids);
 
+export const getSavedEvents = (): SavedEvent[] => useCalendarStore.getState().savedEvents;
+
+/** Assinaturas enxutas pros marcadores do seletor de mês (sem montar o `useCalendar`). */
+export const useSavedEventsList = () => useCalendarStore((state) => state.savedEvents);
+export const useCalendarItemsList = () => useCalendarStore((state) => state.items);
+
 export const useCalendar = () => {
   const {
     items,
     classItems,
+    savedEvents,
+    saveEventWithoutNotification,
+    removeSavedEventWithoutNotification,
+    updateSavedEventWithoutNotification,
+    getSavedEvent,
+    getSavedEventsByDate,
     addItemWithoutNotification,
     addClassItem,
     setClassItems,
@@ -138,7 +202,8 @@ export const useCalendar = () => {
     clearCalendarWithoutNotification,
   } = useCalendarStore();
 
-  const { scheduleNotification, cancelItemNotification } = useCalendarNotifications();
+  const { scheduleNotification, scheduleEventNotification, cancelItemNotification } =
+    useCalendarNotifications();
 
   const addItem = async (newItem: Omit<CalendarItem, 'id'>) => {
     const id = generateRandomId();
@@ -194,6 +259,84 @@ export const useCalendar = () => {
     clearCalendarWithoutNotification();
   };
 
+  /** Salva o evento no calendário do app e agenda o lembrete padrão. Idempotente. */
+  const saveEvent = async (event: Event) => {
+    if (getSavedEvent(event.id)) return;
+
+    const snapshot = toSnapshot(event);
+    const reminderDate = getDefaultReminderDate(snapshot);
+    const saved: SavedEvent = {
+      eventId: event.id,
+      savedAt: new Date().toISOString(),
+      snapshot,
+      notificationEnabled: true,
+      notificationDate: reminderDate?.toISOString(),
+    };
+
+    saved.notificationId = await scheduleEventNotification(saved);
+    saveEventWithoutNotification(saved);
+  };
+
+  const unsaveEvent = async (eventId: string) => {
+    const saved = getSavedEvent(eventId);
+
+    if (saved?.notificationId) {
+      await cancelItemNotification(saved.notificationId);
+    }
+
+    removeSavedEventWithoutNotification(eventId);
+  };
+
+  const isEventSaved = (eventId: string) => savedEvents.some((saved) => saved.eventId === eventId);
+
+  /**
+   * Reconcilia os snapshots com a lista fresca do servidor. Eventos ausentes da lista
+   * são mantidos (a query só traz futuros do campus atual) — nunca apaga sozinho.
+   */
+  const refreshSavedEvents = async (events: Event[]) => {
+    const freshById = new Map(events.map((event) => [event.id, event]));
+
+    for (const saved of getSavedEvents()) {
+      const fresh = freshById.get(saved.eventId);
+      if (!fresh) continue;
+
+      const snapshot = toSnapshot(fresh);
+      if (!snapshotChanged(saved.snapshot, snapshot)) continue;
+
+      if (!timesChanged(saved.snapshot, snapshot)) {
+        updateSavedEventWithoutNotification(saved.eventId, { snapshot });
+        continue;
+      }
+
+      // Mudou início/fim: reagenda o lembrete a partir das novas datas.
+      if (saved.notificationId) {
+        await cancelItemNotification(saved.notificationId);
+      }
+      const reminderDate = saved.notificationEnabled ? getDefaultReminderDate(snapshot) : null;
+      const next: SavedEvent = {
+        ...saved,
+        snapshot,
+        notificationDate: reminderDate?.toISOString(),
+        notificationId: undefined,
+      };
+      next.notificationId = await scheduleEventNotification(next);
+      updateSavedEventWithoutNotification(saved.eventId, next);
+    }
+  };
+
+  /** Usado depois de `cancelAllNotifications()` no rebuild do semestre. */
+  const rescheduleSavedEventNotifications = async () => {
+    for (const saved of getSavedEvents()) {
+      if (!saved.notificationEnabled || !saved.notificationDate) continue;
+      try {
+        const notificationId = await scheduleEventNotification(saved);
+        updateSavedEventWithoutNotification(saved.eventId, { notificationId });
+      } catch (error) {
+        console.error('Error rescheduling saved event notification:', error);
+      }
+    }
+  };
+
   return {
     items,
     addItem,
@@ -208,5 +351,13 @@ export const useCalendar = () => {
     classItems,
     addClassItem,
     setClassItems,
+    savedEvents,
+    saveEvent,
+    unsaveEvent,
+    isEventSaved,
+    getSavedEvent,
+    getSavedEventsByDate,
+    refreshSavedEvents,
+    rescheduleSavedEventNotifications,
   };
 };
