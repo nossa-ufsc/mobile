@@ -8,10 +8,10 @@ import { COLORS } from '@/theme/colors';
 
 type MCIName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
-export type MenuBadgeTone = 'neutral' | 'info' | 'warning' | 'positive';
+export type BadgeTone = 'neutral' | 'info' | 'warning' | 'positive';
 
 const TONES: Record<
-  MenuBadgeTone,
+  BadgeTone,
   { container: string; text: string; icon: { light: string; dark: string } | null }
 > = {
   neutral: {
@@ -32,14 +32,14 @@ const TONES: Record<
   },
 };
 
-interface MenuBadgeProps {
+interface BadgeProps {
   label: string;
-  tone?: MenuBadgeTone;
+  tone?: BadgeTone;
   icon?: MCIName;
   className?: string;
 }
 
-export const MenuBadge = ({ label, tone = 'neutral', icon, className }: MenuBadgeProps) => {
+export const Badge = ({ label, tone = 'neutral', icon, className }: BadgeProps) => {
   const { colorScheme } = useColorScheme();
   const scheme = colorScheme === 'dark' ? 'dark' : 'light';
   const t = TONES[tone];

@@ -10,7 +10,7 @@ import { useColorScheme } from 'nativewind';
 import { COLORS } from '@/theme/colors';
 import { MenuDish } from '@/types';
 import { formatDishName } from '../utils/menu';
-import { MenuBadge, MenuBadgeTone } from './menu-badge';
+import { Badge, BadgeTone } from '@/ui/badge';
 
 interface MenuDishRowProps {
   dish: MenuDish;
@@ -21,8 +21,8 @@ interface MenuDishRowProps {
 interface BadgeSpec {
   key: string;
   label: string;
-  tone: MenuBadgeTone;
-  icon?: ComponentProps<typeof MenuBadge>['icon'];
+  tone: BadgeTone;
+  icon?: ComponentProps<typeof Badge>['icon'];
 }
 
 export const MenuDishRow = ({ dish, showMealBadge = true, isLast = false }: MenuDishRowProps) => {
@@ -107,14 +107,14 @@ export const MenuDishRow = ({ dish, showMealBadge = true, isLast = false }: Menu
             {badges.length > 0 && (
               <View className="flex-row flex-wrap gap-1.5">
                 {badges.map((b) => (
-                  <MenuBadge key={b.key} label={b.label} tone={b.tone} icon={b.icon} />
+                  <Badge key={b.key} label={b.label} tone={b.tone} icon={b.icon} />
                 ))}
               </View>
             )}
           </View>
           {hasIngredients && (
             <View className="mt-1 h-6 w-6 items-center justify-center rounded-full bg-gray-500/10">
-              <Ionicons name={expanded ? 'chevron-up' : 'information'} size={14} color={grey} />
+              <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={14} color={grey} />
             </View>
           )}
         </View>

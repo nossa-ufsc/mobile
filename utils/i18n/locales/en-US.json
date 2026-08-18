@@ -168,7 +168,41 @@
     "tickets": "Tickets",
     "submit": "Submit",
     "submittedTitle": "Event submitted!",
-    "submittedMessage": "We got your suggestion. It will show up in the app once approved — usually within a few days."
+    "submittedMessage": "We got your suggestion. It will show up in the app once approved — usually within a few days.",
+    "registration": "Register",
+    "allDay": "All day",
+    "ongoing": "Ongoing",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "until": "until {{date}}",
+    "about": "About the event",
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "free": "Free",
+    "paid": "Paid",
+    "viewOnUfscSite": "View on UFSC website",
+    "updatedAt": "Updated {{date}}",
+    "filterAll": "All",
+    "categories": {
+      "festa": "Party",
+      "palestra": "Talk",
+      "curso": "Course",
+      "cultura": "Culture",
+      "academico": "Academic",
+      "esporte": "Sports",
+      "saude": "Health",
+      "outro": "Other"
+    },
+    "categoryFilters": {
+      "festa": "Parties",
+      "palestra": "Talks",
+      "curso": "Courses",
+      "cultura": "Culture",
+      "academico": "Academic",
+      "esporte": "Sports",
+      "saude": "Health",
+      "outro": "Other"
+    }
   },
   "subjects": {
     "editSubject": "Edit subject",

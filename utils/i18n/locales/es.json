@@ -168,7 +168,41 @@
     "tickets": "Entradas",
     "submit": "Enviar",
     "submittedTitle": "¡Evento enviado!",
-    "submittedMessage": "Recibimos tu sugerencia. Aparecerá en la app cuando sea aprobada — normalmente en unos días."
+    "submittedMessage": "Recibimos tu sugerencia. Aparecerá en la app cuando sea aprobada — normalmente en unos días.",
+    "registration": "Inscripciones",
+    "allDay": "Todo el día",
+    "ongoing": "En curso",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "until": "hasta {{date}}",
+    "about": "Sobre el evento",
+    "readMore": "Leer más",
+    "readLess": "Leer menos",
+    "free": "Gratis",
+    "paid": "Pago",
+    "viewOnUfscSite": "Ver en el sitio de la UFSC",
+    "updatedAt": "Actualizado el {{date}}",
+    "filterAll": "Todos",
+    "categories": {
+      "festa": "Fiesta",
+      "palestra": "Charla",
+      "curso": "Curso",
+      "cultura": "Cultura",
+      "academico": "Académico",
+      "esporte": "Deporte",
+      "saude": "Salud",
+      "outro": "Otro"
+    },
+    "categoryFilters": {
+      "festa": "Fiestas",
+      "palestra": "Charlas",
+      "curso": "Cursos",
+      "cultura": "Cultura",
+      "academico": "Académico",
+      "esporte": "Deporte",
+      "saude": "Salud",
+      "outro": "Otros"
+    }
   },
   "subjects": {
     "editSubject": "Editar asignatura",

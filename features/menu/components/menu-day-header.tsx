@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MenuMeal } from '@/types';
-import { MenuBadge } from './menu-badge';
+import { Badge } from '@/ui/badge';
 import { MenuMealToggle } from './menu-meal-toggle';
 
 interface MenuDayHeaderProps {
@@ -24,7 +24,7 @@ export const MenuDayHeader = ({ meals, mealToggle }: MenuDayHeaderProps) => {
 
   return (
     <View className="mb-1 flex-row px-1">
-      <MenuBadge
+      <Badge
         tone="info"
         icon="silverware-fork-knife"
         label={meals.map((m) => t(`menu.meals.${m}`)).join(' · ')}

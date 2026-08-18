@@ -21,15 +21,30 @@ export interface Event {
   image_url: string;
   campus: Campus;
   created_by: EventCreator;
-  /** Link externo pra compra de ingressos (Cheers, Sympla, etc). Opcional. */
+  /** Link externo pra ingressos (Cheers, Sympla) ou inscrição (eventos oficiais). Opcional. */
   ticket_url?: string | null;
   /** Moderação: eventos entram como `pending` e só aparecem no app depois de `approved`. */
   status?: EventStatus;
-  /** De onde veio o evento: cadastrado por aluno no app ou importado da Cheers. */
-  source?: 'user' | 'cheers';
+  /** De onde veio: cadastrado por aluno, importado da Cheers ou do calendário oficial da UFSC. */
+  source?: EventSource;
+  /** Texto corrido (parágrafos separados por \n). Só eventos oficiais têm. */
+  description?: string | null;
+  /** Tags cruas da fonte, em minúsculas (ex.: "palestra", "cinema"). */
+  tags?: string[] | null;
+  /** Categoria normalizada pelo pipeline; festas de aluno/Cheers são `festa`. */
+  category?: EventCategory | null;
+  /** Página do evento no site da UFSC. */
+  info_url?: string | null;
+  is_free?: boolean | null;
+  /** Dia inteiro: `end_date` é o fim (inclusivo) do último dia. */
+  is_all_day?: boolean;
+  updated_at?: string | null;
 }
 
 export type EventStatus = 'pending' | 'approved' | 'rejected';
+export type EventSource = 'user' | 'cheers' | 'ufsc';
+export type EventCategory =
+  'festa' | 'palestra' | 'curso' | 'cultura' | 'academico' | 'esporte' | 'saude' | 'outro';
 
 export interface User {
   id: string;
