@@ -1,24 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/utils/supabase';
-import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { Menu } from '@/types';
+import { useMenuRestaurant } from './use-menu-restaurant';
 
 export const useMenu = () => {
-  const campus = useEnvironmentStore((state) => state.campus);
+  const { selectedKey } = useMenuRestaurant();
 
   return useQuery({
-    queryKey: ['menu', campus],
+    queryKey: ['menu', selectedKey],
+    enabled: !!selectedKey,
     queryFn: async () => {
       const { data, error } = await supabase
         .from('menus')
         .select('menu')
-        .eq('campus', campus)
+        .eq('campus', selectedKey)
         .single();
 
-      if (error) {
-        console.error('Error fetching menu:', error);
-        throw error;
-      }
+      if (error) throw error;
 
       return data?.menu as Menu;
     },

@@ -47,13 +47,13 @@ export const NEWS_ITEMS: NewsItem[] = [
     icon: 'silverware-fork-knife',
     title: 'Cardápio do RU de cara nova',
     description:
-      'O cardápio agora é sincronizado automaticamente com o site do seu RU. Quando informado, você também pode ver o almoço e jantar separados, alergênicos (glúten, lácteos) e os ingredientes de cada prato.',
+      'O cardápio agora é sincronizado automaticamente com o site do seu RU. Também foi adicionado suporte para o RU do CCA.',
   },
   {
     id: 'events-v2',
     icon: 'calendar-star',
     title: 'Eventos da UFSC no app',
     description:
-      'A aba Eventos agora traz automaticamente a agenda oficial da UFSC - palestras, cursos, atividades de cultura, esporte e mais.'
+      'A aba Eventos agora traz automaticamente a agenda oficial da UFSC - palestras, cursos, atividades de cultura, esporte e mais.',
   },
 ];

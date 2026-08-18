@@ -30,6 +30,9 @@ interface EnvironmentState {
   notificationDelay: number;
   notificationsEnabled: boolean;
   campus: Campus | null;
+  // Restaurante (RU) escolhido na aba Cardápio — chave da tabela `menus`. Null =
+  // padrão do campus (ver features/menu/utils/restaurants.ts). Zerado ao trocar campus.
+  menuRestaurant: string | null;
   setUser: (user: User | null) => void;
   setSubjects: (subjects: Subject[] | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
@@ -39,6 +42,7 @@ interface EnvironmentState {
   setNotificationDelay: (delay: number) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
   setCampus: (campus: Campus) => void;
+  setMenuRestaurant: (key: string | null) => void;
   clearEnvironment: () => void;
   isGuest: boolean;
   setIsGuest: (isGuest: boolean) => void;
@@ -76,6 +80,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       notificationDelay: 15,
       notificationsEnabled: true,
       campus: null,
+      menuRestaurant: null,
 
       setUser: (user) => {
         set({
@@ -116,7 +121,11 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       },
 
       setCampus: (campus) => {
-        set({ campus });
+        set({ campus, menuRestaurant: null });
+      },
+
+      setMenuRestaurant: (key) => {
+        set({ menuRestaurant: key });
       },
 
       clearEnvironment: () => {
@@ -130,6 +139,7 @@ export const useEnvironmentStore = create<EnvironmentState>()(
           notificationDelay: 15,
           notificationsEnabled: true,
           campus: Campus.FLORIANOPOLIS,
+          menuRestaurant: null,
           isGuest: false,
         });
       },

@@ -262,6 +262,7 @@
       "sobremesa": "Dessert",
       "outro": "Other"
     },
+    "restaurant": "Restaurant",
     "meals": {
       "almoco": "Lunch",
       "jantar": "Dinner"

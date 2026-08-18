@@ -1,8 +1,5 @@
-import { Pressable, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
-import { Text } from '@/ui/text';
-import { cn } from '@/utils/cn';
+import { SegmentedControl } from '@/ui/segmented-control';
 import { MenuMeal } from '@/types';
 
 interface MenuMealToggleProps {
@@ -16,31 +13,10 @@ export const MenuMealToggle = ({ value, onChange }: MenuMealToggleProps) => {
   const { t } = useTranslation();
 
   return (
-    <View className="flex-row rounded-full bg-gray-500/10 p-1" accessibilityRole="tablist">
-      {OPTIONS.map((meal) => {
-        const selected = meal === value;
-        return (
-          <Pressable
-            key={meal}
-            accessibilityRole="tab"
-            accessibilityState={{ selected }}
-            onPress={() => {
-              if (selected) return;
-              Haptics.selectionAsync();
-              onChange(meal);
-            }}
-            className={cn(
-              'flex-1 items-center justify-center rounded-full px-3 py-1.5',
-              selected && 'bg-card dark:bg-gray-500/25'
-            )}>
-            <Text
-              variant="subhead"
-              className={cn('font-medium', selected ? 'text-foreground' : 'text-muted-foreground')}>
-              {t(`menu.meals.${meal}`)}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
+    <SegmentedControl
+      options={OPTIONS.map((meal) => ({ value: meal, label: t(`menu.meals.${meal}`) }))}
+      value={value}
+      onChange={onChange}
+    />
   );
 };
