@@ -44,6 +44,7 @@ export const MenuHome = () => {
         <View className="flex-1">
           <WeekDaySelector
             className="mt-4"
+            showDots={false}
             selectedDay={selectedDay}
             onSelectDay={(day) => {
               Haptics.selectionAsync();

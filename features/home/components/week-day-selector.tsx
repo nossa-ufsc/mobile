@@ -13,6 +13,7 @@ interface WeekDaySelectorProps {
   onSelectDay: (day: number) => void;
   testID?: string;
   className?: string;
+  showDots?: boolean;
 }
 
 export const WeekDaySelector = ({
@@ -20,6 +21,7 @@ export const WeekDaySelector = ({
   onSelectDay,
   testID,
   className,
+  showDots = true,
 }: WeekDaySelectorProps) => {
   const { colors } = useColorScheme();
   const { t } = useTranslation();
@@ -103,7 +105,12 @@ export const WeekDaySelector = ({
                 )}>
                 {day.number}
               </Text>
-              <DayDots colors={dotColorsFor(day.date)} isSelected={selectedDay === day.dayIndex} />
+              {showDots && (
+                <DayDots
+                  colors={dotColorsFor(day.date)}
+                  isSelected={selectedDay === day.dayIndex}
+                />
+              )}
             </View>
           </TouchableOpacity>
         ))}
