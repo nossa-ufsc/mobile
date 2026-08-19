@@ -5,7 +5,7 @@ import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { useTranslation } from 'react-i18next';
-import { CalendarItem } from '@/types';
+import { CalendarColor, CalendarItem } from '@/types';
 import { Text } from '@/ui/text';
 import { Container } from '@/ui/container';
 import { DatePicker } from '@/ui/date-picker';
@@ -15,6 +15,9 @@ import { useEnvironmentStore } from '@/utils/use-environment-store';
 import { getActiveSubjects } from '@/utils/subjects';
 import { getDateLocale } from '@/utils/i18n/get-date-locale';
 import { useCalendar } from '../hooks/use-calendar';
+import { useCalendarColorPrefs } from '../hooks/use-calendar-colors';
+import { getKindDefaultColor } from '../utils/calendar-colors';
+import { ColorSwatchPicker, useColorName } from '../components/color-swatch-picker';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -54,6 +57,9 @@ export const CalendarItemScreen = () => {
   );
   const [subject, setSubject] = useState(initialItem?.subject ?? initialSubject ?? subjects[0]);
   const [type, setType] = useState<CalendarItem['type']>(initialItem?.type ?? 'exam');
+  const [color, setColor] = useState<CalendarColor | undefined>(initialItem?.color);
+  const colorPrefs = useCalendarColorPrefs();
+  const colorName = useColorName();
   const [notificationEnabled, setNotificationEnabled] = useState(
     initialItem?.notificationEnabled ?? false
   );
@@ -91,6 +97,7 @@ export const CalendarItemScreen = () => {
       description,
       date,
       type,
+      color,
       subject,
       notificationEnabled,
       notificationDate: notificationEnabled ? notificationDate : undefined,
@@ -246,6 +253,22 @@ export const CalendarItemScreen = () => {
                 />
               </View>
             )}
+          </View>
+
+          <View style={{ backgroundColor: colors.card }} className="mb-4 rounded-xl py-3">
+            <View className="flex-row items-center justify-between px-4">
+              <Text className="text-[17px] text-foreground">{t('calendarItemSheet.color')}</Text>
+              <Text variant="subhead" color="tertiary">
+                {colorName(color)}
+              </Text>
+            </View>
+            <ColorSwatchPicker
+              layout="row"
+              className="mt-3"
+              value={color}
+              defaultColor={getKindDefaultColor(type, colorPrefs)}
+              onChange={setColor}
+            />
           </View>
 
           {!initialSubject && (

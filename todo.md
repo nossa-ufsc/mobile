@@ -3,8 +3,3 @@
 [ ] - Watch https://github.com/supabase/supabase-js/issues/1400 and migrate out of @next version to stable release. Currently necesary due to Supabase compatibility error with Expo SDK53.
 
 [ ] - Watch https://github.com/software-mansion/react-native-screens/issues/432 and migrate out of the nightly version. Currently necessary due to headerRight not working with Expo SDK53.
-
-[ ] - ccs ru menu
-[ ] - color code for exams and etc
-[x] - events add to calendar as well
-[ ] - remove the whole logic for amount of weeks and make it be readable from somewhere automatically

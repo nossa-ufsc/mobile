@@ -55,6 +55,7 @@
     "contribute": "Contribute to the Code",
     "contact": "Contact us",
     "language": "Language",
+    "calendarColors": "Calendar colors",
     "languageOptions": {
       "system": "Automatic",
       "ptBR": "Português",
@@ -130,7 +131,34 @@
     "date": "Date",
     "notification": "Notification",
     "notificationTime": "Time",
-    "selectSubject": "Select a subject"
+    "selectSubject": "Select a subject",
+    "color": "Color"
+  },
+  "calendarColors": {
+    "title": "Calendar colors",
+    "description": "Used when an item has no color of its own.",
+    "default": "Default",
+    "eventColor": "Color in calendar",
+    "kinds": {
+      "class": "Class"
+    },
+    "names": {
+      "primary": "App blue",
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "yellow": "Yellow",
+      "lime": "Lime",
+      "green": "Green",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "sky": "Sky",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "pink": "Pink",
+      "gray": "Gray"
+    }
   },
   "classItemSheet": {
     "schedule": "Schedule",
@@ -213,10 +241,10 @@
     "lotUntil": "On sale until {{date}}",
     "pricesFromCheers": "Live batches and prices from Cheers — they can change at any time.",
     "ageRating": {
-      "free": "All ages",
       "16": "16+",
-      "16_accompanied": "16+ or accompanied",
       "18": "18+",
+      "free": "All ages",
+      "16_accompanied": "16+ or accompanied",
       "18_accompanied": "18+ or accompanied"
     }
   },
@@ -276,7 +304,8 @@
       "noAnimalOrigin": "No animal origin"
     },
     "ingredients": "Ingredients",
-    "ingredientsHint": "Tap to see the ingredients",
+    "ingredientsHint": "Tap to see dish details",
+    "allergensTitle": "Allergens & diet",
     "openSource": "View original menu",
     "updatedAt": "Updated {{date}}",
     "noMenuForMeal": "Nothing specific for this meal"

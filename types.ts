@@ -154,6 +154,28 @@ export interface AcademicCalendar {
   };
 }
 
+export type CalendarPaletteKey =
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'lime'
+  | 'green'
+  | 'emerald'
+  | 'teal'
+  | 'sky'
+  | 'blue'
+  | 'indigo'
+  | 'purple'
+  | 'pink'
+  | 'gray';
+
+export type CalendarColor = CalendarPaletteKey | 'primary' | `#${string}`;
+
+export type CalendarColorKind = CalendarItem['type'] | 'class';
+
+export type CalendarTypeColorPrefs = Partial<Record<CalendarColorKind, CalendarColor>>;
+
 export interface CalendarItem {
   id: string;
   title: string;
@@ -161,6 +183,7 @@ export interface CalendarItem {
   date: Date;
   subject: Subject;
   type: 'task' | 'exam' | 'assignment';
+  color?: CalendarColor;
   notificationEnabled?: boolean;
   notificationDate?: Date;
   notificationId?: string;
@@ -193,6 +216,7 @@ export interface SavedEvent {
     | 'source'
     | 'campus'
   >;
+  color?: CalendarColor;
   notificationEnabled?: boolean;
   notificationDate?: string;
   notificationId?: string;

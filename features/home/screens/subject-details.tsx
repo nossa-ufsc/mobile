@@ -4,6 +4,7 @@ import { View, Pressable } from 'react-native';
 import { Stack, useIsFocused, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
+import { useCalendarColors } from '@/features/calendar/hooks/use-calendar-colors';
 import { useEffect, useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Sheet } from '@/ui/bottom-sheet';
@@ -24,6 +25,7 @@ export const SubjectDetails = () => {
   const subjects = useEnvironmentStore((state) => state.subjects);
   const subject = subjects?.find((s) => s.id === id);
   const { getItemsBySubject } = useCalendar();
+  const palette = useCalendarColors();
   const { addAbsence, removeAbsence, maxAbsences, absences, remainingAbsences, totalAbsences } =
     useSubjectAbsence(id);
   const absenceSheetRef = useRef<BottomSheetModal>(null);
@@ -207,6 +209,10 @@ export const SubjectDetails = () => {
                     index !== sortedItems.length - 1 ? 'border-b border-border' : ''
                   } ${isPast ? 'opacity-50' : ''}`}>
                   <View className="mb-1 flex-row items-center justify-between">
+                    <View
+                      className="mr-2 h-2 w-2 rounded-full"
+                      style={{ backgroundColor: palette.item(item).accent }}
+                    />
                     <Text variant="body" className="flex-1">
                       {item.title}
                     </Text>

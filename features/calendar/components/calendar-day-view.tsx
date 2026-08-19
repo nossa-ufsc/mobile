@@ -7,8 +7,8 @@ import { useSubjectAbsence } from '@/features/home/hooks/use-subject-absence';
 import { useFocusEffect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { getDateLocale } from '@/utils/i18n/get-date-locale';
-import { EVENT_CATEGORY_META, getEventCategory } from '@/features/events/utils/event-category-meta';
 import { expandSavedEvent, type EventOccurrence } from '../utils/expand-saved-event';
+import { useCalendarColors, type CalendarPalette } from '../hooks/use-calendar-colors';
 
 interface CalendarDayViewProps {
   className?: string;
@@ -22,38 +22,6 @@ interface CalendarDayViewProps {
   onPressClass: (item: CalendarClassItem) => void;
 }
 
-export const getItemColor = (type: CalendarItem['type'] | 'event') => {
-  switch (type) {
-    case 'exam':
-      return 'bg-red-100 dark:bg-red-900';
-    case 'assignment':
-      return 'bg-pink-100 dark:bg-pink-900';
-    case 'task':
-      return 'bg-green-100 dark:bg-green-900';
-    case 'event':
-      return 'bg-amber-100 dark:bg-amber-900';
-    default:
-      return 'bg-gray-100 dark:bg-gray-900';
-  }
-};
-
-export const getNestedItemColor = (type: CalendarItem['type'] | 'class' | 'event') => {
-  switch (type) {
-    case 'exam':
-      return 'bg-red-200 dark:bg-red-800';
-    case 'assignment':
-      return 'bg-pink-200 dark:bg-pink-800';
-    case 'task':
-      return 'bg-green-200 dark:bg-green-800';
-    case 'class':
-      return 'bg-primary/20 dark:bg-primary/30';
-    case 'event':
-      return 'bg-amber-200 dark:bg-amber-800';
-    default:
-      return 'bg-gray-200 dark:bg-gray-700';
-  }
-};
-
 const HOUR_HEIGHT = 72;
 const TIME_LABEL_WIDTH = 64;
 const SIDE_PADDING = 8;
@@ -61,6 +29,7 @@ const CLASS_DURATION = 50;
 
 const EVENT_MIN_HEIGHT = 40;
 const EVENT_ACCENT_WIDTH = 4;
+const NESTED_ACCENT_WIDTH = 3;
 
 const OTHER_ITEM_FIXED_HEIGHT = 40;
 const NESTED_ITEM_FIXED_HEIGHT = 30;
@@ -109,9 +78,11 @@ const formatTime = (date: Date) =>
 const AllDayLane = ({
   occurrences,
   onLayoutHeight,
+  palette,
 }: {
   occurrences: SavedEventOccurrence<'allDay'>[];
   onLayoutHeight: (height: number) => void;
+  palette: CalendarPalette;
 }) => {
   const { t } = useTranslation();
 
@@ -124,7 +95,7 @@ const AllDayLane = ({
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="gap-2 px-3">
         {occurrences.map(({ saved, occurrence }) => {
-          const meta = EVENT_CATEGORY_META[getEventCategory(saved.snapshot)];
+          const color = palette.savedEvent(saved);
           const rangeLabel =
             occurrence.dayCount > 1
               ? t('calendar.dayOf', { n: occurrence.dayIndex, total: occurrence.dayCount })
@@ -136,12 +107,10 @@ const AllDayLane = ({
               hitSlop={4}
               accessibilityRole="button"
               onPress={() => openEvent(saved.eventId)}
-              className={cn(
-                'max-w-[280px] flex-row items-center gap-2 rounded-lg py-1.5 pl-2 pr-3',
-                meta.tintClassName
-              )}>
+              className="max-w-[280px] flex-row items-center gap-2 rounded-lg py-1.5 pl-2 pr-3"
+              style={{ backgroundColor: color.tint }}>
               <View
-                style={{ backgroundColor: meta.color, width: EVENT_ACCENT_WIDTH }}
+                style={{ backgroundColor: color.accent, width: EVENT_ACCENT_WIDTH }}
                 className="h-5 rounded-full"
               />
               <Text variant="subhead" className="flex-shrink font-medium" numberOfLines={1}>
@@ -166,10 +135,10 @@ const AllDayLane = ({
 };
 
 /** Bloco com duração real na grade, no mesmo lugar que uma aula ocuparia. */
-const EventBlock = ({ item }: { item: LayoutedEvent }) => {
+const EventBlock = ({ item, palette }: { item: LayoutedEvent; palette: CalendarPalette }) => {
   const { t } = useTranslation();
   const { saved, occurrence } = item;
-  const meta = EVENT_CATEGORY_META[getEventCategory(saved.snapshot)];
+  const color = palette.savedEvent(saved);
   const range = `${formatTime(new Date(saved.snapshot.start_date))} – ${formatTime(
     new Date(saved.snapshot.end_date)
   )}`;
@@ -188,11 +157,10 @@ const EventBlock = ({ item }: { item: LayoutedEvent }) => {
       onPress={() => openEvent(saved.eventId)}
       className={cn(
         'absolute left-0 right-0 flex-row overflow-hidden rounded-lg',
-        'border border-gray-300 dark:border-gray-700',
-        meta.tintClassName
+        'border border-gray-300 dark:border-gray-700'
       )}
-      style={{ top: item.top, height: item.height }}>
-      <View style={{ backgroundColor: meta.color, width: EVENT_ACCENT_WIDTH }} />
+      style={{ top: item.top, height: item.height, backgroundColor: color.tint }}>
+      <View style={{ backgroundColor: color.accent, width: EVENT_ACCENT_WIDTH }} />
       <View className="flex-1 justify-start px-3 py-1.5">
         <Text variant="subhead" className="font-semibold" numberOfLines={1}>
           {saved.snapshot.name}
@@ -212,10 +180,12 @@ const ClassItem = ({
   item,
   onPressClass,
   onPressItem,
+  palette,
 }: {
   item: LayoutedClass;
   onPressClass: (item: CalendarClassItem) => void;
   onPressItem: (item: CalendarItem) => void;
+  palette: CalendarPalette;
 }) => {
   const { absences } = useSubjectAbsence(item.subject.id);
   const existingAbsence = absences.find((entry) => entry.date === item.date.toDateString());
@@ -225,11 +195,15 @@ const ClassItem = ({
       hitSlop={4}
       className={cn(
         'absolute left-0 right-0 overflow-hidden rounded-lg px-3 py-1',
-        'border border-gray-300 dark:border-gray-700',
-        'bg-primary/10 dark:bg-primary/20'
+        'border border-gray-300 dark:border-gray-700'
       )}
       onPressOut={() => onPressClass(item)}
-      style={{ top: item.top, height: item.height, minHeight: 48 }}>
+      style={{
+        top: item.top,
+        height: item.height,
+        minHeight: 48,
+        backgroundColor: palette.cls().tint,
+      }}>
       <View className="flex-row items-center justify-between">
         <Text variant="subhead" className="mr-2 flex-shrink font-semibold">
           {item.title}
@@ -250,6 +224,7 @@ const ClassItem = ({
       <View className="mt-1">
         {item.nestedItems.map((nestedItem, index) => {
           const nestedTop = index * (NESTED_ITEM_FIXED_HEIGHT + NESTED_ITEM_VERTICAL_GAP);
+          const color = palette.item(nestedItem);
           return (
             <TouchableOpacity
               key={nestedItem.id}
@@ -262,12 +237,14 @@ const ClassItem = ({
                 left: 0,
                 right: 0,
                 minHeight: 32,
+                backgroundColor: color.tint,
               }}
-              className={cn(
-                'flex-row items-center justify-between rounded px-2 py-0.5',
-                getNestedItemColor(nestedItem.type)
-              )}>
-              <Text variant="caption1" className="flex-1 font-medium" numberOfLines={1}>
+              className="flex-row items-center overflow-hidden rounded">
+              <View
+                style={{ width: NESTED_ACCENT_WIDTH, backgroundColor: color.accent }}
+                className="h-full"
+              />
+              <Text variant="caption1" className="flex-1 px-2 font-medium" numberOfLines={1}>
                 {nestedItem.title}
               </Text>
             </TouchableOpacity>
@@ -290,6 +267,7 @@ export const CalendarDayView = ({
   const scrollRef = useRef<ScrollView>(null);
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [laneHeight, setLaneHeight] = useState(0);
+  const palette = useCalendarColors();
 
   useFocusEffect(() => {
     setCurrentHour(new Date().getHours());
@@ -456,7 +434,11 @@ export const CalendarDayView = ({
       showsVerticalScrollIndicator={false}
       contentContainerClassName="pb-24">
       {occurrences.allDay.length > 0 && (
-        <AllDayLane occurrences={occurrences.allDay} onLayoutHeight={setLaneHeight} />
+        <AllDayLane
+          occurrences={occurrences.allDay}
+          onLayoutHeight={setLaneHeight}
+          palette={palette}
+        />
       )}
 
       <View className="relative">
@@ -494,33 +476,37 @@ export const CalendarDayView = ({
               item={classItem}
               onPressClass={onPressClass}
               onPressItem={onPressItem}
+              palette={palette}
             />
           ))}
 
           {layout.layoutedEvents.map((event) => (
-            <EventBlock key={event.saved.eventId} item={event} />
+            <EventBlock key={event.saved.eventId} item={event} palette={palette} />
           ))}
 
-          {layout.layoutedOthers.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() => onPressItem(item)}
-              className={cn(
-                'absolute left-0 right-0 rounded-lg px-3 py-1',
-                'border border-gray-300 dark:border-gray-700',
-                getNestedItemColor(item.type)
-              )}
-              style={{ top: item.top }}>
-              <View className="flex-col">
-                <Text variant="caption2" numberOfLines={1}>
-                  {item.subject.name}
-                </Text>
-                <Text variant="subhead" className="flex-1" numberOfLines={1}>
-                  {item.title}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+          {layout.layoutedOthers.map((item) => {
+            const color = palette.item(item);
+            return (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => onPressItem(item)}
+                className={cn(
+                  'absolute left-0 right-0 flex-row overflow-hidden rounded-lg',
+                  'border border-gray-300 dark:border-gray-700'
+                )}
+                style={{ top: item.top, backgroundColor: color.tint }}>
+                <View style={{ backgroundColor: color.accent, width: EVENT_ACCENT_WIDTH }} />
+                <View className="flex-1 flex-col px-3 py-1">
+                  <Text variant="caption2" numberOfLines={1}>
+                    {item.subject.name}
+                  </Text>
+                  <Text variant="subhead" className="flex-1" numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
     </ScrollView>

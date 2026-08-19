@@ -308,6 +308,18 @@ export const SettingsModal = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            onPress={() => router.push('/calendar-colors')}
+            className="flex-row items-center justify-between border-b border-gray-400/20 px-4 py-3 dark:border-gray-200/10">
+            <View className="flex-row items-center gap-3">
+              <View className="h-8 w-8 items-center justify-center rounded-md bg-purple-400/70 shadow-sm">
+                <MaterialCommunityIcons name="palette" size={24} color="white" />
+              </View>
+              <Text variant="body">{t('settings.calendarColors')}</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.grey} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
             onPress={handleLanguageChange}
             className="flex-row items-center justify-between px-4 py-3">
             <View className="flex-row items-center gap-3">

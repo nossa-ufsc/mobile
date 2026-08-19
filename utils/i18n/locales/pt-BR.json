@@ -63,6 +63,7 @@
     "contribute": "Contribuir com o Código",
     "contact": "Entrar em contato",
     "language": "Idioma",
+    "calendarColors": "Cores do calendário",
     "languageOptions": {
       "system": "Automático",
       "ptBR": "Português",
@@ -138,7 +139,34 @@
     "date": "Data",
     "notification": "Notificação",
     "notificationTime": "Horário",
-    "selectSubject": "Selecione uma disciplina"
+    "selectSubject": "Selecione uma disciplina",
+    "color": "Cor"
+  },
+  "calendarColors": {
+    "title": "Cores do calendário",
+    "description": "Cores usadas quando o item não tem uma cor própria.",
+    "default": "Padrão",
+    "eventColor": "Cor no calendário",
+    "kinds": {
+      "class": "Aula"
+    },
+    "names": {
+      "primary": "Azul do app",
+      "red": "Vermelho",
+      "orange": "Laranja",
+      "amber": "Âmbar",
+      "yellow": "Amarelo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Turquesa",
+      "sky": "Celeste",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "purple": "Roxo",
+      "pink": "Rosa",
+      "gray": "Cinza"
+    }
   },
   "classItemSheet": {
     "schedule": "Horário",
@@ -221,10 +249,10 @@
     "lotUntil": "Vendas até {{date}}",
     "pricesFromCheers": "Lotes e preços ao vivo da Cheers — podem mudar a qualquer momento.",
     "ageRating": {
-      "free": "Livre",
       "16": "16+",
-      "16_accompanied": "16+ ou acompanhado",
       "18": "18+",
+      "free": "Livre",
+      "16_accompanied": "16+ ou acompanhado",
       "18_accompanied": "18+ ou acompanhado"
     }
   },
@@ -284,7 +312,8 @@
       "noAnimalOrigin": "Sem origem animal"
     },
     "ingredients": "Ingredientes",
-    "ingredientsHint": "Toque para ver os ingredientes",
+    "ingredientsHint": "Toque para ver detalhes do prato",
+    "allergensTitle": "Alergênicos e dieta",
     "openSource": "Ver cardápio original",
     "updatedAt": "Atualizado em {{date}}",
     "noMenuForMeal": "Nada específico para esta refeição"

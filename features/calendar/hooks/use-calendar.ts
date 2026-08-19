@@ -1,7 +1,14 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
-import { CalendarClassItem, CalendarItem, Event, SavedEvent, Subject } from '@/types';
+import {
+  CalendarClassItem,
+  CalendarColor,
+  CalendarItem,
+  Event,
+  SavedEvent,
+  Subject,
+} from '@/types';
 import { useCalendarNotifications } from './use-calendar-notifications';
 import { generateRandomId } from '@/utils/generate-random-id';
 import { expandSavedEvent } from '../utils/expand-saved-event';
@@ -289,6 +296,9 @@ export const useCalendar = () => {
 
   const isEventSaved = (eventId: string) => savedEvents.some((saved) => saved.eventId === eventId);
 
+  const setSavedEventColor = (eventId: string, color: CalendarColor | undefined) =>
+    updateSavedEventWithoutNotification(eventId, { color });
+
   /**
    * Reconcilia os snapshots com a lista fresca do servidor. Eventos ausentes da lista
    * são mantidos (a query só traz futuros do campus atual) — nunca apaga sozinho.
@@ -355,6 +365,7 @@ export const useCalendar = () => {
     saveEvent,
     unsaveEvent,
     isEventSaved,
+    setSavedEventColor,
     getSavedEvent,
     getSavedEventsByDate,
     refreshSavedEvents,

@@ -55,6 +55,7 @@
     "contribute": "Contribuir con el Código",
     "contact": "Contactar",
     "language": "Idioma",
+    "calendarColors": "Colores del calendario",
     "languageOptions": {
       "system": "Automático",
       "ptBR": "Português",
@@ -130,7 +131,34 @@
     "date": "Fecha",
     "notification": "Notificación",
     "notificationTime": "Hora",
-    "selectSubject": "Selecciona una asignatura"
+    "selectSubject": "Selecciona una asignatura",
+    "color": "Color"
+  },
+  "calendarColors": {
+    "title": "Colores del calendario",
+    "description": "Se usan cuando el elemento no tiene color propio.",
+    "default": "Predeterminado",
+    "eventColor": "Color en el calendario",
+    "kinds": {
+      "class": "Clase"
+    },
+    "names": {
+      "primary": "Azul de la app",
+      "red": "Rojo",
+      "orange": "Naranja",
+      "amber": "Ámbar",
+      "yellow": "Amarillo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Turquesa",
+      "sky": "Celeste",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "purple": "Morado",
+      "pink": "Rosa",
+      "gray": "Gris"
+    }
   },
   "classItemSheet": {
     "schedule": "Horario",
@@ -213,10 +241,10 @@
     "lotUntil": "Ventas hasta {{date}}",
     "pricesFromCheers": "Lotes y precios en vivo de Cheers — pueden cambiar en cualquier momento.",
     "ageRating": {
-      "free": "Para todas las edades",
       "16": "16+",
-      "16_accompanied": "16+ o acompañado",
       "18": "18+",
+      "free": "Para todas las edades",
+      "16_accompanied": "16+ o acompañado",
       "18_accompanied": "18+ o acompañado"
     }
   },
@@ -276,7 +304,8 @@
       "noAnimalOrigin": "Sin origen animal"
     },
     "ingredients": "Ingredientes",
-    "ingredientsHint": "Toca para ver los ingredientes",
+    "ingredientsHint": "Toca para ver detalles del plato",
+    "allergensTitle": "Alérgenos y dieta",
     "openSource": "Ver menú original",
     "updatedAt": "Actualizado el {{date}}",
     "noMenuForMeal": "Nada específico para esta comida"

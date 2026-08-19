@@ -32,6 +32,12 @@ export default function AppLayout() {
         }}
       />
       <Stack.Screen
+        name="calendar-colors"
+        options={{
+          title: t('calendarColors.title'),
+        }}
+      />
+      <Stack.Screen
         name="event/[id]"
         options={{
           presentation: 'modal',

@@ -1,6 +1,14 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { Subject, User, Campus, AcademicCalendar } from '@/types';
+import {
+  Subject,
+  User,
+  Campus,
+  AcademicCalendar,
+  CalendarColor,
+  CalendarColorKind,
+  CalendarTypeColorPrefs,
+} from '@/types';
 import { ExtensionStorage } from '@bacons/apple-targets';
 import { convertSubjectsToWidgetFormat } from './subjects-to-widget-adapter';
 import { i18n, detectDeviceLanguage, SupportedLanguage } from './i18n';
@@ -53,6 +61,8 @@ interface EnvironmentState {
   // User-selected language override. Null means "follow the device locale".
   language: SupportedLanguage | null;
   setLanguage: (language: SupportedLanguage | null) => void;
+  calendarTypeColors: CalendarTypeColorPrefs;
+  setCalendarTypeColor: (kind: CalendarColorKind, color: CalendarColor | undefined) => void;
 }
 
 const systemStorageZustandAdadpter = {
@@ -159,6 +169,16 @@ export const useEnvironmentStore = create<EnvironmentState>()(
       setLanguage: (language) => {
         set({ language });
         i18n.changeLanguage(language ?? detectDeviceLanguage());
+      },
+
+      calendarTypeColors: {},
+      setCalendarTypeColor: (kind, color) => {
+        set((state) => {
+          const next = { ...state.calendarTypeColors };
+          if (color) next[kind] = color;
+          else delete next[kind];
+          return { calendarTypeColors: next };
+        });
       },
     }),
     {

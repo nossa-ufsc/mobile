@@ -2,8 +2,11 @@ import { View, TouchableOpacity } from 'react-native';
 import { Text } from '../../../ui/text';
 import { useColorScheme } from '@/utils/use-color-scheme';
 import { cn } from '@/utils/cn';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DayDots, useDayDotColors } from '@/features/calendar/components/day-dots';
+import { useEnvironmentStore } from '@/utils/use-environment-store';
+import { getActiveSubjects } from '@/utils/subjects';
 
 interface WeekDaySelectorProps {
   selectedDay: number;
@@ -36,6 +39,7 @@ export const WeekDaySelector = ({
       date.setDate(mondayDate.getDate() + index);
       const jsIndex = date.getDay();
       return {
+        date,
         number: date.getDate(),
         name: weekdayLetters[index],
         dayIndex: jsIndex,
@@ -43,6 +47,22 @@ export const WeekDaySelector = ({
       };
     });
   }, [weekdayLetters]);
+
+  const subjects = useEnvironmentStore((state) => state.subjects);
+  const classWeekDays = useMemo(
+    () =>
+      new Set(
+        getActiveSubjects(subjects ?? []).flatMap((subject) =>
+          (subject.schedule ?? [])
+            .filter((time) => time.startTime && time.endTime)
+            .map((time) => time.weekDay)
+        )
+      ),
+    [subjects]
+  );
+  const dates = useMemo(() => days.map((day) => day.date), [days]);
+  const hasClass = useCallback((date: Date) => classWeekDays.has(date.getDay()), [classWeekDays]);
+  const dotColorsFor = useDayDotColors(dates, { hasClass });
 
   return (
     <View
@@ -83,6 +103,7 @@ export const WeekDaySelector = ({
                 )}>
                 {day.number}
               </Text>
+              <DayDots colors={dotColorsFor(day.date)} isSelected={selectedDay === day.dayIndex} />
             </View>
           </TouchableOpacity>
         ))}

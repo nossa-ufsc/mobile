@@ -49,7 +49,7 @@ export const EventCategoryFilter = ({
               }}
               className={cn(
                 'items-center justify-center rounded-full px-3.5 py-1.5',
-                selected ? 'bg-primary' : 'bg-gray-500/10'
+                selected ? 'bg-primary' : 'bg-gray-500/10 dark:bg-gray-500/30'
               )}>
               <Text
                 variant="subhead"

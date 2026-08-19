@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  LayoutAnimation,
   Linking,
   Platform,
   Pressable,
@@ -31,6 +32,12 @@ import { EventDescription } from '../components/event-description';
 import { EventTickets } from '../components/event-tickets';
 import { CAMPUS_LABELS } from '@/features/settings/utils/const';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
+import { useCalendarColors } from '@/features/calendar/hooks/use-calendar-colors';
+import { getSavedEventDefaultColor } from '@/features/calendar/utils/calendar-colors';
+import {
+  ColorSwatchPicker,
+  useColorName,
+} from '@/features/calendar/components/color-swatch-picker';
 
 const CTA_BAR_HEIGHT = 56;
 const MAX_TAGS = 10;
@@ -132,9 +139,13 @@ export const EventDetails = () => {
   const { data: tickets } = useCheersTickets(event?.ticket_url);
   const [imageOpen, setImageOpen] = useState(false);
   const [toast, setToast] = useState<{ id: number; label: string } | null>(null);
-  const { saveEvent, unsaveEvent, isEventSaved } = useCalendar();
+  const { saveEvent, unsaveEvent, isEventSaved, getSavedEvent, setSavedEventColor } = useCalendar();
+  const palette = useCalendarColors();
+  const colorName = useColorName();
+  const [colorOpen, setColorOpen] = useState(false);
 
   const saved = !!event && isEventSaved(event.id);
+  const savedRecord = event ? getSavedEvent(event.id) : undefined;
 
   const toggleSaved = async () => {
     if (!event) return;
@@ -346,6 +357,50 @@ export const EventDetails = () => {
                   </View>
                   <Ionicons name="chevron-forward" size={18} color={colors.grey} />
                 </Pressable>
+              </>
+            )}
+            {saved && savedRecord && (
+              <>
+                <View className="h-px bg-border" />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded: colorOpen }}
+                  onPress={() => {
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                    setColorOpen((open) => !open);
+                  }}
+                  className="flex-row items-center py-4 active:opacity-70">
+                  <View className="bg-primary/10 mr-3 h-12 w-12 items-center justify-center rounded-xl">
+                    <View
+                      className="h-5 w-5 rounded-full"
+                      style={{ backgroundColor: palette.savedEvent(savedRecord).accent }}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Text variant="heading" numberOfLines={1}>
+                      {t('calendarColors.eventColor')}
+                    </Text>
+                    <Text variant="subhead" color="tertiary" numberOfLines={1}>
+                      {savedRecord.color
+                        ? colorName(savedRecord.color)
+                        : `${t('calendarColors.default')} · ${categoryLabel}`}
+                    </Text>
+                  </View>
+                  <Ionicons
+                    name={colorOpen ? 'chevron-up' : 'chevron-down'}
+                    size={18}
+                    color={colors.grey}
+                  />
+                </Pressable>
+                {colorOpen && (
+                  <ColorSwatchPicker
+                    layout="row"
+                    className="-mx-4 pb-4"
+                    value={savedRecord.color}
+                    defaultColor={getSavedEventDefaultColor(savedRecord)}
+                    onChange={(c) => setSavedEventColor(event.id, c)}
+                  />
+                )}
               </>
             )}
           </View>

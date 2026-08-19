@@ -14,8 +14,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { useCalendarState } from '@/features/calendar/hooks/use-calendar-state';
-import { useCalendarItemsList, useSavedEventsList } from '@/features/calendar/hooks/use-calendar';
-import { hasOccurrenceOnDay } from '@/features/calendar/utils/expand-saved-event';
+import { DayDots, useDayDotColors } from '@/features/calendar/components/day-dots';
 
 interface MonthSelectorProps {
   selectedDay: Date;
@@ -23,40 +22,6 @@ interface MonthSelectorProps {
   testID?: string;
   className?: string;
 }
-
-/** Amarelo = evento salvo, azul = tarefa/prova. Clareia no dia selecionado (círculo azul). */
-const EVENT_DOT = { normal: '#f59e0b', onSelected: '#fde68a' };
-const ITEM_DOT = { onSelected: '#ffffff' };
-
-const DayDots = ({
-  hasEvent,
-  hasItem,
-  isSelected,
-  primary,
-}: {
-  hasEvent: boolean;
-  hasItem: boolean;
-  isSelected: boolean;
-  primary: string;
-}) => {
-  if (!hasEvent && !hasItem) return null;
-  return (
-    <View className="absolute bottom-1 flex-row gap-0.5" pointerEvents="none">
-      {hasEvent && (
-        <View
-          className="h-1 w-1 rounded-full"
-          style={{ backgroundColor: isSelected ? EVENT_DOT.onSelected : EVENT_DOT.normal }}
-        />
-      )}
-      {hasItem && (
-        <View
-          className="h-1 w-1 rounded-full"
-          style={{ backgroundColor: isSelected ? ITEM_DOT.onSelected : primary }}
-        />
-      )}
-    </View>
-  );
-};
 
 export const MonthSelector = ({
   selectedDay,
@@ -69,8 +34,6 @@ export const MonthSelector = ({
   const weekdayLetters = t('common.weekdayLetters', { returnObjects: true }) as string[];
   const { isExpanded, setIsExpanded, currentDate, setCurrentDate, setSelectedDay } =
     useCalendarState();
-  const savedEvents = useSavedEventsList();
-  const calendarItems = useCalendarItemsList();
 
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const SLIDE_WIDTH = SCREEN_WIDTH;
@@ -255,28 +218,14 @@ export const MonthSelector = ({
     return arr;
   }, [currentDate, selectedDay, isExpanded]);
 
-  const itemDayKeys = useMemo(
-    () => new Set(calendarItems.map((item) => new Date(item.date).toDateString())),
-    [calendarItems]
-  );
-
-  // Eventos podem durar vários dias: em vez de indexar por data, testa cada dia visível
-  // (no máximo 42) contra a lista de salvos, que é curta.
-  const eventDayKeys = useMemo(() => {
-    if (!savedEvents.length) return new Set<string>();
-    const now = Date.now();
-    const visibleDays = [
+  const visibleDates = useMemo(
+    () => [
       ...days.map((day) => day.date),
       ...monthDays.filter((day) => day !== null).map((day) => day.date),
-    ];
-    const keys = new Set<string>();
-    visibleDays.forEach((date) => {
-      if (savedEvents.some((saved) => hasOccurrenceOnDay(saved, date, now))) {
-        keys.add(date.toDateString());
-      }
-    });
-    return keys;
-  }, [savedEvents, days, monthDays]);
+    ],
+    [days, monthDays]
+  );
+  const dotColorsFor = useDayDotColors(visibleDates);
 
   return (
     <GestureDetector gesture={gesture}>
@@ -329,12 +278,7 @@ export const MonthSelector = ({
                       )}>
                       {day.number}
                     </Text>
-                    <DayDots
-                      hasEvent={eventDayKeys.has(day.date.toDateString())}
-                      hasItem={itemDayKeys.has(day.date.toDateString())}
-                      isSelected={day.isSelected}
-                      primary={colors.primary}
-                    />
+                    <DayDots colors={dotColorsFor(day.date)} isSelected={day.isSelected} />
                   </View>
                 </TouchableOpacity>
               ))}
@@ -389,10 +333,8 @@ export const MonthSelector = ({
                                 {day.number}
                               </Text>
                               <DayDots
-                                hasEvent={eventDayKeys.has(day.date.toDateString())}
-                                hasItem={itemDayKeys.has(day.date.toDateString())}
+                                colors={dotColorsFor(day.date)}
                                 isSelected={day.isSelected}
-                                primary={colors.primary}
                               />
                             </View>
                           </TouchableOpacity>

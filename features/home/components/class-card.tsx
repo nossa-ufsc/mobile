@@ -5,7 +5,7 @@ import { ProgressIndicator } from '@/ui/progress-indicator';
 import { cn } from '@/utils/cn';
 import { useSubjectAbsence } from '../hooks/use-subject-absence';
 import { useCalendar } from '@/features/calendar/hooks/use-calendar';
-import { getItemColor } from '@/features/calendar/components/calendar-day-view';
+import { useCalendarColors } from '@/features/calendar/hooks/use-calendar-colors';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/utils/use-color-scheme';
@@ -42,6 +42,7 @@ export const ClassCard = ({
   const { getItemsByDateAndSubject } = useCalendar();
   const { colors } = useColorScheme();
   const { t } = useTranslation();
+  const palette = useCalendarColors();
   const { showActionSheetWithOptions } = useActionSheet();
   const { bottom } = useSafeAreaInsets();
 
@@ -180,7 +181,10 @@ export const ClassCard = ({
         <View className="mt-3 flex-col items-start gap-1 border-t border-border pt-3">
           {todayItems.map((item) => (
             <View key={item.id} className="flex-row items-center gap-3">
-              <View className={cn(getItemColor(item.type), 'h-3 w-3 rounded-full')} />
+              <View
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: palette.item(item).accent }}
+              />
               <Text variant="subhead" className="flex-1 text-foreground" numberOfLines={1}>
                 {item.title}
               </Text>

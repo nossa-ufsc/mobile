@@ -15,7 +15,7 @@ const TONES: Record<
   { container: string; text: string; icon: { light: string; dark: string } | null }
 > = {
   neutral: {
-    container: 'bg-gray-500/10',
+    container: 'bg-gray-500/10 dark:bg-gray-500/25',
     text: 'text-gray-600 dark:text-gray-300',
     icon: { light: '#4b5563', dark: '#d1d5db' },
   },

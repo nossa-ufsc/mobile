@@ -11,19 +11,28 @@ interface MenuSectionCardProps {
   showMealBadges?: boolean;
 }
 
+/** Categorias cujo prato é "o prato do dia" — ganham um pouco mais de peso tipográfico. */
+const PROMINENT_CATEGORIES = new Set(['carne', 'vegetariano']);
+
 export const MenuSectionCard = ({ section, showMealBadges = true }: MenuSectionCardProps) => {
   const { t } = useTranslation();
   const meta = MENU_CATEGORY_META[section.category];
+  const prominent = PROMINENT_CATEGORIES.has(section.category);
 
   return (
     <Animated.View
       layout={LinearTransition.duration(220)}
-      className="rounded-2xl bg-card px-4 pb-1.5 pt-3 shadow-sm">
-      <View className="mb-1 flex-row items-center gap-2">
-        <Text className="text-[17px] leading-[22px]" accessibilityElementsHidden>
+      className="rounded-2xl bg-card px-4 pb-1 pt-3 shadow-sm">
+      {/* Categoria como "eyebrow": pequena e terciária. O destaque é o prato. */}
+      <View className="mb-0.5 flex-row items-center gap-1.5">
+        <Text className="text-[13px] leading-4" accessibilityElementsHidden>
           {meta.emoji}
         </Text>
-        <Text variant="heading" className="flex-1" accessibilityRole="header">
+        <Text
+          variant="footnote"
+          color="tertiary"
+          className="font-medium"
+          accessibilityRole="header">
           {t(`menu.categories.${section.category}`)}
         </Text>
       </View>
@@ -31,6 +40,8 @@ export const MenuSectionCard = ({ section, showMealBadges = true }: MenuSectionC
         <MenuDishRow
           key={`${dish.nome}-${index}`}
           dish={dish}
+          category={section.category}
+          prominent={prominent}
           showMealBadge={showMealBadges}
           isLast={index === section.dishes.length - 1}
         />
